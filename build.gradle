@@ -70,7 +70,6 @@ publishing {
             artifact sourcesJar
             artifact javadocJar
             pom.withXml {
-                def parent = asNode()
                 asNode().children().last() + createPom
             }
         }
