@@ -27,10 +27,10 @@ import org.citydb.sqlbuilder.select.operator.comparison.BinaryComparisonOperator
 import org.citydb.sqlbuilder.select.operator.comparison.ComparisonName;
 
 public class Join {
-	private final JoinName name;
 	private final Column fromColumn;
 	private final Column toColumn;
 	private final BinaryComparisonOperator condition;
+	private JoinName name;
 
 	public Join(JoinName name, Table table, String column, ComparisonName binaryComparison, Column fromColumn) {
 		this.name = name;
@@ -60,6 +60,10 @@ public class Join {
 
 	public JoinName getJoinName() {
 		return name;
+	}
+
+	public void setJoinName(JoinName name) {
+		this.name = name;
 	}
 	
 	public void getInvolvedTables(Set<Table> tables) {
