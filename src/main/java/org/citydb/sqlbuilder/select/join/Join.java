@@ -63,7 +63,8 @@ public class Join {
 	}
 
 	public void setJoinName(JoinName name) {
-		this.name = name;
+		if (name != null)
+			this.name = name;
 	}
 	
 	public void getInvolvedTables(Set<Table> tables) {
@@ -73,7 +74,7 @@ public class Join {
 	
 	@Override
 	public String toString() {		
-		return String.valueOf(getJoinName()) + " " + toColumn.getTable() + " on " + condition;
+		return name + " " + toColumn.getTable() + " on " + condition;
 	}
 
 }
