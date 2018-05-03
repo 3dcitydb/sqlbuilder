@@ -24,9 +24,9 @@ import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.operator.comparison.ComparisonName;
 
 public class JoinFactory {
-	
-	public static Join simple(Table table, String column, ComparisonName name, Column fromColumn) {
-		return new Join(JoinName.SIMPLE_JOIN, table, column, name, fromColumn);
+
+	public static Join inner(Table table, String column, ComparisonName name, Column fromColumn) {
+		return new Join(JoinName.INNER_JOIN, table, column, name, fromColumn);
 	}
 	
 	public static Join left(Table table, String column, ComparisonName name, Column fromColumn) {
@@ -35,10 +35,6 @@ public class JoinFactory {
 	
 	public static Join right(Table table, String column, ComparisonName name, Column fromColumn) {
 		return new Join(JoinName.RIGHT_JOIN, table, column, name, fromColumn);
-	}
-	
-	public static Join inner(Table table, String column, ComparisonName name, Column fromColumn) {
-		return new Join(JoinName.INNER_JOIN, table, column, name, fromColumn);
 	}
 	
 	public static Join full(Table table, String column, ComparisonName name, Column fromColumn) {

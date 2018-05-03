@@ -22,10 +22,9 @@ package org.citydb.sqlbuilder.select.join;
 import org.citydb.sqlbuilder.select.operator.OperationName;
 
 public enum JoinName implements OperationName {
-	SIMPLE_JOIN("join"),
+	INNER_JOIN("inner join"),
 	LEFT_JOIN("left join"),
 	RIGHT_JOIN("right join"),
-	INNER_JOIN("inner join"),
 	FULL_JOIN("full join");
 	
 	final String symbol;

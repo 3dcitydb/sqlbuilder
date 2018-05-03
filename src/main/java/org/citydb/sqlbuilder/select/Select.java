@@ -19,18 +19,6 @@
 
 package org.citydb.sqlbuilder.select;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-
 import org.citydb.sqlbuilder.SQLStatement;
 import org.citydb.sqlbuilder.expression.CommonTableExpression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
@@ -38,7 +26,17 @@ import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.join.Join;
-import org.citydb.sqlbuilder.select.join.JoinName;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Select implements SQLStatement, SubQueryExpression {
 	private final List<CommonTableExpression> ctes;
@@ -338,11 +336,6 @@ public class Select implements SQLStatement, SubQueryExpression {
 
 		print(writer, projectionTokens, ",", indent, false);
 
-		// we might need to change predicateTokens and tableTokens
-		// so work on a copy in the following
-		LinkedList<PredicateToken> predicateTokens = new LinkedList<>(this.predicateTokens);
-		List<Join> joins = new ArrayList<>(this.joins);
-
 		Set<Table> tables = getInvolvedTables();
 		if (!joins.isEmpty() || !tables.isEmpty()) {
 			writer.print("from ");
@@ -350,23 +343,12 @@ public class Select implements SQLStatement, SubQueryExpression {
 				writer.println();
 
 			if (!joins.isEmpty()) {
-				Set<Table> removeTables = new LinkedHashSet<>();
-				ListIterator<Join> iter = joins.listIterator(joins.size());
+				Set<Table> removeTables = new HashSet<>();
+				for (Join join : joins)
+					join.getInvolvedTables(removeTables);
 
-				while (iter.hasPrevious()) {
-					Join join = iter.previous();
-					if (join.getJoinName() == JoinName.SIMPLE_JOIN) {
-						predicateTokens.addFirst(join.getCondition());
-						iter.remove();
-					} else
-						join.getInvolvedTables(removeTables);
-				}
-
-				if (!tables.isEmpty())
-					tables.removeAll(removeTables);
-
-				if (tables.isEmpty())
-					tables.add(getInvolvedTables().iterator().next());
+				tables.removeAll(removeTables);
+				tables.add(joins.get(0).getFromColumn().getTable());
 			}
 
 			if (!tables.isEmpty())
