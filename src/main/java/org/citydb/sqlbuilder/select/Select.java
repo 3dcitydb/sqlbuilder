@@ -363,6 +363,7 @@ public class Select implements SQLStatement, SubQueryExpression {
 				writer.println();
 
 			writer.print(pseudoTable);
+			writer.print(' ');
 		}
 
 		if (!predicateTokens.isEmpty()) {
