@@ -25,7 +25,7 @@ public class GlobalAliasGenerator implements AliasGenerator {
 	private static GlobalAliasGenerator instance = null;
 
 	private final ReentrantLock lock = new ReentrantLock();
-	private final DefaultAliasGenerator aliasGenerator = new DefaultAliasGenerator();
+	private final AliasGenerator aliasGenerator = new DefaultAliasGenerator();
 
 	private GlobalAliasGenerator() {
 		// just to thwart instantiation
@@ -36,16 +36,6 @@ public class GlobalAliasGenerator implements AliasGenerator {
 			instance = new GlobalAliasGenerator();
 
 		return instance;
-	}
-	
-	public void updateAlias(DefaultAliasGenerator other) {
-		lock.lock();
-		try {
-			aliasGenerator.character = other.character;
-			aliasGenerator.counter = other.counter;
-		} finally {
-			lock.unlock();
-		}
 	}
 
 	@Override

@@ -54,4 +54,9 @@ public class DefaultAliasGenerator implements AliasGenerator {
 		counter = 0;
 	}
 
+	public void updateFrom(DefaultAliasGenerator other) {
+		character = other.character;
+		counter = other.counter;
+	}
+
 }
