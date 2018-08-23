@@ -19,6 +19,12 @@
 
 package org.citydb.sqlbuilder.update;
 
+import org.citydb.sqlbuilder.SQLStatement;
+import org.citydb.sqlbuilder.expression.CommonTableExpression;
+import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.schema.Table;
+import org.citydb.sqlbuilder.select.PredicateToken;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -28,12 +34,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.citydb.sqlbuilder.SQLStatement;
-import org.citydb.sqlbuilder.expression.CommonTableExpression;
-import org.citydb.sqlbuilder.expression.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
-import org.citydb.sqlbuilder.select.PredicateToken;
 
 public class Update implements SQLStatement {
 	private Table table;

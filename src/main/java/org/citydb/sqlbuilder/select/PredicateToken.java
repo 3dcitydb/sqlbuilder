@@ -19,9 +19,9 @@
 
 package org.citydb.sqlbuilder.select;
 
-import java.util.List;
-
 import org.citydb.sqlbuilder.expression.PlaceHolder;
+
+import java.util.List;
 
 public interface PredicateToken {
 	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements);

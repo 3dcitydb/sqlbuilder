@@ -19,6 +19,12 @@
 
 package org.citydb.sqlbuilder.select.operator.set;
 
+import org.citydb.sqlbuilder.SQLStatement;
+import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.expression.SubQueryExpression;
+import org.citydb.sqlbuilder.schema.Table;
+import org.citydb.sqlbuilder.select.Select;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -27,12 +33,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.citydb.sqlbuilder.SQLStatement;
-import org.citydb.sqlbuilder.expression.PlaceHolder;
-import org.citydb.sqlbuilder.expression.SubQueryExpression;
-import org.citydb.sqlbuilder.schema.Table;
-import org.citydb.sqlbuilder.select.Select;
 
 public class SetOperator implements SQLStatement, SubQueryExpression {
 	private final SetOperationName operationName;

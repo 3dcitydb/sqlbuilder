@@ -19,9 +19,9 @@
 
 package org.citydb.sqlbuilder.select.operator.set;
 
-import java.util.List;
-
 import org.citydb.sqlbuilder.select.Select;
+
+import java.util.List;
 
 public class SetOperationFactory {
 

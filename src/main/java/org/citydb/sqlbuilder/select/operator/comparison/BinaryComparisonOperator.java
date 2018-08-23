@@ -19,11 +19,11 @@
 
 package org.citydb.sqlbuilder.select.operator.comparison;
 
-import java.util.List;
-
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
+
+import java.util.List;
 
 public class BinaryComparisonOperator extends AbstractComparisonOperator {
 	private final Expression leftOperand;

@@ -19,11 +19,11 @@
 
 package org.citydb.sqlbuilder.select;
 
-import java.util.List;
-import java.util.Set;
-
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Table;
+
+import java.util.List;
+import java.util.Set;
 
 public interface ProjectionToken {
 	public void getInvolvedTables(Set<Table> tables);
