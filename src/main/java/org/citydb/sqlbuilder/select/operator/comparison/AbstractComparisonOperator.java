@@ -19,13 +19,13 @@
 
 package org.citydb.sqlbuilder.select.operator.comparison;
 
-import java.util.List;
-
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import org.citydb.sqlbuilder.select.ProjectionToken;
 import org.citydb.sqlbuilder.select.operator.Operator;
+
+import java.util.List;
 
 public abstract class AbstractComparisonOperator implements Operator {
 	

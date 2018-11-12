@@ -19,13 +19,13 @@
 
 package org.citydb.sqlbuilder.select.projection;
 
-import java.util.List;
-import java.util.Set;
-
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.ProjectionToken;
+
+import java.util.List;
+import java.util.Set;
 
 public class WildCardColumn implements ProjectionToken, Expression {
 	private final Table table;

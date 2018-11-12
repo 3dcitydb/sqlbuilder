@@ -19,12 +19,12 @@
 
 package org.citydb.sqlbuilder.select.operator.comparison;
 
-import java.util.List;
-
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.StringLiteral;
 import org.citydb.sqlbuilder.select.operator.OperationName;
+
+import java.util.List;
 
 public class LikeOperator extends AbstractComparisonOperator {
 	private final Expression operand;

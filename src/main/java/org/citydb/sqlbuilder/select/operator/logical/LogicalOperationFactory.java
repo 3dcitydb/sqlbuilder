@@ -19,9 +19,9 @@
 
 package org.citydb.sqlbuilder.select.operator.logical;
 
-import java.util.List;
-
 import org.citydb.sqlbuilder.select.PredicateToken;
+
+import java.util.List;
 
 public class LogicalOperationFactory {
 	

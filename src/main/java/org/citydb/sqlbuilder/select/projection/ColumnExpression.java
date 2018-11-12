@@ -19,13 +19,13 @@
 
 package org.citydb.sqlbuilder.select.projection;
 
-import java.util.List;
-import java.util.Set;
-
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.ProjectionToken;
 import org.citydb.sqlbuilder.select.Select;
+
+import java.util.List;
+import java.util.Set;
 
 public class ColumnExpression implements ProjectionToken {
 	private final Select select;

@@ -19,10 +19,10 @@
 
 package org.citydb.sqlbuilder.select.operator.logical;
 
-import java.util.List;
-
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.select.PredicateToken;
+
+import java.util.List;
 
 public class NotOperator extends AbstractLogicalOperator {
 	private final PredicateToken operand;

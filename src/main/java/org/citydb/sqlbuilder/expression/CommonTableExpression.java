@@ -19,15 +19,15 @@
 
 package org.citydb.sqlbuilder.expression;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.citydb.sqlbuilder.schema.AliasGenerator;
 import org.citydb.sqlbuilder.schema.GlobalAliasGenerator;
 import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.Select;
 import org.citydb.sqlbuilder.select.operator.set.SetOperator;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommonTableExpression {
 	private final String name;

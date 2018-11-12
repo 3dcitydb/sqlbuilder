@@ -19,16 +19,16 @@
 
 package org.citydb.sqlbuilder.select.projection;
 
+import org.citydb.sqlbuilder.expression.Expression;
+import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.schema.Table;
+import org.citydb.sqlbuilder.select.ProjectionToken;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.citydb.sqlbuilder.expression.Expression;
-import org.citydb.sqlbuilder.expression.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
-import org.citydb.sqlbuilder.select.ProjectionToken;
 
 public class Function implements ProjectionToken, Expression {
 	private final String name;

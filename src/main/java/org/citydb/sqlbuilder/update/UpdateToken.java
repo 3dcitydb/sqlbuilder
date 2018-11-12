@@ -19,13 +19,13 @@
 
 package org.citydb.sqlbuilder.update;
 
-import java.util.List;
-
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.select.PredicateToken;
+
+import java.util.List;
 
 public class UpdateToken {
 	private final Column column;

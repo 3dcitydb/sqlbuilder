@@ -19,9 +19,9 @@
 
 package org.citydb.sqlbuilder.select.operator.logical;
 
-import java.util.EnumSet;
-
 import org.citydb.sqlbuilder.select.operator.OperationName;
+
+import java.util.EnumSet;
 
 public enum LogicalOperationName implements OperationName {
 	AND("and"),

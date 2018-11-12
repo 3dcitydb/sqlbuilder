@@ -19,12 +19,12 @@
 
 package org.citydb.sqlbuilder.select.join;
 
-import java.util.Set;
-
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.operator.comparison.BinaryComparisonOperator;
 import org.citydb.sqlbuilder.select.operator.comparison.ComparisonName;
+
+import java.util.Set;
 
 public class Join {
 	private final Column fromColumn;

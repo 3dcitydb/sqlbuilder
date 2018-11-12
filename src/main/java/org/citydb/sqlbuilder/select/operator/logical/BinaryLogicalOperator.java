@@ -19,13 +19,13 @@
 
 package org.citydb.sqlbuilder.select.operator.logical;
 
+import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.select.PredicateToken;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import org.citydb.sqlbuilder.expression.PlaceHolder;
-import org.citydb.sqlbuilder.select.PredicateToken;
 
 public class BinaryLogicalOperator extends AbstractLogicalOperator {
 	private final List<PredicateToken> operands;
