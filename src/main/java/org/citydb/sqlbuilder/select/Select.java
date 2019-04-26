@@ -299,10 +299,22 @@ public class Select implements SQLStatement, SubQueryExpression {
 
 		for (ProjectionToken token : projectionTokens)
 			token.getInvolvedPlaceHolders(statements);
-		
-		for (Table table : getInvolvedTables()) {
+
+		Set<Table> tables = new LinkedHashSet<>();
+		for (ProjectionToken token : projectionTokens)
+			token.getInvolvedTables(tables);
+
+		for (Table table : tables) {
 			if (table.isSetQueryExpression())
 				table.getQueryExpression().getInvolvedPlaceHolders(statements);
+		}
+
+		for (Join join : joins) {
+			Table table = join.getToColumn().getTable();
+			if (table.isSetQueryExpression() && !tables.contains(table))
+				table.getQueryExpression().getInvolvedPlaceHolders(statements);
+
+			join.getInvolvedPlaceHolders(statements);
 		}
 
 		for (PredicateToken token : predicateTokens)

@@ -19,6 +19,7 @@
 
 package org.citydb.sqlbuilder.select.join;
 
+import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.PredicateToken;
@@ -84,9 +85,14 @@ public class Join {
 		fromColumn.getInvolvedTables(tables);
 		toColumn.getInvolvedTables(tables);
 	}
+
+	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+		for (PredicateToken condition : conditions)
+			condition.getInvolvedPlaceHolders(statements);
+	}
 	
 	@Override
-	public String toString() {		
+	public String toString() {
 		return name + " " + toColumn.getTable() + " on " + new BinaryLogicalOperator(conditionOperationName, conditions);
 	}
 
