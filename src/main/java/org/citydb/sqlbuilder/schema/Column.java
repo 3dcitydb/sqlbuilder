@@ -84,7 +84,8 @@ public class Column implements ProjectionToken, Expression {
 		if (obj instanceof Column) {
 			Column other = (Column)obj;
 			return table.equals(other.table) &&
-					name.toUpperCase().equals(other.name.toUpperCase());
+					name.toUpperCase().equals(other.name.toUpperCase()) &&
+					((asName == null && other.asName == null) || (asName != null && asName.equalsIgnoreCase(other.asName)));
 		}
 		
 		return false;
