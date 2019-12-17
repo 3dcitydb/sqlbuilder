@@ -23,6 +23,8 @@ import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import org.citydb.sqlbuilder.select.Select;
 import org.citydb.sqlbuilder.select.operator.set.SetOperator;
 
+import java.util.Objects;
+
 public final class Table {
 	private String name;
 	private String alias;
@@ -95,6 +97,15 @@ public final class Table {
 
 	public Column getColumn(String columnName, String asName) {
 		return new Column(this, columnName, asName);
+	}
+
+	public Column[] getColumns(String... columnNames) {
+		Objects.requireNonNull(columnNames, "The column names array must not be null.");
+		Column[] columns = new Column[columnNames.length];
+		for (int i = 0; i < columnNames.length; i++)
+			columns[i] = getColumn(columnNames[i]);
+
+		return columns;
 	}
 
 	@Override
