@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'org.citydb'
-version '2.2.0'
+version '2.2.1-b20191219.1208'
 description 'Dynamic SQL builder for the 3D City Database'
 
 sourceCompatibility = 1.8
