@@ -24,5 +24,5 @@ import org.citydb.sqlbuilder.expression.PlaceHolder;
 import java.util.List;
 
 public interface PredicateToken {
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements);
+    void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements);
 }

@@ -22,19 +22,19 @@ package org.citydb.sqlbuilder.select.operator.set;
 import org.citydb.sqlbuilder.select.operator.OperationName;
 
 public enum SetOperationName implements OperationName {
-	INTERSECT("intersect"),
-	UNION("union"),
-	UNION_ALL("union all"),
-	GENERIC("generic");
-	
-	final String symbol;
-	
-	SetOperationName(String symbol) {
-		this.symbol = symbol;
-	}
-	
-	@Override
-	public String toString() {
-		return symbol;
-	}
+    INTERSECT("intersect"),
+    UNION("union"),
+    UNION_ALL("union all"),
+    GENERIC("generic");
+
+    final String symbol;
+
+    SetOperationName(String symbol) {
+        this.symbol = symbol;
+    }
+
+    @Override
+    public String toString() {
+        return symbol;
+    }
 }

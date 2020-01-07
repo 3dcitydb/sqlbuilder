@@ -20,6 +20,6 @@
 package org.citydb.sqlbuilder.select.orderBy;
 
 public enum SortOrder {
-	ASCENDING,
-	DESCENDING
+    ASCENDING,
+    DESCENDING
 }

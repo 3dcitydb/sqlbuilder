@@ -23,5 +23,5 @@ import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.select.PredicateToken;
 
 public interface Operator extends PredicateToken, Expression {
-	public OperationName getOperationName();
+    OperationName getOperationName();
 }

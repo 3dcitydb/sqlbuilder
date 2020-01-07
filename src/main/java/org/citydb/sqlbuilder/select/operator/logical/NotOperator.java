@@ -25,24 +25,24 @@ import org.citydb.sqlbuilder.select.PredicateToken;
 import java.util.List;
 
 public class NotOperator extends AbstractLogicalOperator {
-	private final PredicateToken operand;
+    private final PredicateToken operand;
 
-	public NotOperator(PredicateToken operand) {
-		this.operand = operand;
-	}
+    public NotOperator(PredicateToken operand) {
+        this.operand = operand;
+    }
 
-	@Override
-	public LogicalOperationName getOperationName() {
-		return LogicalOperationName.NOT;
-	}
-	
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		operand.getInvolvedPlaceHolders(statements);
-	}
+    @Override
+    public LogicalOperationName getOperationName() {
+        return LogicalOperationName.NOT;
+    }
 
-	@Override
-	public String toString() {
-		return "(" + getOperationName() + " " + operand + ")";
-	}
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        operand.getInvolvedPlaceHolders(statements);
+    }
+
+    @Override
+    public String toString() {
+        return "(" + getOperationName() + " " + operand + ")";
+    }
 }

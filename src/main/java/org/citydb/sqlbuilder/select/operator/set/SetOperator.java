@@ -35,104 +35,104 @@ import java.util.List;
 import java.util.Set;
 
 public class SetOperator implements SQLStatement, SubQueryExpression {
-	private final SetOperationName operationName;
-	private final List<Select> operands;
-	private final String sqlName;
-	
-	public SetOperator(String name, List<Select> operands) {
-		if (operands == null || operands.size() < 2)
-			throw new IllegalArgumentException("A set operator requires two or more operands.");
-		
-		this.operationName = SetOperationName.GENERIC;
-		this.operands = operands;
-		this.sqlName = name;
-	}
-	
-	public SetOperator(String name, Select... operands) {
-		this(name, Arrays.asList(operands));
-	}
-	
-	public SetOperator(SetOperationName name, List<Select> operands) {
-		if (operands == null || operands.size() < 2)
-			throw new IllegalArgumentException("A set operator requires two or more operands.");
+    private final SetOperationName operationName;
+    private final List<Select> operands;
+    private final String sqlName;
 
-		this.operationName = name;
-		this.operands = operands;
-		this.sqlName = name.toString();
-	}
-	
-	public SetOperator(SetOperationName name, Select... operands) {
-		this(name, Arrays.asList(operands));
-	}
-	
-	public SetOperationName getOperationName() {
-		return operationName;
-	}
-	
-	public String getSQLName() {
-		return sqlName;
-	}
-	
-	public List<Select> getOperands() {
-		return operands;
-	}
-	
-	@Override
-	public Set<Table> getInvolvedTables() {
-		Set<Table> tables = new LinkedHashSet<Table>();
-		for (Select operand : operands)
-			tables.addAll(operand.getInvolvedTables());
-		
-		return tables;
-	}
-	
-	@Override
-	public List<PlaceHolder<?>> getInvolvedPlaceHolders() {
-		List<PlaceHolder<?>> statements = new ArrayList<PlaceHolder<?>>();
-		for (Select operand : operands)
-			statements.addAll(operand.getInvolvedPlaceHolders());
-		
-		return statements;
-	}
+    public SetOperator(String name, List<Select> operands) {
+        if (operands == null || operands.size() < 2)
+            throw new IllegalArgumentException("A set operator requires two or more operands.");
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		for (Select operand : operands)
-			statements.addAll(operand.getInvolvedPlaceHolders());
-	}
+        this.operationName = SetOperationName.GENERIC;
+        this.operands = operands;
+        this.sqlName = name;
+    }
 
-	@Override
-	public void print(PrintWriter writer, boolean indent) {
-		Iterator<Select> iter = operands.iterator();
-		while (iter.hasNext()) {
-			writer.print('(');
-			iter.next().print(writer, indent);
-			writer.print(')');
-			
-			if (iter.hasNext()) {
-				if (indent)
-					writer.println();
-				else
-					writer.print(' ');
-				
-				writer.print(sqlName);
-				
-				if (indent)
-					writer.println();
-				else
-					writer.print(' ');
-			}
-		}
+    public SetOperator(String name, Select... operands) {
+        this(name, Arrays.asList(operands));
+    }
 
-		writer.flush();
-	}
+    public SetOperator(SetOperationName name, List<Select> operands) {
+        if (operands == null || operands.size() < 2)
+            throw new IllegalArgumentException("A set operator requires two or more operands.");
 
-	@Override
-	public String toString() {
-		StringWriter writer = new StringWriter();
-		print(new PrintWriter(writer), false);
+        this.operationName = name;
+        this.operands = operands;
+        this.sqlName = name.toString();
+    }
 
-		return writer.toString();
-	}
-	
+    public SetOperator(SetOperationName name, Select... operands) {
+        this(name, Arrays.asList(operands));
+    }
+
+    public SetOperationName getOperationName() {
+        return operationName;
+    }
+
+    public String getSQLName() {
+        return sqlName;
+    }
+
+    public List<Select> getOperands() {
+        return operands;
+    }
+
+    @Override
+    public Set<Table> getInvolvedTables() {
+        Set<Table> tables = new LinkedHashSet<>();
+        for (Select operand : operands)
+            tables.addAll(operand.getInvolvedTables());
+
+        return tables;
+    }
+
+    @Override
+    public List<PlaceHolder<?>> getInvolvedPlaceHolders() {
+        List<PlaceHolder<?>> statements = new ArrayList<>();
+        for (Select operand : operands)
+            statements.addAll(operand.getInvolvedPlaceHolders());
+
+        return statements;
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        for (Select operand : operands)
+            statements.addAll(operand.getInvolvedPlaceHolders());
+    }
+
+    @Override
+    public void print(PrintWriter writer, boolean indent) {
+        Iterator<Select> iter = operands.iterator();
+        while (iter.hasNext()) {
+            writer.print('(');
+            iter.next().print(writer, indent);
+            writer.print(')');
+
+            if (iter.hasNext()) {
+                if (indent)
+                    writer.println();
+                else
+                    writer.print(' ');
+
+                writer.print(sqlName);
+
+                if (indent)
+                    writer.println();
+                else
+                    writer.print(' ');
+            }
+        }
+
+        writer.flush();
+    }
+
+    @Override
+    public String toString() {
+        StringWriter writer = new StringWriter();
+        print(new PrintWriter(writer), false);
+
+        return writer.toString();
+    }
+
 }

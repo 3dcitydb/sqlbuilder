@@ -20,37 +20,37 @@
 package org.citydb.sqlbuilder.expression;
 
 public class StringWithEscapeLiteral extends AbstractJDBCEscapeLiteral<String> {
-	private final String escapeCharacter;
+    private final String escapeCharacter;
 
-	public StringWithEscapeLiteral(String value, String escapeCharacter) {
-		super(value, JDBCEscape.ESCAPE);
-		this.escapeCharacter = escapeCharacter;
+    public StringWithEscapeLiteral(String value, String escapeCharacter) {
+        super(value, JDBCEscape.ESCAPE);
+        this.escapeCharacter = escapeCharacter;
 
-		if (escapeCharacter != null && escapeCharacter.length() > 1)
-			throw new IllegalArgumentException("Escape sequence may only contain null or one character.");		
-	}
-	
-	public StringWithEscapeLiteral(String value) {
-		this(value, null);
-	}
+        if (escapeCharacter != null && escapeCharacter.length() > 1)
+            throw new IllegalArgumentException("Escape sequence may only contain null or one character.");
+    }
 
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.STRING_WITH_ESCAPE;
-	}
+    public StringWithEscapeLiteral(String value) {
+        this(value, null);
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder().append("'").append(value.replace("'", "''")).append("'");
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.STRING_WITH_ESCAPE;
+    }
 
-		if (escapeCharacter != null) {
-			if (isUseEscapeSyntax())	
-				tmp.append(" ").append("{").append(escape).append("'").append(escapeCharacter).append("'").append("}");
-			else
-				tmp.append(" ").append("escape ").append("'").append(escapeCharacter).append("'");
-		}
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder().append("'").append(value.replace("'", "''")).append("'");
 
-		return tmp.toString();
-	}
+        if (escapeCharacter != null) {
+            if (isUseEscapeSyntax())
+                tmp.append(" ").append("{").append(escape).append("'").append(escapeCharacter).append("'").append("}");
+            else
+                tmp.append(" ").append("escape ").append("'").append(escapeCharacter).append("'");
+        }
+
+        return tmp.toString();
+    }
 
 }

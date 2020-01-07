@@ -26,123 +26,123 @@ import org.citydb.sqlbuilder.select.operator.set.SetOperator;
 import java.util.Objects;
 
 public final class Table {
-	private String name;
-	private String alias;
-	private String schema;
-	private SubQueryExpression queryExpression;
-	
-	public Table(String name, String schema, AliasGenerator aliasGenerator) {
-		this.name = name;
-		this.schema = schema;
-		
-		if (name == null || name.length() == 0)
-			throw new IllegalArgumentException("The table name shall neither be null nor empty.");
+    private String name;
+    private String alias;
+    private String schema;
+    private SubQueryExpression queryExpression;
 
-		alias = aliasGenerator.nextAlias();
-	}
+    public Table(String name, String schema, AliasGenerator aliasGenerator) {
+        this.name = name;
+        this.schema = schema;
 
-	public Table(String name, AliasGenerator aliasGenerator) {
-		this(name, null, aliasGenerator);
-	}
-	
-	public Table(Select select, AliasGenerator aliasGenerator) {
-		this("(" + select + ")", aliasGenerator);
-		queryExpression = select;
-	}
-	
-	public Table(SetOperator setOperator, AliasGenerator aliasGenerator) {
-		this("(" + setOperator + ")", aliasGenerator);
-		queryExpression = setOperator;
-	}
-	
-	public Table(String name, String schema) {
-		this(name, schema, GlobalAliasGenerator.getInstance());
-	}
-	
-	public Table(String name) {
-		this(name, GlobalAliasGenerator.getInstance());
-	}
+        if (name == null || name.length() == 0)
+            throw new IllegalArgumentException("The table name shall neither be null nor empty.");
 
-	public Table(Select select) {
-		this(select, GlobalAliasGenerator.getInstance());
-	}
-	
-	public Table(SetOperator setOperator) {
-		this(setOperator, GlobalAliasGenerator.getInstance());
-	}
+        alias = aliasGenerator.nextAlias();
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Table(String name, AliasGenerator aliasGenerator) {
+        this(name, null, aliasGenerator);
+    }
 
-	public String getSchema() {
-		return schema;
-	}
+    public Table(Select select, AliasGenerator aliasGenerator) {
+        this("(" + select + ")", aliasGenerator);
+        queryExpression = select;
+    }
 
-	public String getAlias() {
-		return alias;
-	}
+    public Table(SetOperator setOperator, AliasGenerator aliasGenerator) {
+        this("(" + setOperator + ")", aliasGenerator);
+        queryExpression = setOperator;
+    }
 
-	public boolean isSetQueryExpression() {
-		return queryExpression != null;
-	}
+    public Table(String name, String schema) {
+        this(name, schema, GlobalAliasGenerator.getInstance());
+    }
 
-	public SubQueryExpression getQueryExpression() {
-		return queryExpression;
-	}
+    public Table(String name) {
+        this(name, GlobalAliasGenerator.getInstance());
+    }
 
-	public Column getColumn(String columnName) {
-		return new Column(this, columnName);
-	}
+    public Table(Select select) {
+        this(select, GlobalAliasGenerator.getInstance());
+    }
 
-	public Column getColumn(String columnName, String asName) {
-		return new Column(this, columnName, asName);
-	}
+    public Table(SetOperator setOperator) {
+        this(setOperator, GlobalAliasGenerator.getInstance());
+    }
 
-	public Column[] getColumns(String... columnNames) {
-		Objects.requireNonNull(columnNames, "The column names array must not be null.");
-		Column[] columns = new Column[columnNames.length];
-		for (int i = 0; i < columnNames.length; i++)
-			columns[i] = getColumn(columnNames[i]);
+    public String getName() {
+        return name;
+    }
 
-		return columns;
-	}
+    public String getSchema() {
+        return schema;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder();
-		if (schema != null && schema.length() > 0)
-			tmp.append(schema).append(".");
+    public String getAlias() {
+        return alias;
+    }
 
-		return tmp.append(name).append(" ").append(alias).toString();
-	}
+    public boolean isSetQueryExpression() {
+        return queryExpression != null;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
+    public SubQueryExpression getQueryExpression() {
+        return queryExpression;
+    }
 
-		if (obj instanceof Table) {
-			Table other = (Table)obj;
-			return (schema == null ? other.schema == null : schema.toUpperCase().equals(other.schema.toUpperCase()))
-					&& name.toUpperCase().equals(other.name.toUpperCase())
-					&& alias.equals(other.alias);
-		}
+    public Column getColumn(String columnName) {
+        return new Column(this, columnName);
+    }
 
-		return false;
-	}
+    public Column getColumn(String columnName, String asName) {
+        return new Column(this, columnName, asName);
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 1;
-		
-		if (schema != null)
-			hash = hash * 31 + schema.toUpperCase().hashCode();
-		
-		hash = hash * 31 + name.toUpperCase().hashCode();
-		hash = hash * 31 + alias.hashCode();
+    public Column[] getColumns(String... columnNames) {
+        Objects.requireNonNull(columnNames, "The column names array must not be null.");
+        Column[] columns = new Column[columnNames.length];
+        for (int i = 0; i < columnNames.length; i++)
+            columns[i] = getColumn(columnNames[i]);
 
-		return hash;
-	}
+        return columns;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+        if (schema != null && schema.length() > 0)
+            tmp.append(schema).append(".");
+
+        return tmp.append(name).append(" ").append(alias).toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj instanceof Table) {
+            Table other = (Table) obj;
+            return (schema == null ? other.schema == null : schema.toUpperCase().equals(other.schema.toUpperCase()))
+                    && name.toUpperCase().equals(other.name.toUpperCase())
+                    && alias.equals(other.alias);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+
+        if (schema != null)
+            hash = hash * 31 + schema.toUpperCase().hashCode();
+
+        hash = hash * 31 + name.toUpperCase().hashCode();
+        hash = hash * 31 + alias.hashCode();
+
+        return hash;
+    }
 
 }

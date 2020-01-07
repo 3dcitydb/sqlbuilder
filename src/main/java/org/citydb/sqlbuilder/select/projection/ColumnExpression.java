@@ -28,43 +28,43 @@ import java.util.List;
 import java.util.Set;
 
 public class ColumnExpression implements ProjectionToken {
-	private final Select select;
-	private final String asName;
-	
-	public ColumnExpression(Select select, String asName) {
-		this.select = select;
-		this.asName = asName;
-	}
-	
-	public ColumnExpression(Select select) {
-		this(select, null);
-	}
+    private final Select select;
+    private final String asName;
 
-	public Select getSelect() {
-		return select;
-	}
+    public ColumnExpression(Select select, String asName) {
+        this.select = select;
+        this.asName = asName;
+    }
 
-	public String getAsName() {
-		return asName;
-	}
+    public ColumnExpression(Select select) {
+        this(select, null);
+    }
 
-	@Override
-	public void getInvolvedTables(Set<Table> tables) {
-		// nothing to do here
-	}
+    public Select getSelect() {
+        return select;
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		select.getInvolvedPlaceHolders(statements);
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder("(").append(select).append(")");
-		if (asName != null)
-			tmp.append(" as ").append(asName);
-		
-		return tmp.toString();
-	}
-	
+    public String getAsName() {
+        return asName;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        // nothing to do here
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        select.getInvolvedPlaceHolders(statements);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder("(").append(select).append(")");
+        if (asName != null)
+            tmp.append(" as ").append(asName);
+
+        return tmp.toString();
+    }
+
 }

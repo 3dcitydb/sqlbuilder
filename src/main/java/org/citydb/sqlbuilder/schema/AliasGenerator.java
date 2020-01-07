@@ -20,7 +20,7 @@
 package org.citydb.sqlbuilder.schema;
 
 public interface AliasGenerator {
-	public String currentAlias();
-	public String nextAlias();
-	public void reset();
+    String currentAlias();
+    String nextAlias();
+    void reset();
 }

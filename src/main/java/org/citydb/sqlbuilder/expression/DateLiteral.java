@@ -24,21 +24,21 @@ import java.util.GregorianCalendar;
 
 public class DateLiteral extends AbstractJDBCEscapeLiteral<Date> {
 
-	public DateLiteral(Date value) {
-		super(value, JDBCEscape.DATE);
-	}
-	
-	public DateLiteral(java.util.Date date) {
-		this(new Date(date.getTime()));
-	}
-	
-	public DateLiteral(GregorianCalendar calendar) {
-		this(calendar.getTime());
-	}
+    public DateLiteral(Date value) {
+        super(value, JDBCEscape.DATE);
+    }
 
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.DATE;
-	}
-	
+    public DateLiteral(java.util.Date date) {
+        this(new Date(date.getTime()));
+    }
+
+    public DateLiteral(GregorianCalendar calendar) {
+        this(calendar.getTime());
+    }
+
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.DATE;
+    }
+
 }

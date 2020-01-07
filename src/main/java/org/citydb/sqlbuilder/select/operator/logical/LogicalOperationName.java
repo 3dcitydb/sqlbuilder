@@ -24,21 +24,21 @@ import org.citydb.sqlbuilder.select.operator.OperationName;
 import java.util.EnumSet;
 
 public enum LogicalOperationName implements OperationName {
-	AND("and"),
-	OR("or"),
-	NOT("not");
-	
-	public static final EnumSet<LogicalOperationName> BINARY_OPERATIONS = EnumSet.of(AND, OR);	
-	public static final EnumSet<LogicalOperationName> UNARY_OPERATIONS = EnumSet.of(NOT);
-	
-	final String symbol;
-	
-	LogicalOperationName(String symbol) {
-		this.symbol = symbol;
-	}
-	
-	@Override
-	public String toString() {
-		return symbol;
-	}
+    AND("and"),
+    OR("or"),
+    NOT("not");
+
+    public static final EnumSet<LogicalOperationName> BINARY_OPERATIONS = EnumSet.of(AND, OR);
+    public static final EnumSet<LogicalOperationName> UNARY_OPERATIONS = EnumSet.of(NOT);
+
+    final String symbol;
+
+    LogicalOperationName(String symbol) {
+        this.symbol = symbol;
+    }
+
+    @Override
+    public String toString() {
+        return symbol;
+    }
 }

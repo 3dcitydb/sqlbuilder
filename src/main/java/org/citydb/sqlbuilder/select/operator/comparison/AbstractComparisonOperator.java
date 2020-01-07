@@ -28,13 +28,13 @@ import org.citydb.sqlbuilder.select.operator.Operator;
 import java.util.List;
 
 public abstract class AbstractComparisonOperator implements Operator {
-	
-	public void getInvolvedPlaceHolders(Expression operand, List<PlaceHolder<?>> statements) {
-		if (operand instanceof PlaceHolder<?>)
-			statements.add((PlaceHolder<?>)operand);
-		else if (operand instanceof ProjectionToken)
-			((ProjectionToken)operand).getInvolvedPlaceHolders(statements);
-		else if (operand instanceof SubQueryExpression)
-			((SubQueryExpression)operand).getInvolvedPlaceHolders(statements);
-	}
+
+    public void getInvolvedPlaceHolders(Expression operand, List<PlaceHolder<?>> statements) {
+        if (operand instanceof PlaceHolder<?>)
+            statements.add((PlaceHolder<?>) operand);
+        else if (operand instanceof ProjectionToken)
+            ((ProjectionToken) operand).getInvolvedPlaceHolders(statements);
+        else if (operand instanceof SubQueryExpression)
+            ((SubQueryExpression) operand).getInvolvedPlaceHolders(statements);
+    }
 }

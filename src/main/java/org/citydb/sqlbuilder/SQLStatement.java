@@ -26,6 +26,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface SQLStatement extends Printable {
-	public Set<Table> getInvolvedTables();
-	public List<PlaceHolder<?>> getInvolvedPlaceHolders();
+    Set<Table> getInvolvedTables();
+    List<PlaceHolder<?>> getInvolvedPlaceHolders();
 }

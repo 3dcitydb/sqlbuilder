@@ -24,38 +24,38 @@ import org.citydb.sqlbuilder.select.operator.OperationName;
 import java.util.EnumSet;
 
 public enum ComparisonName implements OperationName {
-	EQUAL_TO("="),
-	NOT_EQUAL_TO("<>"),
-	LESS_THAN("<"),
-	GREATER_THAN(">"),
-	LESS_THAN_OR_EQUAL_TO("<="),
-	GREATER_THAN_OR_EQUAL_TO(">="),
-	LIKE("like"),
-	NOT_LIKE("not like"),
-	BETWEEN("between"),
-	NOT_BETWEEN("not between"),
-	IN("in"),
-	NOT_IN("not in"),
-	IS_NULL("is null"),
-	IS_NOT_NULL("is not null"),
-	EXISTS("exists"),
-	NOT_EXISTS("not exists"),
-	GENERIC("generic");
-	
-	public static final EnumSet<ComparisonName> BINARY_COMPARISONS = EnumSet.of(
-			EQUAL_TO, NOT_EQUAL_TO, LESS_THAN, LESS_THAN_OR_EQUAL_TO, GREATER_THAN, GREATER_THAN_OR_EQUAL_TO);
-	
-	public static final EnumSet<ComparisonName> UNARY_COMPARISONS = EnumSet.of(
-			IS_NULL, IS_NOT_NULL, EXISTS, NOT_EXISTS);
-	
-	final String symbol;
-	
-	ComparisonName(String symbol) {
-		this.symbol = symbol;
-	}
-	
-	@Override
-	public String toString() {
-		return symbol;
-	}
+    EQUAL_TO("="),
+    NOT_EQUAL_TO("<>"),
+    LESS_THAN("<"),
+    GREATER_THAN(">"),
+    LESS_THAN_OR_EQUAL_TO("<="),
+    GREATER_THAN_OR_EQUAL_TO(">="),
+    LIKE("like"),
+    NOT_LIKE("not like"),
+    BETWEEN("between"),
+    NOT_BETWEEN("not between"),
+    IN("in"),
+    NOT_IN("not in"),
+    IS_NULL("is null"),
+    IS_NOT_NULL("is not null"),
+    EXISTS("exists"),
+    NOT_EXISTS("not exists"),
+    GENERIC("generic");
+
+    public static final EnumSet<ComparisonName> BINARY_COMPARISONS = EnumSet.of(
+            EQUAL_TO, NOT_EQUAL_TO, LESS_THAN, LESS_THAN_OR_EQUAL_TO, GREATER_THAN, GREATER_THAN_OR_EQUAL_TO);
+
+    public static final EnumSet<ComparisonName> UNARY_COMPARISONS = EnumSet.of(
+            IS_NULL, IS_NOT_NULL, EXISTS, NOT_EXISTS);
+
+    final String symbol;
+
+    ComparisonName(String symbol) {
+        this.symbol = symbol;
+    }
+
+    @Override
+    public String toString() {
+        return symbol;
+    }
 }

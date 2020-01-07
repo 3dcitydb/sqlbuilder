@@ -24,25 +24,25 @@ import org.citydb.sqlbuilder.select.PredicateToken;
 import java.util.List;
 
 public class LogicalOperationFactory {
-	
-	public static BinaryLogicalOperator AND(List<PredicateToken> operands) {
-		return new BinaryLogicalOperator(LogicalOperationName.AND, operands);
-	}
-	
-	public static BinaryLogicalOperator AND(PredicateToken... operands) {
-		return new BinaryLogicalOperator(LogicalOperationName.AND, operands);
-	}
-	
-	public static BinaryLogicalOperator OR(List<PredicateToken> operands) {
-		return new BinaryLogicalOperator(LogicalOperationName.OR, operands);
-	}
-	
-	public static BinaryLogicalOperator OR(PredicateToken... operands) {
-		return new BinaryLogicalOperator(LogicalOperationName.OR, operands);
-	}
-	
-	public static NotOperator NOT(PredicateToken operand) {
-		return new NotOperator(operand);
-	}
-	
+
+    public static BinaryLogicalOperator AND(List<PredicateToken> operands) {
+        return new BinaryLogicalOperator(LogicalOperationName.AND, operands);
+    }
+
+    public static BinaryLogicalOperator AND(PredicateToken... operands) {
+        return new BinaryLogicalOperator(LogicalOperationName.AND, operands);
+    }
+
+    public static BinaryLogicalOperator OR(List<PredicateToken> operands) {
+        return new BinaryLogicalOperator(LogicalOperationName.OR, operands);
+    }
+
+    public static BinaryLogicalOperator OR(PredicateToken... operands) {
+        return new BinaryLogicalOperator(LogicalOperationName.OR, operands);
+    }
+
+    public static NotOperator NOT(PredicateToken operand) {
+        return new NotOperator(operand);
+    }
+
 }

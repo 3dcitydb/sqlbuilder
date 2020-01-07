@@ -22,19 +22,19 @@ package org.citydb.sqlbuilder.select.join;
 import org.citydb.sqlbuilder.select.operator.OperationName;
 
 public enum JoinName implements OperationName {
-	INNER_JOIN("inner join"),
-	LEFT_JOIN("left join"),
-	RIGHT_JOIN("right join"),
-	FULL_JOIN("full join");
-	
-	final String symbol;
-	
-	JoinName(String symbol) {
-		this.symbol = symbol;
-	}
-	
-	@Override
-	public String toString() {
-		return symbol;
-	}
+    INNER_JOIN("inner join"),
+    LEFT_JOIN("left join"),
+    RIGHT_JOIN("right join"),
+    FULL_JOIN("full join");
+
+    final String symbol;
+
+    JoinName(String symbol) {
+        this.symbol = symbol;
+    }
+
+    @Override
+    public String toString() {
+        return symbol;
+    }
 }

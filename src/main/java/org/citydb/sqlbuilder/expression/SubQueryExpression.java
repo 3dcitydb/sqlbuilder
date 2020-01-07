@@ -22,5 +22,5 @@ package org.citydb.sqlbuilder.expression;
 import java.util.List;
 
 public interface SubQueryExpression extends Expression {
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements);
+    void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements);
 }

@@ -21,13 +21,13 @@ package org.citydb.sqlbuilder.expression;
 
 public class LongLiteral extends AbstractSQLLiteral<Long> {
 
-	public LongLiteral(long value) {
-		super(value);
-	}
-	
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.LONG;
-	}
-	
+    public LongLiteral(long value) {
+        super(value);
+    }
+
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.LONG;
+    }
+
 }

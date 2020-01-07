@@ -23,34 +23,34 @@ import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.select.orderBy.SortOrder;
 
 public class OrderByToken {
-	private final Column column;
-	private final SortOrder sortOrder;
-		
-	public OrderByToken(Column column, SortOrder sortOrder) {
-		this.column = column;
-		this.sortOrder = sortOrder; 
-	}
-	
-	public OrderByToken(Column column) {
-		this(column, SortOrder.ASCENDING);
-	}
-	
-	public Column getColumn() {
-		return column;
-	}
+    private final Column column;
+    private final SortOrder sortOrder;
 
-	public SortOrder getSortOrder() {
-		return sortOrder;
-	}
+    public OrderByToken(Column column, SortOrder sortOrder) {
+        this.column = column;
+        this.sortOrder = sortOrder;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder();
-		tmp.append(column.toString(false));
-		if (sortOrder != SortOrder.ASCENDING)
-			tmp.append(" desc");
-		
-		return tmp.toString();
-	}
-	
+    public OrderByToken(Column column) {
+        this(column, SortOrder.ASCENDING);
+    }
+
+    public Column getColumn() {
+        return column;
+    }
+
+    public SortOrder getSortOrder() {
+        return sortOrder;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+        tmp.append(column.toString(false));
+        if (sortOrder != SortOrder.ASCENDING)
+            tmp.append(" desc");
+
+        return tmp.toString();
+    }
+
 }

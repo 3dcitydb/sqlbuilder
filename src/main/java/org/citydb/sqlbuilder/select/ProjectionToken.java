@@ -26,6 +26,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface ProjectionToken {
-	public void getInvolvedTables(Set<Table> tables);
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements);
+    void getInvolvedTables(Set<Table> tables);
+    void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements);
 }

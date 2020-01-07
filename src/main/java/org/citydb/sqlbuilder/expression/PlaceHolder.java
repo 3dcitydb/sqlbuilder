@@ -20,27 +20,27 @@
 package org.citydb.sqlbuilder.expression;
 
 public class PlaceHolder<T> extends AbstractSQLLiteral<T> {
-	
-	public PlaceHolder() {
-		super(null);
-	}
-	
-	public PlaceHolder(T value) {
-		super(value);
-	}
-	
-	public void setValue(T value) {
-		this.value = value;
-	}
-	
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.PLACE_HOLDER;
-	}
-	
-	@Override
-	public String toString() {
-		return "?";
-	}
-	
+
+    public PlaceHolder() {
+        super(null);
+    }
+
+    public PlaceHolder(T value) {
+        super(value);
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.PLACE_HOLDER;
+    }
+
+    @Override
+    public String toString() {
+        return "?";
+    }
+
 }

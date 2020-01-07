@@ -21,18 +21,18 @@ package org.citydb.sqlbuilder.expression;
 
 public class NullLiteral extends AbstractSQLLiteral<Void> {
 
-	public NullLiteral() {
-		super(null);
-	}
+    public NullLiteral() {
+        super(null);
+    }
 
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.NULL;
-	}
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.NULL;
+    }
 
-	@Override
-	public String toString() {
-		return "null";
-	}
+    @Override
+    public String toString() {
+        return "null";
+    }
 
 }

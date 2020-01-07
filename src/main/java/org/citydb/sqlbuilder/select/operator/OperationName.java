@@ -20,5 +20,4 @@
 package org.citydb.sqlbuilder.select.operator;
 
 public interface OperationName {
-
 }

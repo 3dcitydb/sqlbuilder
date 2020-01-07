@@ -26,25 +26,25 @@ import java.util.GregorianCalendar;
 
 public class TimestampLiteral extends AbstractJDBCEscapeLiteral<Timestamp> {
 
-	public TimestampLiteral(Timestamp value) {
-		super(value, JDBCEscape.TIMESTAMP);
-	}
-	
-	public TimestampLiteral(Date value) {
-		this(new Timestamp(value.getTime()));
-	}
-	
-	public TimestampLiteral(Calendar calendar) {
-		this(calendar.getTime());
-	}
-	
-	public TimestampLiteral(GregorianCalendar calendar) {
-		this(calendar.getTime());
-	}
+    public TimestampLiteral(Timestamp value) {
+        super(value, JDBCEscape.TIMESTAMP);
+    }
 
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.TIMESTAMP;
-	}
-	
+    public TimestampLiteral(Date value) {
+        this(new Timestamp(value.getTime()));
+    }
+
+    public TimestampLiteral(Calendar calendar) {
+        this(calendar.getTime());
+    }
+
+    public TimestampLiteral(GregorianCalendar calendar) {
+        this(calendar.getTime());
+    }
+
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.TIMESTAMP;
+    }
+
 }

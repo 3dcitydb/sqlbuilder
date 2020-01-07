@@ -22,50 +22,50 @@ package org.citydb.sqlbuilder.schema;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class GlobalAliasGenerator implements AliasGenerator {
-	private static GlobalAliasGenerator instance = null;
+    private static GlobalAliasGenerator instance = null;
 
-	private final ReentrantLock lock = new ReentrantLock();
-	private final AliasGenerator aliasGenerator = new DefaultAliasGenerator();
+    private final ReentrantLock lock = new ReentrantLock();
+    private final AliasGenerator aliasGenerator = new DefaultAliasGenerator();
 
-	private GlobalAliasGenerator() {
-		// just to thwart instantiation
-	}
+    private GlobalAliasGenerator() {
+        // just to thwart instantiation
+    }
 
-	public static synchronized GlobalAliasGenerator getInstance() {
-		if (instance == null)
-			instance = new GlobalAliasGenerator();
+    public static synchronized GlobalAliasGenerator getInstance() {
+        if (instance == null)
+            instance = new GlobalAliasGenerator();
 
-		return instance;
-	}
+        return instance;
+    }
 
-	@Override
-	public String currentAlias() {
-		lock.lock();
-		try {
-			return aliasGenerator.currentAlias();
-		} finally {
-			lock.unlock();
-		}
-	}
+    @Override
+    public String currentAlias() {
+        lock.lock();
+        try {
+            return aliasGenerator.currentAlias();
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	@Override
-	public String nextAlias() {
-		lock.lock();
-		try {
-			return aliasGenerator.nextAlias();
-		} finally {
-			lock.unlock();
-		}
-	}
+    @Override
+    public String nextAlias() {
+        lock.lock();
+        try {
+            return aliasGenerator.nextAlias();
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	@Override
-	public void reset() {
-		lock.lock();
-		try {
-			aliasGenerator.reset();
-		} finally {
-			lock.unlock();
-		}
-	}
+    @Override
+    public void reset() {
+        lock.lock();
+        try {
+            aliasGenerator.reset();
+        } finally {
+            lock.unlock();
+        }
+    }
 
 }

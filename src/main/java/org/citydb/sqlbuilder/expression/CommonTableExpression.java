@@ -30,59 +30,59 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommonTableExpression {
-	private final String name;
-	private final SubQueryExpression queryExpression;
-	private final List<String> columnNames;
+    private final String name;
+    private final SubQueryExpression queryExpression;
+    private final List<String> columnNames;
 
-	private CommonTableExpression(String name, SubQueryExpression queryExpression, List<String> columnNames) {
-		this.name = name;
-		this.queryExpression = queryExpression;
-		this.columnNames = columnNames;
-	}
-	
-	public CommonTableExpression(String name, Select select, String... columnNames) {
-		this(name, select, Arrays.asList(columnNames));
-	}
-	
-	public CommonTableExpression(String name, SetOperator setOperator, String... columnNames) {
-		this(name, setOperator, Arrays.asList(columnNames));
-	}
-	
-	public String getName() {
-		return name;
-	}
+    private CommonTableExpression(String name, SubQueryExpression queryExpression, List<String> columnNames) {
+        this.name = name;
+        this.queryExpression = queryExpression;
+        this.columnNames = columnNames;
+    }
 
-	public SubQueryExpression getQueryExpression() {
-		return queryExpression;
-	}
-	
-	public Table asTable(AliasGenerator aliasGenerator) {
-		return new Table(name, aliasGenerator);
-	}
-	
-	public Table asTable() {
-		return new Table(name, GlobalAliasGenerator.getInstance());
-	}
-	
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		queryExpression.getInvolvedPlaceHolders(statements);
-	}
+    public CommonTableExpression(String name, Select select, String... columnNames) {
+        this(name, select, Arrays.asList(columnNames));
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder(name);
+    public CommonTableExpression(String name, SetOperator setOperator, String... columnNames) {
+        this(name, setOperator, Arrays.asList(columnNames));
+    }
 
-		if (columnNames != null && !columnNames.isEmpty()) {
-			builder.append(" (")
-			.append(columnNames.stream().collect(Collectors.joining(", ")))
-			.append(")");
-		}
+    public String getName() {
+        return name;
+    }
 
-		builder.append(" as (")
-		.append(queryExpression)
-		.append(")");
+    public SubQueryExpression getQueryExpression() {
+        return queryExpression;
+    }
 
-		return builder.toString();
-	}
+    public Table asTable(AliasGenerator aliasGenerator) {
+        return new Table(name, aliasGenerator);
+    }
+
+    public Table asTable() {
+        return new Table(name, GlobalAliasGenerator.getInstance());
+    }
+
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        queryExpression.getInvolvedPlaceHolders(statements);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(name);
+
+        if (columnNames != null && !columnNames.isEmpty()) {
+            builder.append(" (")
+                    .append(columnNames.stream().collect(Collectors.joining(", ")))
+                    .append(")");
+        }
+
+        builder.append(" as (")
+                .append(queryExpression)
+                .append(")");
+
+        return builder.toString();
+    }
 
 }

@@ -22,94 +22,94 @@ package org.citydb.sqlbuilder.expression;
 import java.util.List;
 
 public class LiteralList implements SubQueryExpression {
-	private final AbstractSQLLiteral<?>[] literals;
+    private final AbstractSQLLiteral<?>[] literals;
 
-	public LiteralList(boolean... literals) {
-		this.literals = new BooleanLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new BooleanLiteral(literals[i]);	
-	}
-	
-	public LiteralList(Boolean... literals) {
-		this.literals = new BooleanLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new BooleanLiteral(literals[i]);	
-	}
+    public LiteralList(boolean... literals) {
+        this.literals = new BooleanLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new BooleanLiteral(literals[i]);
+    }
 
-	public LiteralList(double... literals) {
-		this.literals = new DoubleLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new DoubleLiteral(literals[i]);	
-	}
-	
-	public LiteralList(Double... literals) {
-		this.literals = new DoubleLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new DoubleLiteral(literals[i]);	
-	}
+    public LiteralList(Boolean... literals) {
+        this.literals = new BooleanLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new BooleanLiteral(literals[i]);
+    }
 
-	public LiteralList(int... literals) {
-		this.literals = new IntegerLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new IntegerLiteral(literals[i]);	
-	}
-	
-	public LiteralList(Integer... literals) {
-		this.literals = new IntegerLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new IntegerLiteral(literals[i]);	
-	}
+    public LiteralList(double... literals) {
+        this.literals = new DoubleLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new DoubleLiteral(literals[i]);
+    }
 
-	public LiteralList(long... literals) {
-		this.literals = new LongLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new LongLiteral(literals[i]);	
-	}
-	
-	public LiteralList(Long... literals) {
-		this.literals = new LongLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new LongLiteral(literals[i]);	
-	}
+    public LiteralList(Double... literals) {
+        this.literals = new DoubleLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new DoubleLiteral(literals[i]);
+    }
 
-	public LiteralList(String... literals) {
-		this.literals = new StringLiteral[literals.length];
-		for (int i = 0; i < literals.length; i++)
-			this.literals[i] = new StringLiteral(literals[i]);	
-	}
+    public LiteralList(int... literals) {
+        this.literals = new IntegerLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new IntegerLiteral(literals[i]);
+    }
 
-	@SafeVarargs
-	public <T> LiteralList(PlaceHolder<T>... literals) {
-		this.literals = new PlaceHolder[literals.length];
-		System.arraycopy(literals, 0, this.literals, 0, literals.length);
-	}
+    public LiteralList(Integer... literals) {
+        this.literals = new IntegerLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new IntegerLiteral(literals[i]);
+    }
 
-	public AbstractSQLLiteral<?>[] getLiterals() {
-		return literals;
-	}
+    public LiteralList(long... literals) {
+        this.literals = new LongLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new LongLiteral(literals[i]);
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		for (AbstractSQLLiteral<?> literal : literals) {
-			if (literal instanceof PlaceHolder<?>)
-				statements.add((PlaceHolder<?>)literal);
-			else
-				break;
-		}
-	}
+    public LiteralList(Long... literals) {
+        this.literals = new LongLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new LongLiteral(literals[i]);
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder();
+    public LiteralList(String... literals) {
+        this.literals = new StringLiteral[literals.length];
+        for (int i = 0; i < literals.length; i++)
+            this.literals[i] = new StringLiteral(literals[i]);
+    }
 
-		for (int i = 0; i < literals.length; i++) {
-			tmp.append(literals[i]);
-			if (i < literals.length - 1)
-				tmp.append(", ");
-		}
+    @SafeVarargs
+    public <T> LiteralList(PlaceHolder<T>... literals) {
+        this.literals = new PlaceHolder[literals.length];
+        System.arraycopy(literals, 0, this.literals, 0, literals.length);
+    }
 
-		return tmp.toString();
-	}
+    public AbstractSQLLiteral<?>[] getLiterals() {
+        return literals;
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        for (AbstractSQLLiteral<?> literal : literals) {
+            if (literal instanceof PlaceHolder<?>)
+                statements.add((PlaceHolder<?>) literal);
+            else
+                break;
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+
+        for (int i = 0; i < literals.length; i++) {
+            tmp.append(literals[i]);
+            if (i < literals.length - 1)
+                tmp.append(", ");
+        }
+
+        return tmp.toString();
+    }
 
 
 }

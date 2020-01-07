@@ -25,58 +25,58 @@ import org.citydb.sqlbuilder.expression.PlaceHolder;
 import java.util.List;
 
 public class BetweenOperator extends AbstractComparisonOperator {
-	private final Expression operand;
-	private final Expression lowerBound;
-	private final Expression upperBound;
+    private final Expression operand;
+    private final Expression lowerBound;
+    private final Expression upperBound;
 
-	private boolean negate;
+    private boolean negate;
 
-	public BetweenOperator(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
-		this.operand = operand;
-		this.lowerBound = lowerBound;
-		this.upperBound = upperBound;
-		this.negate = negate;
-	}
-	
-	public BetweenOperator(Expression operand, Expression lowerBound, Expression upperBound) {
-		this(operand, lowerBound, upperBound, false);
-	}
+    public BetweenOperator(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
+        this.operand = operand;
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+        this.negate = negate;
+    }
 
-	public boolean isNegate() {
-		return negate;
-	}
+    public BetweenOperator(Expression operand, Expression lowerBound, Expression upperBound) {
+        this(operand, lowerBound, upperBound, false);
+    }
 
-	public void setNegate(boolean negate) {
-		this.negate = negate;
-	}
+    public boolean isNegate() {
+        return negate;
+    }
 
-	public Expression getOperand() {
-		return operand;
-	}
+    public void setNegate(boolean negate) {
+        this.negate = negate;
+    }
 
-	public Expression getLowerBound() {
-		return lowerBound;
-	}
+    public Expression getOperand() {
+        return operand;
+    }
 
-	public Expression getUpperBound() {
-		return upperBound;
-	}
+    public Expression getLowerBound() {
+        return lowerBound;
+    }
 
-	@Override
-	public ComparisonName getOperationName() {
-		return !negate ? ComparisonName.BETWEEN : ComparisonName.NOT_BETWEEN;
-	}
+    public Expression getUpperBound() {
+        return upperBound;
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		getInvolvedPlaceHolders(operand, statements);
-		getInvolvedPlaceHolders(lowerBound, statements);
-		getInvolvedPlaceHolders(upperBound, statements);
-	}
+    @Override
+    public ComparisonName getOperationName() {
+        return !negate ? ComparisonName.BETWEEN : ComparisonName.NOT_BETWEEN;
+    }
 
-	@Override
-	public String toString() {
-		return String.valueOf(getOperand()) + " " + getOperationName() + " " + lowerBound + " and " + upperBound;
-	}
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        getInvolvedPlaceHolders(operand, statements);
+        getInvolvedPlaceHolders(lowerBound, statements);
+        getInvolvedPlaceHolders(upperBound, statements);
+    }
+
+    @Override
+    public String toString() {
+        return getOperand() + " " + getOperationName() + " " + lowerBound + " and " + upperBound;
+    }
 
 }

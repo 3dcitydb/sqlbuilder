@@ -21,18 +21,18 @@ package org.citydb.sqlbuilder.expression;
 
 public class BooleanLiteral extends AbstractSQLLiteral<Boolean> {
 
-	public BooleanLiteral(boolean value) {
-		super(value);
-	}
+    public BooleanLiteral(boolean value) {
+        super(value);
+    }
 
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.BOOLEAN;
-	}
-	
-	@Override
-	public String toString() {
-		return value ? "1" : "0";
-	}
-	
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.BOOLEAN;
+    }
+
+    @Override
+    public String toString() {
+        return value ? "1" : "0";
+    }
+
 }

@@ -25,36 +25,36 @@ import java.util.List;
 
 public class SetOperationFactory {
 
-	public static SetOperator intersect(List<Select> operands) {
-		return new SetOperator(SetOperationName.INTERSECT, operands);
-	}
-	
-	public static SetOperator intersect(Select... operands) {
-		return new SetOperator(SetOperationName.INTERSECT, operands);
-	}
+    public static SetOperator intersect(List<Select> operands) {
+        return new SetOperator(SetOperationName.INTERSECT, operands);
+    }
 
-	public static SetOperator union(List<Select> operands) {
-		return new SetOperator(SetOperationName.UNION, operands);
-	}
+    public static SetOperator intersect(Select... operands) {
+        return new SetOperator(SetOperationName.INTERSECT, operands);
+    }
 
-	public static SetOperator union(Select... operands) {
-		return new SetOperator(SetOperationName.UNION, operands);
-	}
+    public static SetOperator union(List<Select> operands) {
+        return new SetOperator(SetOperationName.UNION, operands);
+    }
 
-	public static SetOperator unionAll(List<Select> operands) {
-		return new SetOperator(SetOperationName.UNION_ALL, operands);
-	}
+    public static SetOperator union(Select... operands) {
+        return new SetOperator(SetOperationName.UNION, operands);
+    }
 
-	public static SetOperator unionAll(Select... operands) {
-		return new SetOperator(SetOperationName.UNION_ALL, operands);
-	}
+    public static SetOperator unionAll(List<Select> operands) {
+        return new SetOperator(SetOperationName.UNION_ALL, operands);
+    }
 
-	public static SetOperator generic(String sqlName, List<Select> operands) {
-		return new SetOperator(sqlName, operands);
-	}
-	
-	public static SetOperator generic(String sqlName, Select... operands) {
-		return new SetOperator(sqlName, operands);
-	}
-	
+    public static SetOperator unionAll(Select... operands) {
+        return new SetOperator(SetOperationName.UNION_ALL, operands);
+    }
+
+    public static SetOperator generic(String sqlName, List<Select> operands) {
+        return new SetOperator(sqlName, operands);
+    }
+
+    public static SetOperator generic(String sqlName, Select... operands) {
+        return new SetOperator(sqlName, operands);
+    }
+
 }

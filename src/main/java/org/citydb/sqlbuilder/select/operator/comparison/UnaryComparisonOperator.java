@@ -25,48 +25,48 @@ import org.citydb.sqlbuilder.expression.PlaceHolder;
 import java.util.List;
 
 public class UnaryComparisonOperator extends AbstractComparisonOperator {
-	private final Expression operand;
-	private final ComparisonName name;
+    private final Expression operand;
+    private final ComparisonName name;
 
-	private boolean isPrefix;
+    private boolean isPrefix;
 
-	public UnaryComparisonOperator(Expression operand, ComparisonName name) {
-		if (!ComparisonName.UNARY_COMPARISONS.contains(name))
-			throw new IllegalArgumentException("Allowed binary comparisons only include " + ComparisonName.UNARY_COMPARISONS);
+    public UnaryComparisonOperator(Expression operand, ComparisonName name) {
+        if (!ComparisonName.UNARY_COMPARISONS.contains(name))
+            throw new IllegalArgumentException("Allowed binary comparisons only include " + ComparisonName.UNARY_COMPARISONS);
 
-		this.operand = operand;
-		this.name = name;
+        this.operand = operand;
+        this.name = name;
 
-		isPrefix = (name == ComparisonName.EXISTS) || (name == ComparisonName.NOT_EXISTS);
-	}
+        isPrefix = (name == ComparisonName.EXISTS) || (name == ComparisonName.NOT_EXISTS);
+    }
 
-	public Expression getOperand() {
-		return operand;
-	}
+    public Expression getOperand() {
+        return operand;
+    }
 
-	@Override
-	public ComparisonName getOperationName() {
-		return name;
-	}
+    @Override
+    public ComparisonName getOperationName() {
+        return name;
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		getInvolvedPlaceHolders(operand, statements);
-	}
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        getInvolvedPlaceHolders(operand, statements);
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder();
-		if (isPrefix)
-			tmp.append(getOperationName()).append(" (");
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+        if (isPrefix)
+            tmp.append(getOperationName()).append(" (");
 
-		tmp.append(operand);
+        tmp.append(operand);
 
-		if (!isPrefix)
-			tmp.append(" ").append(getOperationName());
-		else
-			tmp.append(")");
+        if (!isPrefix)
+            tmp.append(" ").append(getOperationName());
+        else
+            tmp.append(")");
 
-		return tmp.toString();
-	}
+        return tmp.toString();
+    }
 }

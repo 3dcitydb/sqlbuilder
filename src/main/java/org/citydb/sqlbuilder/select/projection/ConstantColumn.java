@@ -31,75 +31,75 @@ import java.util.List;
 import java.util.Set;
 
 public class ConstantColumn implements ProjectionToken, Expression {
-	private final AbstractSQLLiteral<?> literal;
-	private final String asName;
-	private Table table;
-	
-	public ConstantColumn(AbstractSQLLiteral<?> literal, String asName) {
-		this.literal = literal;
-		this.asName = asName;
-	}
-	
-	public ConstantColumn(AbstractSQLLiteral<?> literal) {
-		this(literal, null);
-	}
-	
-	public ConstantColumn(int value, String asName) {
-		this(new IntegerLiteral(value), asName);
-	}
-	
-	public ConstantColumn(int value) {
-		this(new IntegerLiteral(value), null);
-	}
-	
-	public ConstantColumn(String value, String asName) {
-		this(new StringLiteral(value), asName);
-	}
-	
-	public ConstantColumn(String value) {
-		this(new StringLiteral(value), null);
-	}
-	
-	public AbstractSQLLiteral<?> getLiteral() {
-		return literal;
-	}
+    private final AbstractSQLLiteral<?> literal;
+    private final String asName;
+    private Table table;
 
-	public String getAsName() {
-		return asName;
-	}
-	
-	public ConstantColumn withFromTable(Table table) {
-		this.table = table;
-		return this;
-	}
-	
-	public Table getTable() {
-		return table;
-	}
+    public ConstantColumn(AbstractSQLLiteral<?> literal, String asName) {
+        this.literal = literal;
+        this.asName = asName;
+    }
 
-	@Override
-	public void getInvolvedTables(Set<Table> tables) {
-		if (table != null)
-			tables.add(table);
-	}
+    public ConstantColumn(AbstractSQLLiteral<?> literal) {
+        this(literal, null);
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		if (literal instanceof PlaceHolder<?>)
-			statements.add((PlaceHolder<?>)literal);
-		
-		if (table != null && table.isSetQueryExpression())
-			table.getQueryExpression().getInvolvedPlaceHolders(statements);
-	}
+    public ConstantColumn(int value, String asName) {
+        this(new IntegerLiteral(value), asName);
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder();
-		tmp.append(literal);
-		if (asName != null)
-			tmp.append(" as ").append(asName);
-		
-		return tmp.toString();
-	}
+    public ConstantColumn(int value) {
+        this(new IntegerLiteral(value), null);
+    }
+
+    public ConstantColumn(String value, String asName) {
+        this(new StringLiteral(value), asName);
+    }
+
+    public ConstantColumn(String value) {
+        this(new StringLiteral(value), null);
+    }
+
+    public AbstractSQLLiteral<?> getLiteral() {
+        return literal;
+    }
+
+    public String getAsName() {
+        return asName;
+    }
+
+    public ConstantColumn withFromTable(Table table) {
+        this.table = table;
+        return this;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        if (table != null)
+            tables.add(table);
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        if (literal instanceof PlaceHolder<?>)
+            statements.add((PlaceHolder<?>) literal);
+
+        if (table != null && table.isSetQueryExpression())
+            table.getQueryExpression().getInvolvedPlaceHolders(statements);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+        tmp.append(literal);
+        if (asName != null)
+            tmp.append(" as ").append(asName);
+
+        return tmp.toString();
+    }
 
 }

@@ -20,14 +20,14 @@
 package org.citydb.sqlbuilder.expression;
 
 public enum SQLLiteralType {
-	STRING,
-	STRING_WITH_ESCAPE,
-	DOUBLE,
-	INTEGER,
-	LONG,
-	DATE,
-	TIMESTAMP,
-	BOOLEAN,
-	NULL,
-	PLACE_HOLDER
+    STRING,
+    STRING_WITH_ESCAPE,
+    DOUBLE,
+    INTEGER,
+    LONG,
+    DATE,
+    TIMESTAMP,
+    BOOLEAN,
+    NULL,
+    PLACE_HOLDER
 }

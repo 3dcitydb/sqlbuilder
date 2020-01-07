@@ -27,68 +27,68 @@ import org.citydb.sqlbuilder.select.operator.OperationName;
 import java.util.List;
 
 public class LikeOperator extends AbstractComparisonOperator {
-	private final Expression operand;
-	private final Expression pattern;
-	private final StringLiteral escapeCharacter;
+    private final Expression operand;
+    private final Expression pattern;
+    private final StringLiteral escapeCharacter;
 
-	private boolean negate;
-	
-	public LikeOperator(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
-		if (escapeCharacter != null && escapeCharacter.getValue() != null && escapeCharacter.getValue().length() > 1)
-			throw new IllegalArgumentException("Escape sequence may only contain null or one character.");
-		
-		this.operand = operand;
-		this.pattern = pattern;
-		this.escapeCharacter = escapeCharacter;
-		this.negate = negate;
-	}
-	
-	public LikeOperator(Expression operand, Expression pattern, StringLiteral escapeCharacter) {
-		this(operand, pattern, escapeCharacter, false);
-	}
-	
-	public LikeOperator(Expression operand, Expression pattern, boolean negate) {
-		this(operand, pattern, null, negate);
-	}
-	
-	public LikeOperator(Expression operand, Expression pattern) {
-		this(operand, pattern, null, false);
-	}
-	
-	public Expression getOperand() {
-		return operand;
-	}
+    private boolean negate;
 
-	public Expression getPattern() {
-		return pattern;
-	}
+    public LikeOperator(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
+        if (escapeCharacter != null && escapeCharacter.getValue() != null && escapeCharacter.getValue().length() > 1)
+            throw new IllegalArgumentException("Escape sequence may only contain null or one character.");
 
-	public StringLiteral getEscapeCharacter() {
-		return escapeCharacter;
-	}
-	
-	public boolean isNegate() {
-		return negate;
-	}
+        this.operand = operand;
+        this.pattern = pattern;
+        this.escapeCharacter = escapeCharacter;
+        this.negate = negate;
+    }
 
-	@Override
-	public OperationName getOperationName() {
-		return !negate ? ComparisonName.LIKE : ComparisonName.NOT_LIKE;
-	}
+    public LikeOperator(Expression operand, Expression pattern, StringLiteral escapeCharacter) {
+        this(operand, pattern, escapeCharacter, false);
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		getInvolvedPlaceHolders(operand, statements);
-		getInvolvedPlaceHolders(pattern, statements);
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder().append(operand).append(" ").append(getOperationName()).append(" ").append(pattern);
-		if (escapeCharacter != null)
-			tmp.append(" escape ").append(escapeCharacter);
-			
-		return tmp.toString();
-	}
+    public LikeOperator(Expression operand, Expression pattern, boolean negate) {
+        this(operand, pattern, null, negate);
+    }
+
+    public LikeOperator(Expression operand, Expression pattern) {
+        this(operand, pattern, null, false);
+    }
+
+    public Expression getOperand() {
+        return operand;
+    }
+
+    public Expression getPattern() {
+        return pattern;
+    }
+
+    public StringLiteral getEscapeCharacter() {
+        return escapeCharacter;
+    }
+
+    public boolean isNegate() {
+        return negate;
+    }
+
+    @Override
+    public OperationName getOperationName() {
+        return !negate ? ComparisonName.LIKE : ComparisonName.NOT_LIKE;
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        getInvolvedPlaceHolders(operand, statements);
+        getInvolvedPlaceHolders(pattern, statements);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder().append(operand).append(" ").append(getOperationName()).append(" ").append(pattern);
+        if (escapeCharacter != null)
+            tmp.append(" escape ").append(escapeCharacter);
+
+        return tmp.toString();
+    }
 
 }

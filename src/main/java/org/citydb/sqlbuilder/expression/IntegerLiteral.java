@@ -21,13 +21,13 @@ package org.citydb.sqlbuilder.expression;
 
 public class IntegerLiteral extends AbstractSQLLiteral<Integer> {
 
-	public IntegerLiteral(int value) {
-		super(value);
-	}
-	
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.INTEGER;
-	}
-	
+    public IntegerLiteral(int value) {
+        super(value);
+    }
+
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.INTEGER;
+    }
+
 }

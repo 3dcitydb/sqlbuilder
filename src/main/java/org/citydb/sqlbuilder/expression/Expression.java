@@ -20,5 +20,4 @@
 package org.citydb.sqlbuilder.expression;
 
 public interface Expression {
-	
 }

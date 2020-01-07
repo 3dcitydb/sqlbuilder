@@ -22,19 +22,19 @@ package org.citydb.sqlbuilder.select;
 import org.citydb.sqlbuilder.schema.Column;
 
 public class GroupByToken {
-	private final Column column;
+    private final Column column;
 
-	public GroupByToken(Column column) {
-		this.column = column;
-	}
+    public GroupByToken(Column column) {
+        this.column = column;
+    }
 
-	public Column getColumn() {
-		return column;
-	}
+    public Column getColumn() {
+        return column;
+    }
 
-	@Override
-	public String toString() {
-		return column.toString(false);
-	}
+    @Override
+    public String toString() {
+        return column.toString(false);
+    }
 
 }

@@ -20,24 +20,24 @@
 package org.citydb.sqlbuilder.expression;
 
 public enum JDBCEscape {
-	SCALAR_FUNCTION("fn "),
-	DATE("d "),
-	TIME("t "),
-	TIMESTAMP("ts "),
-	OUTER_JOIN("oj "),
-	STORED_PROCEDURE("call "),
-	STORED_PROCEDURE_WITH_RETURN("?= call "),
-	ESCAPE("escape ");
+    SCALAR_FUNCTION("fn "),
+    DATE("d "),
+    TIME("t "),
+    TIMESTAMP("ts "),
+    OUTER_JOIN("oj "),
+    STORED_PROCEDURE("call "),
+    STORED_PROCEDURE_WITH_RETURN("?= call "),
+    ESCAPE("escape ");
 
-	final String escape;
-	
-	JDBCEscape(String escape) {
-		this.escape = escape;
-	}
+    final String escape;
 
-	@Override
-	public String toString() {
-		return escape;
-	}
-	
+    JDBCEscape(String escape) {
+        this.escape = escape;
+    }
+
+    @Override
+    public String toString() {
+        return escape;
+    }
+
 }

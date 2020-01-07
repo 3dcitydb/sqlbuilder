@@ -21,13 +21,13 @@ package org.citydb.sqlbuilder.expression;
 
 public class DoubleLiteral extends AbstractSQLLiteral<Double> {
 
-	public DoubleLiteral(double value) {
-		super(value);
-	}
-	
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.DOUBLE;
-	}
-	
+    public DoubleLiteral(double value) {
+        super(value);
+    }
+
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.DOUBLE;
+    }
+
 }

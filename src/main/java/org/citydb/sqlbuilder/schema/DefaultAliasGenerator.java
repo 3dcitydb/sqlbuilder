@@ -20,43 +20,43 @@
 package org.citydb.sqlbuilder.schema;
 
 public class DefaultAliasGenerator implements AliasGenerator {
-	char character = 'a';
-	int counter = 0;
+    char character = 'a';
+    int counter = 0;
 
-	@Override
-	public String currentAlias() {
-		StringBuilder alias = new StringBuilder(String.valueOf(character));
-		if (counter > 0)
-			alias.append(counter);
-		
-		return alias.toString();
-	}
+    @Override
+    public String currentAlias() {
+        StringBuilder alias = new StringBuilder(String.valueOf(character));
+        if (counter > 0)
+            alias.append(counter);
 
-	@Override
-	public String nextAlias() {
-		StringBuilder alias = new StringBuilder(String.valueOf(character++));
-		if (counter > 0)
-			alias.append(counter);		
+        return alias.toString();
+    }
 
-		if (character > 'z') {
-			character = 'a';
+    @Override
+    public String nextAlias() {
+        StringBuilder alias = new StringBuilder(String.valueOf(character++));
+        if (counter > 0)
+            alias.append(counter);
 
-			if (++counter == 100)
-				counter = 0;
-		}
+        if (character > 'z') {
+            character = 'a';
 
-		return alias.toString();
-	}
+            if (++counter == 100)
+                counter = 0;
+        }
 
-	@Override
-	public void reset() {
-		character = 'a';
-		counter = 0;
-	}
+        return alias.toString();
+    }
 
-	public void updateFrom(DefaultAliasGenerator other) {
-		character = other.character;
-		counter = other.counter;
-	}
+    @Override
+    public void reset() {
+        character = 'a';
+        counter = 0;
+    }
+
+    public void updateFrom(DefaultAliasGenerator other) {
+        character = other.character;
+        counter = other.counter;
+    }
 
 }

@@ -20,6 +20,10 @@
 package org.citydb.sqlbuilder.select;
 
 import org.citydb.sqlbuilder.expression.Expression;
+import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.expression.SubQueryExpression;
+
+import java.util.List;
 
 public class HavingToken {
 	private final Expression expression;
@@ -30,6 +34,15 @@ public class HavingToken {
 
 	public Expression getExpression() {
 		return expression;
+	}
+
+	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+		if (expression instanceof PredicateToken)
+			((PredicateToken) expression).getInvolvedPlaceHolders(statements);
+		else if (expression instanceof ProjectionToken)
+			((ProjectionToken) expression).getInvolvedPlaceHolders(statements);
+		else if (expression instanceof SubQueryExpression)
+			((SubQueryExpression) expression).getInvolvedPlaceHolders(statements);
 	}
 
 	@Override

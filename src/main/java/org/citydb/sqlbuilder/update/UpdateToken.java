@@ -24,50 +24,53 @@ import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.select.PredicateToken;
+import org.citydb.sqlbuilder.select.ProjectionToken;
 
 import java.util.List;
 
 public class UpdateToken {
-	private final Column column;
-	private final Expression value;
-	
-	public UpdateToken(Column column, Expression value) {
-		this.column = column;
-		this.value = value;
-	}
+    private final Column column;
+    private final Expression value;
 
-	public Column getColumn() {
-		return column;
-	}
+    public UpdateToken(Column column, Expression value) {
+        this.column = column;
+        this.value = value;
+    }
 
-	public Expression getValue() {
-		return value;
-	}
-	
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		if (value instanceof PlaceHolder<?>)
-			statements.add((PlaceHolder<?>)value);
-		else if (value instanceof PredicateToken)
-			((PredicateToken)value).getInvolvedPlaceHolders(statements);
-		else if (value instanceof SubQueryExpression)
-			((SubQueryExpression)value).getInvolvedPlaceHolders(statements);
-	}
+    public Column getColumn() {
+        return column;
+    }
 
-	@Override
-	public String toString() {
-		boolean isSubQuery = value instanceof SubQueryExpression;
+    public Expression getValue() {
+        return value;
+    }
 
-		StringBuilder tmp = new StringBuilder()
-		.append(column.getName()).append(" = ");
-		if (isSubQuery)
-			tmp.append("(");
-		
-		tmp.append(value);
-		
-		if (isSubQuery)
-			tmp.append(")");
-		
-		return tmp.toString();
-	}
-	
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        if (value instanceof PlaceHolder<?>)
+            statements.add((PlaceHolder<?>) value);
+        else if (value instanceof PredicateToken)
+            ((PredicateToken) value).getInvolvedPlaceHolders(statements);
+        else if (value instanceof ProjectionToken)
+            ((ProjectionToken) value).getInvolvedPlaceHolders(statements);
+        else if (value instanceof SubQueryExpression)
+            ((SubQueryExpression) value).getInvolvedPlaceHolders(statements);
+    }
+
+    @Override
+    public String toString() {
+        boolean isSubQuery = value instanceof SubQueryExpression;
+
+        StringBuilder tmp = new StringBuilder()
+                .append(column.getName()).append(" = ");
+        if (isSubQuery)
+            tmp.append("(");
+
+        tmp.append(value);
+
+        if (isSubQuery)
+            tmp.append(")");
+
+        return tmp.toString();
+    }
+
 }

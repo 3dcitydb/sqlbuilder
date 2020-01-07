@@ -21,18 +21,18 @@ package org.citydb.sqlbuilder.expression;
 
 public class StringLiteral extends AbstractSQLLiteral<String> {
 
-	public StringLiteral(String value) {
-		super(value);
-	}
+    public StringLiteral(String value) {
+        super(value);
+    }
 
-	@Override
-	public SQLLiteralType getType() {
-		return SQLLiteralType.STRING;
-	}
+    @Override
+    public SQLLiteralType getType() {
+        return SQLLiteralType.STRING;
+    }
 
-	@Override
-	public String toString() {
-		return "'" + value.replace("'", "''") + "'";
-	}
+    @Override
+    public String toString() {
+        return "'" + value.replace("'", "''") + "'";
+    }
 
 }

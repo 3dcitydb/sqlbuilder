@@ -28,39 +28,39 @@ import java.util.List;
 import java.util.Set;
 
 public class WildCardColumn implements ProjectionToken, Expression {
-	private final Table table;
+    private final Table table;
 
-	public WildCardColumn() {
-		table = null;
-	}
+    public WildCardColumn() {
+        table = null;
+    }
 
-	public WildCardColumn(Table table) {
-		this.table = table;
-	}
+    public WildCardColumn(Table table) {
+        this.table = table;
+    }
 
-	public Table getTable() {
-		return table;
-	}
+    public Table getTable() {
+        return table;
+    }
 
-	@Override
-	public void getInvolvedTables(Set<Table> tables) {
-		if (table != null)
-			tables.add(table);
-	}
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        if (table != null)
+            tables.add(table);
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		// nothing to do here
-	}
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        // nothing to do here
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder();
-		if (table != null)
-			tmp.append(table.getAlias()).append(".");
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+        if (table != null)
+            tmp.append(table.getAlias()).append(".");
 
-		return tmp.append("*").toString();
-	}
+        return tmp.append("*").toString();
+    }
 
 
 }

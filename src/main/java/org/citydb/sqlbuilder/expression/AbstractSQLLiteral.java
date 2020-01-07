@@ -20,21 +20,21 @@
 package org.citydb.sqlbuilder.expression;
 
 public abstract class AbstractSQLLiteral<T> implements Expression {
-	protected T value;
+    protected T value;
 
-	public AbstractSQLLiteral(T value) {
-		this.value = value;
-	}
-	
-	public abstract SQLLiteralType getType();
+    public AbstractSQLLiteral(T value) {
+        this.value = value;
+    }
 
-	public T getValue() {
-		return value;
-	}
+    public abstract SQLLiteralType getType();
 
-	@Override
-	public String toString() {
-		return value.toString();
-	}
-	
+    public T getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
+
 }

@@ -22,5 +22,5 @@ package org.citydb.sqlbuilder;
 import java.io.PrintWriter;
 
 public interface Printable {
-	public void print(PrintWriter writer, boolean indent);
+    void print(PrintWriter writer, boolean indent);
 }

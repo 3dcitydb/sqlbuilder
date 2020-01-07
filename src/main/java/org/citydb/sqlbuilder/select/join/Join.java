@@ -33,67 +33,67 @@ import java.util.List;
 import java.util.Set;
 
 public class Join {
-	private final Column fromColumn;
-	private final Column toColumn;
-	private final List<PredicateToken> conditions;
-	private JoinName name;
-	private LogicalOperationName conditionOperationName = LogicalOperationName.AND;
-	
-	public Join(JoinName name, Column toColumn, ComparisonName binaryComparison, Column fromColumn) {
-		this.name = name;
-		this.toColumn = toColumn;
-		this.fromColumn = fromColumn;
+    private final Column fromColumn;
+    private final Column toColumn;
+    private final List<PredicateToken> conditions;
+    private JoinName name;
+    private LogicalOperationName conditionOperationName = LogicalOperationName.AND;
 
-		conditions = new ArrayList<>();
-		conditions.add(new BinaryComparisonOperator(this.fromColumn, binaryComparison, this.toColumn));
-	}
+    public Join(JoinName name, Column toColumn, ComparisonName binaryComparison, Column fromColumn) {
+        this.name = name;
+        this.toColumn = toColumn;
+        this.fromColumn = fromColumn;
 
-	public Join(JoinName name, Table table, String column, ComparisonName binaryComparison, Column fromColumn) {
-		this(name, table.getColumn(column), binaryComparison, fromColumn);
-	}
+        conditions = new ArrayList<>();
+        conditions.add(new BinaryComparisonOperator(this.fromColumn, binaryComparison, this.toColumn));
+    }
 
-	public Column getFromColumn() {
-		return fromColumn;
-	}
+    public Join(JoinName name, Table table, String column, ComparisonName binaryComparison, Column fromColumn) {
+        this(name, table.getColumn(column), binaryComparison, fromColumn);
+    }
 
-	public Column getToColumn() {
-		return toColumn;
-	}
+    public Column getFromColumn() {
+        return fromColumn;
+    }
 
-	public JoinName getJoinName() {
-		return name;
-	}
+    public Column getToColumn() {
+        return toColumn;
+    }
 
-	public void setJoinName(JoinName name) {
-		if (name != null)
-			this.name = name;
-	}
+    public JoinName getJoinName() {
+        return name;
+    }
 
-	public void addCondition(PredicateToken condition) {
-		conditions.add(condition);
-	}
+    public void setJoinName(JoinName name) {
+        if (name != null)
+            this.name = name;
+    }
 
-	public LogicalOperationName getConditionOperationName() {
-		return conditionOperationName;
-	}
+    public void addCondition(PredicateToken condition) {
+        conditions.add(condition);
+    }
 
-	public void setConditionOperationName(LogicalOperationName conditionOperationName) {
-		this.conditionOperationName = conditionOperationName;
-	}
+    public LogicalOperationName getConditionOperationName() {
+        return conditionOperationName;
+    }
 
-	public void getInvolvedTables(Set<Table> tables) {
-		fromColumn.getInvolvedTables(tables);
-		toColumn.getInvolvedTables(tables);
-	}
+    public void setConditionOperationName(LogicalOperationName conditionOperationName) {
+        this.conditionOperationName = conditionOperationName;
+    }
 
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		for (PredicateToken condition : conditions)
-			condition.getInvolvedPlaceHolders(statements);
-	}
-	
-	@Override
-	public String toString() {
-		return name + " " + toColumn.getTable() + " on " + new BinaryLogicalOperator(conditionOperationName, conditions);
-	}
+    public void getInvolvedTables(Set<Table> tables) {
+        fromColumn.getInvolvedTables(tables);
+        toColumn.getInvolvedTables(tables);
+    }
+
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        for (PredicateToken condition : conditions)
+            condition.getInvolvedPlaceHolders(statements);
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + toColumn.getTable() + " on " + new BinaryLogicalOperator(conditionOperationName, conditions);
+    }
 
 }

@@ -20,27 +20,27 @@
 package org.citydb.sqlbuilder.expression;
 
 public abstract class AbstractJDBCEscapeLiteral<T> extends AbstractSQLLiteral<T> {
-	protected final JDBCEscape escape;
-	private boolean useEscapeSyntax = true;
-	
-	public AbstractJDBCEscapeLiteral(T value, JDBCEscape esacpe) {
-		super(value);
-		this.escape = esacpe;
-	}
+    protected final JDBCEscape escape;
+    private boolean useEscapeSyntax = true;
 
-	public boolean isUseEscapeSyntax() {
-		return useEscapeSyntax;
-	}
+    public AbstractJDBCEscapeLiteral(T value, JDBCEscape esacpe) {
+        super(value);
+        this.escape = esacpe;
+    }
 
-	public void setUseEscapeSyntax(boolean useEscapeSyntax) {
-		this.useEscapeSyntax = useEscapeSyntax;
-	}
+    public boolean isUseEscapeSyntax() {
+        return useEscapeSyntax;
+    }
 
-	@Override
-	public String toString() {
-		return useEscapeSyntax ?
-				"{" + escape + "'" + value.toString() + "'" + "}" :
-				"'" + value.toString() + "'";
-	}
+    public void setUseEscapeSyntax(boolean useEscapeSyntax) {
+        this.useEscapeSyntax = useEscapeSyntax;
+    }
+
+    @Override
+    public String toString() {
+        return useEscapeSyntax ?
+                "{" + escape + "'" + value.toString() + "'" + "}" :
+                "'" + value.toString() + "'";
+    }
 
 }

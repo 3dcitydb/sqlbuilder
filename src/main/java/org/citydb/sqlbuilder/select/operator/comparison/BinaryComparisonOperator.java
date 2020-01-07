@@ -26,66 +26,66 @@ import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import java.util.List;
 
 public class BinaryComparisonOperator extends AbstractComparisonOperator {
-	private final Expression leftOperand;
-	private final Expression rightOperand;
-	private final ComparisonName name;
-	private final String sqlName;
-	
-	public BinaryComparisonOperator(Expression leftOperand, ComparisonName name, Expression rightOperand) {
-		if (!ComparisonName.BINARY_COMPARISONS.contains(name))
-			throw new IllegalArgumentException("Allowed binary comparisons only include " + ComparisonName.BINARY_COMPARISONS);
-			
-		this.leftOperand = leftOperand;
-		this.rightOperand = rightOperand;
-		this.name = name;
-		this.sqlName = name.toString();
-	}
-	
-	public BinaryComparisonOperator(Expression leftOperand, String name, Expression rightOperand) {
-		this.leftOperand = leftOperand;
-		this.rightOperand = rightOperand;
-		this.name = ComparisonName.GENERIC;
-		this.sqlName = name;
-	}
-	
-	public Expression getLeftOperand() {
-		return leftOperand;
-	}
-	
-	public Expression getRightOperand() {
-		return rightOperand;
-	}
-	
-	@Override
-	public ComparisonName getOperationName() {
-		return name;
-	}
+    private final Expression leftOperand;
+    private final Expression rightOperand;
+    private final ComparisonName name;
+    private final String sqlName;
 
-	public String getSQLName() {
-		return sqlName;
-	}
-	
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		getInvolvedPlaceHolders(leftOperand, statements);
-		getInvolvedPlaceHolders(rightOperand, statements);
-	}
+    public BinaryComparisonOperator(Expression leftOperand, ComparisonName name, Expression rightOperand) {
+        if (!ComparisonName.BINARY_COMPARISONS.contains(name))
+            throw new IllegalArgumentException("Allowed binary comparisons only include " + ComparisonName.BINARY_COMPARISONS);
 
-	@Override
-	public String toString() {
-		boolean rightOperandIsSubQuery = rightOperand instanceof SubQueryExpression;
+        this.leftOperand = leftOperand;
+        this.rightOperand = rightOperand;
+        this.name = name;
+        this.sqlName = name.toString();
+    }
 
-		StringBuilder tmp = new StringBuilder()
-		.append(leftOperand).append(" ").append(sqlName).append(" ");
-		if (rightOperandIsSubQuery)
-			tmp.append("(");
-		
-		tmp.append(rightOperand);
-		
-		if (rightOperandIsSubQuery)
-			tmp.append(")");
-		
-		return tmp.toString();
-	}
+    public BinaryComparisonOperator(Expression leftOperand, String name, Expression rightOperand) {
+        this.leftOperand = leftOperand;
+        this.rightOperand = rightOperand;
+        this.name = ComparisonName.GENERIC;
+        this.sqlName = name;
+    }
+
+    public Expression getLeftOperand() {
+        return leftOperand;
+    }
+
+    public Expression getRightOperand() {
+        return rightOperand;
+    }
+
+    @Override
+    public ComparisonName getOperationName() {
+        return name;
+    }
+
+    public String getSQLName() {
+        return sqlName;
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        getInvolvedPlaceHolders(leftOperand, statements);
+        getInvolvedPlaceHolders(rightOperand, statements);
+    }
+
+    @Override
+    public String toString() {
+        boolean rightOperandIsSubQuery = rightOperand instanceof SubQueryExpression;
+
+        StringBuilder tmp = new StringBuilder()
+                .append(leftOperand).append(" ").append(sqlName).append(" ");
+        if (rightOperandIsSubQuery)
+            tmp.append("(");
+
+        tmp.append(rightOperand);
+
+        if (rightOperandIsSubQuery)
+            tmp.append(")");
+
+        return tmp.toString();
+    }
 
 }

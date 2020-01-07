@@ -26,55 +26,55 @@ import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import java.util.List;
 
 public class InOperator extends AbstractComparisonOperator {
-	private final Expression operand;
-	private final SubQueryExpression subQueryExpression;
+    private final Expression operand;
+    private final SubQueryExpression subQueryExpression;
 
-	private boolean negate;
+    private boolean negate;
 
-	public InOperator(Expression operand, SubQueryExpression subQueryExpression, boolean negate) {
-		this.operand = operand;
-		this.subQueryExpression = subQueryExpression;
-		this.negate = negate;
-	}
-	
-	public InOperator(Expression operand, SubQueryExpression subQueryExpression) {
-		this(operand, subQueryExpression, false);
-	}
+    public InOperator(Expression operand, SubQueryExpression subQueryExpression, boolean negate) {
+        this.operand = operand;
+        this.subQueryExpression = subQueryExpression;
+        this.negate = negate;
+    }
 
-	public Expression getOperand() {
-		return operand;
-	}
+    public InOperator(Expression operand, SubQueryExpression subQueryExpression) {
+        this(operand, subQueryExpression, false);
+    }
 
-	public SubQueryExpression getSubQueryExpression() {
-		return subQueryExpression;
-	}
+    public Expression getOperand() {
+        return operand;
+    }
 
-	public boolean isNegate() {
-		return negate;
-	}
+    public SubQueryExpression getSubQueryExpression() {
+        return subQueryExpression;
+    }
 
-	public void setNegate(boolean negate) {
-		this.negate = negate;
-	}
+    public boolean isNegate() {
+        return negate;
+    }
 
-	@Override
-	public ComparisonName getOperationName() {
-		return !negate ? ComparisonName.IN : ComparisonName.NOT_IN;
-	}
+    public void setNegate(boolean negate) {
+        this.negate = negate;
+    }
 
-	public SubQueryExpression getValueList() {
-		return subQueryExpression;
-	}
+    @Override
+    public ComparisonName getOperationName() {
+        return !negate ? ComparisonName.IN : ComparisonName.NOT_IN;
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		getInvolvedPlaceHolders(operand, statements);
-		subQueryExpression.getInvolvedPlaceHolders(statements);
-	}
+    public SubQueryExpression getValueList() {
+        return subQueryExpression;
+    }
 
-	@Override
-	public String toString() {
-		return String.valueOf(operand) + " " + getOperationName() + " (" + subQueryExpression + ")";
-	}
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        getInvolvedPlaceHolders(operand, statements);
+        subQueryExpression.getInvolvedPlaceHolders(statements);
+    }
+
+    @Override
+    public String toString() {
+        return operand + " " + getOperationName() + " (" + subQueryExpression + ")";
+    }
 
 }

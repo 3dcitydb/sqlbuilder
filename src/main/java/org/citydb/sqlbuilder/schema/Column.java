@@ -27,77 +27,77 @@ import java.util.List;
 import java.util.Set;
 
 public class Column implements ProjectionToken, Expression {
-	private final Table table;
-	private final String name;
-	private final String asName;
-	
-	public Column(Table table, String name, String asName) {
-		this.table = table;
-		this.name = name;
-		this.asName = asName;
-	}
-	
-	public Column(Table table, String name) {
-		this(table, name, null);
-	}
+    private final Table table;
+    private final String name;
+    private final String asName;
 
-	public Table getTable() {
-		return table;
-	}
+    public Column(Table table, String name, String asName) {
+        this.table = table;
+        this.name = name;
+        this.asName = asName;
+    }
 
-	public String getName() {
-		return name;
-	}
-	
-	public String getAsName() {
-		return asName;
-	}
+    public Column(Table table, String name) {
+        this(table, name, null);
+    }
 
-	@Override
-	public void getInvolvedTables(Set<Table> tables) {
-		tables.add(table);
-	}
-	
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		// nothing to do here
-	}
+    public Table getTable() {
+        return table;
+    }
 
-	public String toString(boolean withAlias) {
-		StringBuilder tmp = new StringBuilder().append(table.getAlias()).append(".").append(name);
-		if (withAlias && asName != null)
-			tmp.append(" as ").append(asName);
-		
-		return tmp.toString();
-	}
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public String toString() {
-		return toString(true);
-	}
+    public String getAsName() {
+        return asName;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		
-		if (obj instanceof Column) {
-			Column other = (Column)obj;
-			return table.equals(other.table) &&
-					name.toUpperCase().equals(other.name.toUpperCase()) &&
-					((asName == null && other.asName == null) || (asName != null && asName.equalsIgnoreCase(other.asName)));
-		}
-		
-		return false;
-	}
-	
-	@Override
-	public int hashCode() {
-		int hash = 1;
-		hash = hash * 31 + table.hashCode();
-		hash = hash * 31 + name.toUpperCase().hashCode();
-		
-		return hash;
-	}
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        tables.add(table);
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        // nothing to do here
+    }
+
+    public String toString(boolean withAlias) {
+        StringBuilder tmp = new StringBuilder().append(table.getAlias()).append(".").append(name);
+        if (withAlias && asName != null)
+            tmp.append(" as ").append(asName);
+
+        return tmp.toString();
+    }
+
+    @Override
+    public String toString() {
+        return toString(true);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj instanceof Column) {
+            Column other = (Column) obj;
+            return table.equals(other.table) &&
+                    name.toUpperCase().equals(other.name.toUpperCase()) &&
+                    ((asName == null && other.asName == null) || (asName != null && asName.equalsIgnoreCase(other.asName)));
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + table.hashCode();
+        hash = hash * 31 + name.toUpperCase().hashCode();
+
+        return hash;
+    }
 
 }

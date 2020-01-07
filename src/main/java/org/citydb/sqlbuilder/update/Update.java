@@ -36,186 +36,186 @@ import java.util.List;
 import java.util.Set;
 
 public class Update implements SQLStatement {
-	private Table table;
-	private final List<CommonTableExpression> ctes;
-	private final List<UpdateToken> updateTokens;
-	private final List<PredicateToken> predicateTokens;
+    private Table table;
+    private final List<CommonTableExpression> ctes;
+    private final List<UpdateToken> updateTokens;
+    private final List<PredicateToken> predicateTokens;
 
-	private String indentString = "  ";
+    private String indentString = "  ";
 
-	public Update() {
-		ctes = new ArrayList<>();
-		updateTokens = new ArrayList<>();
-		predicateTokens = new ArrayList<>();
-	}
-	
-	public Update(Update other) {
-		this();
-		if (!other.ctes.isEmpty()) ctes.addAll(other.ctes);
-		if (!other.updateTokens.isEmpty()) updateTokens.addAll(other.updateTokens);
-		if (!other.predicateTokens.isEmpty()) predicateTokens.addAll(other.predicateTokens);
-		
-		table = other.table;
-		indentString = other.indentString;
-	}
+    public Update() {
+        ctes = new ArrayList<>();
+        updateTokens = new ArrayList<>();
+        predicateTokens = new ArrayList<>();
+    }
 
-	public Table getTable() {
-		return table;
-	}
+    public Update(Update other) {
+        this();
+        if (!other.ctes.isEmpty()) ctes.addAll(other.ctes);
+        if (!other.updateTokens.isEmpty()) updateTokens.addAll(other.updateTokens);
+        if (!other.predicateTokens.isEmpty()) predicateTokens.addAll(other.predicateTokens);
 
-	public Update setTable(Table table) {
-		this.table = table;
-		return this;
-	}
-	
-	public Update addWith(CommonTableExpression cte) {
-		ctes.add(cte);
-		return this;
-	}
-	
-	public Update addWith(CommonTableExpression... ctes) {
-		this.ctes.addAll(Arrays.asList(ctes));
-		return this;
-	}
+        table = other.table;
+        indentString = other.indentString;
+    }
 
-	public List<CommonTableExpression> getWith() {
-		return new ArrayList<CommonTableExpression>(ctes);
-	}
+    public Table getTable() {
+        return table;
+    }
 
-	public boolean removeWith(CommonTableExpression cte) {
-		return ctes.remove(cte);
-	}
+    public Update setTable(Table table) {
+        this.table = table;
+        return this;
+    }
 
-	public Update unsetWith() {
-		ctes.clear();
-		return this;
-	}
+    public Update addWith(CommonTableExpression cte) {
+        ctes.add(cte);
+        return this;
+    }
 
-	public Update addUpdateToken(UpdateToken token) {
-		updateTokens.add(token);
-		return this;
-	}
-	
-	public Update addUpdateToken(UpdateToken... tokens) {
-		updateTokens.addAll(Arrays.asList(tokens));
-		return this;
-	}
+    public Update addWith(CommonTableExpression... ctes) {
+        this.ctes.addAll(Arrays.asList(ctes));
+        return this;
+    }
 
-	public List<UpdateToken> getUpdateTokens() {
-		return updateTokens;
-	}
+    public List<CommonTableExpression> getWith() {
+        return new ArrayList<CommonTableExpression>(ctes);
+    }
 
-	public boolean removeUpdateToken(UpdateToken token) {
-		return updateTokens.remove(token);
-	}
-	
-	public Update unsetUpdateToken() {
-		updateTokens.clear();
-		return this;
-	}
+    public boolean removeWith(CommonTableExpression cte) {
+        return ctes.remove(cte);
+    }
 
-	public Update addSelection(PredicateToken token) {
-		predicateTokens.add(token);
-		return this;
-	}
-	
-	public Update addSelection(PredicateToken... tokens) {
-		predicateTokens.addAll(Arrays.asList(tokens));
-		return this;
-	}
+    public Update unsetWith() {
+        ctes.clear();
+        return this;
+    }
 
-	public List<PredicateToken> getSelection() {
-		return new ArrayList<PredicateToken>(predicateTokens);
-	}
+    public Update addUpdateToken(UpdateToken token) {
+        updateTokens.add(token);
+        return this;
+    }
 
-	public boolean removeSelection(PredicateToken token) {
-		return predicateTokens.remove(token);
-	}
+    public Update addUpdateToken(UpdateToken... tokens) {
+        updateTokens.addAll(Arrays.asList(tokens));
+        return this;
+    }
 
-	public void unsetSelection() {
-		predicateTokens.clear();
-	}
+    public List<UpdateToken> getUpdateTokens() {
+        return updateTokens;
+    }
 
-	@Override
-	public Set<Table> getInvolvedTables() {
-		Set<Table> tables = new LinkedHashSet<Table>();
-		tables.add(table);
-		
-		return tables;
-	}
+    public boolean removeUpdateToken(UpdateToken token) {
+        return updateTokens.remove(token);
+    }
 
-	@Override
-	public List<PlaceHolder<?>> getInvolvedPlaceHolders() {
-		List<PlaceHolder<?>> statements = new ArrayList<PlaceHolder<?>>();
-		
-		for (CommonTableExpression cte : ctes)
-			cte.getInvolvedPlaceHolders(statements);
-		
-		for (UpdateToken token : updateTokens)
-			token.getInvolvedPlaceHolders(statements);
-		
-		for (PredicateToken token : predicateTokens)
-			token.getInvolvedPlaceHolders(statements);
-		
-		return statements;
-	}
-	
-	@Override
-	public void print(PrintWriter writer, boolean indent) {
-		if (!ctes.isEmpty()) {
-			writer.print("with ");
-			if (indent)
-				writer.println();
-			
-			print(writer, ctes, ",", indent, false);
-		}
-		
-		writer.print("update ");		
-		writer.print(table);
-		writer.print(' ');
+    public Update unsetUpdateToken() {
+        updateTokens.clear();
+        return this;
+    }
 
-		if (indent)
-			writer.println();
+    public Update addSelection(PredicateToken token) {
+        predicateTokens.add(token);
+        return this;
+    }
 
-		writer.print("set ");
-		if (indent)
-			writer.println();
+    public Update addSelection(PredicateToken... tokens) {
+        predicateTokens.addAll(Arrays.asList(tokens));
+        return this;
+    }
 
-		print(writer, updateTokens, ",", indent, false);
+    public List<PredicateToken> getSelection() {
+        return new ArrayList<>(predicateTokens);
+    }
 
-		if (!predicateTokens.isEmpty()) {
-			writer.print("where ");
-			if (indent)
-				writer.println();
+    public boolean removeSelection(PredicateToken token) {
+        return predicateTokens.remove(token);
+    }
 
-			print(writer, predicateTokens, " and", indent, false);
-		}
+    public void unsetSelection() {
+        predicateTokens.clear();
+    }
 
-		writer.flush();
-	}
+    @Override
+    public Set<Table> getInvolvedTables() {
+        Set<Table> tables = new LinkedHashSet<>();
+        tables.add(table);
 
-	private void print(PrintWriter writer, Collection<?> collection, String delimiter, boolean indent, boolean keepLastDelimiter) {
-		Iterator<?> iter = collection.iterator();
-		while (iter.hasNext()) {
-			if (indent)
-				writer.print(indentString);
+        return tables;
+    }
 
-			writer.print(iter.next());
-			if (keepLastDelimiter || iter.hasNext())
-				writer.print(delimiter);
+    @Override
+    public List<PlaceHolder<?>> getInvolvedPlaceHolders() {
+        List<PlaceHolder<?>> statements = new ArrayList<>();
 
-			writer.print(' ');
-			if (indent)
-				writer.println();
-		}
-	}
-	
-	@Override
-	public String toString() {
-		StringWriter writer = new StringWriter();
-		print(new PrintWriter(writer), false);
+        for (CommonTableExpression cte : ctes)
+            cte.getInvolvedPlaceHolders(statements);
 
-		return writer.toString();
-	}
+        for (UpdateToken token : updateTokens)
+            token.getInvolvedPlaceHolders(statements);
+
+        for (PredicateToken token : predicateTokens)
+            token.getInvolvedPlaceHolders(statements);
+
+        return statements;
+    }
+
+    @Override
+    public void print(PrintWriter writer, boolean indent) {
+        if (!ctes.isEmpty()) {
+            writer.print("with ");
+            if (indent)
+                writer.println();
+
+            print(writer, ctes, ",", indent, false);
+        }
+
+        writer.print("update ");
+        writer.print(table);
+        writer.print(' ');
+
+        if (indent)
+            writer.println();
+
+        writer.print("set ");
+        if (indent)
+            writer.println();
+
+        print(writer, updateTokens, ",", indent, false);
+
+        if (!predicateTokens.isEmpty()) {
+            writer.print("where ");
+            if (indent)
+                writer.println();
+
+            print(writer, predicateTokens, " and", indent, false);
+        }
+
+        writer.flush();
+    }
+
+    private void print(PrintWriter writer, Collection<?> collection, String delimiter, boolean indent, boolean keepLastDelimiter) {
+        Iterator<?> iter = collection.iterator();
+        while (iter.hasNext()) {
+            if (indent)
+                writer.print(indentString);
+
+            writer.print(iter.next());
+            if (keepLastDelimiter || iter.hasNext())
+                writer.print(delimiter);
+
+            writer.print(' ');
+            if (indent)
+                writer.println();
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringWriter writer = new StringWriter();
+        print(new PrintWriter(writer), false);
+
+        return writer.toString();
+    }
 
 }

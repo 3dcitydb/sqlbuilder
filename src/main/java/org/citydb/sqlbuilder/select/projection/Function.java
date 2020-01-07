@@ -31,99 +31,99 @@ import java.util.List;
 import java.util.Set;
 
 public class Function implements ProjectionToken, Expression {
-	private final String name;
-	private final String asName;
-	private final boolean useParentheses;
-	private final List<Expression> arguments;
-	
-	public Function(String name, String asName, boolean useParentheses) {
-		this.name = name;
-		this.asName = asName;
-		this.useParentheses = useParentheses;
-		this.arguments = new ArrayList<Expression>();
-	}
-	
-	public Function(String name) {
-		this(name, null, true);
-	}
-	
-	public Function(String name, String asName) {
-		this(name, asName, true);
-	}
+    private final String name;
+    private final String asName;
+    private final boolean useParentheses;
+    private final List<Expression> arguments;
 
-	public Function(String name, String asName, boolean useParentheses, Expression... arguments) {
-		this.name = name;
-		this.asName = asName;
-		this.useParentheses = useParentheses;
-		this.arguments = new ArrayList<>(Arrays.asList(arguments));
-	}
+    public Function(String name, String asName, boolean useParentheses) {
+        this.name = name;
+        this.asName = asName;
+        this.useParentheses = useParentheses;
+        this.arguments = new ArrayList<Expression>();
+    }
 
-	public Function(String name, Expression... arguments) {
-		this(name, null, true, arguments);
-	}
+    public Function(String name) {
+        this(name, null, true);
+    }
 
-	public Function(String name, String asName, Expression... arguments) {
-		this(name, asName, true, arguments);
-	}
+    public Function(String name, String asName) {
+        this(name, asName, true);
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Function(String name, String asName, boolean useParentheses, Expression... arguments) {
+        this.name = name;
+        this.asName = asName;
+        this.useParentheses = useParentheses;
+        this.arguments = new ArrayList<>(Arrays.asList(arguments));
+    }
 
-	public String getAsName() {
-		return asName;
-	}
+    public Function(String name, Expression... arguments) {
+        this(name, null, true, arguments);
+    }
 
-	public boolean isUseParentheses() {
-		return useParentheses;
-	}
+    public Function(String name, String asName, Expression... arguments) {
+        this(name, asName, true, arguments);
+    }
 
-	public List<Expression> getArguments() {
-		return new ArrayList<>(arguments);
-	}
-	
-	public Function addArgument(Expression argument) {
-		arguments.add(argument);
-		return this;
-	}
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public void getInvolvedTables(Set<Table> tables) {
-		for (Expression argument : arguments) {
-			if (argument instanceof ProjectionToken)
-				((ProjectionToken)argument).getInvolvedTables(tables);
-		}
-	}
+    public String getAsName() {
+        return asName;
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		for (Expression argument : arguments)
-			if (argument instanceof PlaceHolder<?>)
-				statements.add((PlaceHolder<?>)argument);
-	}
+    public boolean isUseParentheses() {
+        return useParentheses;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder tmp = new StringBuilder();
-		tmp.append(name);
+    public List<Expression> getArguments() {
+        return new ArrayList<>(arguments);
+    }
 
-		tmp.append(useParentheses ? "(" : " ");
+    public Function addArgument(Expression argument) {
+        arguments.add(argument);
+        return this;
+    }
 
-		Iterator<Expression> iter = arguments.iterator();
-		while (iter.hasNext()) {
-			tmp.append(iter.next());
-			if (iter.hasNext())
-				tmp.append(", ");
-		}
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        for (Expression argument : arguments) {
+            if (argument instanceof ProjectionToken)
+                ((ProjectionToken) argument).getInvolvedTables(tables);
+        }
+    }
 
-		if (useParentheses)
-			tmp.append(")");
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        for (Expression argument : arguments)
+            if (argument instanceof PlaceHolder<?>)
+                statements.add((PlaceHolder<?>) argument);
+    }
 
-		if (asName != null)
-			tmp.append(" as ")
-			.append(asName);
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+        tmp.append(name);
 
-		return tmp.toString();
-	}
+        tmp.append(useParentheses ? "(" : " ");
+
+        Iterator<Expression> iter = arguments.iterator();
+        while (iter.hasNext()) {
+            tmp.append(iter.next());
+            if (iter.hasNext())
+                tmp.append(", ");
+        }
+
+        if (useParentheses)
+            tmp.append(")");
+
+        if (asName != null)
+            tmp.append(" as ")
+                    .append(asName);
+
+        return tmp.toString();
+    }
 
 }

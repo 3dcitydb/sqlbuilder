@@ -28,66 +28,66 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BinaryLogicalOperator extends AbstractLogicalOperator {
-	private final List<PredicateToken> operands;
-	private final LogicalOperationName name;
+    private final List<PredicateToken> operands;
+    private final LogicalOperationName name;
 
-	public BinaryLogicalOperator(LogicalOperationName name, List<PredicateToken> operands) {
-		if (operands == null || operands.size() < 1)
-			throw new IllegalArgumentException("A binary logical operator requires one or more operands.");
+    public BinaryLogicalOperator(LogicalOperationName name, List<PredicateToken> operands) {
+        if (operands == null || operands.size() < 1)
+            throw new IllegalArgumentException("A binary logical operator requires one or more operands.");
 
-		this.operands = operands;
-		this.name = name;
-	}
+        this.operands = operands;
+        this.name = name;
+    }
 
-	public BinaryLogicalOperator(LogicalOperationName name, PredicateToken... operands) {
-		this(name, Arrays.asList(operands));
-	}
+    public BinaryLogicalOperator(LogicalOperationName name, PredicateToken... operands) {
+        this(name, Arrays.asList(operands));
+    }
 
-	public BinaryLogicalOperator(PredicateToken leftOperand, LogicalOperationName name, PredicateToken rightOperand) {
-		if (!LogicalOperationName.BINARY_OPERATIONS.contains(name))
-			throw new IllegalArgumentException("Allowed binary comparisons only include " + LogicalOperationName.BINARY_OPERATIONS);
+    public BinaryLogicalOperator(PredicateToken leftOperand, LogicalOperationName name, PredicateToken rightOperand) {
+        if (!LogicalOperationName.BINARY_OPERATIONS.contains(name))
+            throw new IllegalArgumentException("Allowed binary comparisons only include " + LogicalOperationName.BINARY_OPERATIONS);
 
-		operands = new ArrayList<>();
-		operands.add(leftOperand);
-		operands.add(rightOperand);
-		this.name = name;
-	}
+        operands = new ArrayList<>();
+        operands.add(leftOperand);
+        operands.add(rightOperand);
+        this.name = name;
+    }
 
-	public void addOperand(PredicateToken operand) {
-		operands.add(operand);
-	}
+    public void addOperand(PredicateToken operand) {
+        operands.add(operand);
+    }
 
-	public List<PredicateToken> getOperands() {
-		return operands;
-	}
+    public List<PredicateToken> getOperands() {
+        return operands;
+    }
 
-	@Override
-	public LogicalOperationName getOperationName() {
-		return name;
-	}
+    @Override
+    public LogicalOperationName getOperationName() {
+        return name;
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-		for (PredicateToken operand : operands)
-			operand.getInvolvedPlaceHolders(statements);
-	}
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+        for (PredicateToken operand : operands)
+            operand.getInvolvedPlaceHolders(statements);
+    }
 
-	@Override
-	public String toString() {
-		if (operands.size() > 1) {		
-			StringBuilder tmp = new StringBuilder();
-			tmp.append("(");
+    @Override
+    public String toString() {
+        if (operands.size() > 1) {
+            StringBuilder tmp = new StringBuilder();
+            tmp.append("(");
 
-			Iterator<PredicateToken> iter = operands.iterator();
-			while (iter.hasNext()) {
-				tmp.append(iter.next());
-				if (iter.hasNext())
-					tmp.append(" ").append(name).append(" ");
-			}
+            Iterator<PredicateToken> iter = operands.iterator();
+            while (iter.hasNext()) {
+                tmp.append(iter.next());
+                if (iter.hasNext())
+                    tmp.append(" ").append(name).append(" ");
+            }
 
-			return tmp.append(")").toString();
-		} else
-			return operands.get(0).toString();
-	}
+            return tmp.append(")").toString();
+        } else
+            return operands.get(0).toString();
+    }
 
 }

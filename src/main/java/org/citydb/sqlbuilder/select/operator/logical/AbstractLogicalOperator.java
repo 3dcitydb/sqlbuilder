@@ -22,5 +22,4 @@ package org.citydb.sqlbuilder.select.operator.logical;
 import org.citydb.sqlbuilder.select.operator.Operator;
 
 public abstract class AbstractLogicalOperator implements Operator {
-
 }
