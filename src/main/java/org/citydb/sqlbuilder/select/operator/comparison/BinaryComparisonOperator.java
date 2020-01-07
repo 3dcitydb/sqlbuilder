@@ -73,17 +73,19 @@ public class BinaryComparisonOperator extends AbstractComparisonOperator {
 
     @Override
     public String toString() {
-        boolean rightOperandIsSubQuery = rightOperand instanceof SubQueryExpression;
+        StringBuilder tmp = new StringBuilder();
 
-        StringBuilder tmp = new StringBuilder()
-                .append(leftOperand).append(" ").append(sqlName).append(" ");
-        if (rightOperandIsSubQuery)
-            tmp.append("(");
+        if (leftOperand instanceof SubQueryExpression)
+            tmp.append("(").append(leftOperand).append(")");
+        else
+            tmp.append(leftOperand);
 
-        tmp.append(rightOperand);
+        tmp.append(" ").append(sqlName).append(" ");
 
-        if (rightOperandIsSubQuery)
-            tmp.append(")");
+        if (rightOperand instanceof SubQueryExpression)
+            tmp.append("(").append(rightOperand).append(")");
+        else
+            tmp.append(rightOperand);
 
         return tmp.toString();
     }
