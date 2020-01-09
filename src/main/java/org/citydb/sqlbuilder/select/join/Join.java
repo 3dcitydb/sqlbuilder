@@ -29,6 +29,7 @@ import org.citydb.sqlbuilder.select.operator.logical.BinaryLogicalOperator;
 import org.citydb.sqlbuilder.select.operator.logical.LogicalOperationName;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -69,8 +70,27 @@ public class Join {
             this.name = name;
     }
 
-    public void addCondition(PredicateToken condition) {
+    public Join addCondition(PredicateToken condition) {
         conditions.add(condition);
+        return this;
+    }
+
+    public Join addConditions(PredicateToken... conditions) {
+        this.conditions.addAll(Arrays.asList(conditions));
+        return this;
+    }
+
+    public boolean removeCondition(PredicateToken condition) {
+        return conditions.remove(condition);
+    }
+
+    public List<PredicateToken> getConditions() {
+        return new ArrayList<>(conditions);
+    }
+
+    public Join unsetConditions() {
+        conditions.clear();
+        return this;
     }
 
     public LogicalOperationName getConditionOperationName() {
