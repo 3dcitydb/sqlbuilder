@@ -22,12 +22,22 @@ package org.citydb.sqlbuilder.select.operator.comparison;
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
+import org.citydb.sqlbuilder.schema.Table;
+import org.citydb.sqlbuilder.select.PredicateToken;
 import org.citydb.sqlbuilder.select.ProjectionToken;
 import org.citydb.sqlbuilder.select.operator.Operator;
 
 import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractComparisonOperator implements Operator {
+
+    public void getInvolvedTables(Expression operand, Set<Table> tables) {
+        if (operand instanceof ProjectionToken)
+            ((ProjectionToken) operand).getInvolvedTables(tables);
+        else if (operand instanceof PredicateToken)
+            ((PredicateToken) operand).getInvolvedTables(tables);
+    }
 
     public void getInvolvedPlaceHolders(Expression operand, List<PlaceHolder<?>> statements) {
         if (operand instanceof PlaceHolder<?>)

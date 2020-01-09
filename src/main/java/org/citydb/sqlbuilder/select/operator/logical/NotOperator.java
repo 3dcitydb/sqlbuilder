@@ -20,9 +20,11 @@
 package org.citydb.sqlbuilder.select.operator.logical;
 
 import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.PredicateToken;
 
 import java.util.List;
+import java.util.Set;
 
 public class NotOperator extends AbstractLogicalOperator {
     private final PredicateToken operand;
@@ -34,6 +36,11 @@ public class NotOperator extends AbstractLogicalOperator {
     @Override
     public LogicalOperationName getOperationName() {
         return LogicalOperationName.NOT;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        operand.getInvolvedTables(tables);
     }
 
     @Override

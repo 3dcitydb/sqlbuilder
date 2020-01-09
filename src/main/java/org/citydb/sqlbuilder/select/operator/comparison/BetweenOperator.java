@@ -21,8 +21,10 @@ package org.citydb.sqlbuilder.select.operator.comparison;
 
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
+import java.util.Set;
 
 public class BetweenOperator extends AbstractComparisonOperator {
     private final Expression operand;
@@ -65,6 +67,13 @@ public class BetweenOperator extends AbstractComparisonOperator {
     @Override
     public ComparisonName getOperationName() {
         return !negate ? ComparisonName.BETWEEN : ComparisonName.NOT_BETWEEN;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        getInvolvedTables(operand, tables);
+        getInvolvedTables(lowerBound, tables);
+        getInvolvedTables(upperBound, tables);
     }
 
     @Override

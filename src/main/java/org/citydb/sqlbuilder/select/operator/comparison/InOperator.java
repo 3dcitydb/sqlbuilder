@@ -22,8 +22,10 @@ package org.citydb.sqlbuilder.select.operator.comparison;
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
+import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
+import java.util.Set;
 
 public class InOperator extends AbstractComparisonOperator {
     private final Expression operand;
@@ -64,6 +66,11 @@ public class InOperator extends AbstractComparisonOperator {
 
     public SubQueryExpression getValueList() {
         return subQueryExpression;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        getInvolvedTables(operand, tables);
     }
 
     @Override

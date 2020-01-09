@@ -20,12 +20,14 @@
 package org.citydb.sqlbuilder.select.operator.logical;
 
 import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.PredicateToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class BinaryLogicalOperator extends AbstractLogicalOperator {
     private final List<PredicateToken> operands;
@@ -64,6 +66,12 @@ public class BinaryLogicalOperator extends AbstractLogicalOperator {
     @Override
     public LogicalOperationName getOperationName() {
         return name;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        for (PredicateToken operand : operands)
+            operand.getInvolvedTables(tables);
     }
 
     @Override

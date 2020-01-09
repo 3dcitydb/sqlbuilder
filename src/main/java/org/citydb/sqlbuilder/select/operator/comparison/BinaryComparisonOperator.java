@@ -22,8 +22,10 @@ package org.citydb.sqlbuilder.select.operator.comparison;
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
+import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
+import java.util.Set;
 
 public class BinaryComparisonOperator extends AbstractComparisonOperator {
     private final Expression leftOperand;
@@ -63,6 +65,12 @@ public class BinaryComparisonOperator extends AbstractComparisonOperator {
 
     public String getSQLName() {
         return sqlName;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        getInvolvedTables(leftOperand, tables);
+        getInvolvedTables(rightOperand, tables);
     }
 
     @Override

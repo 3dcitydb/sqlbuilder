@@ -22,9 +22,11 @@ package org.citydb.sqlbuilder.select.operator.comparison;
 import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.StringLiteral;
+import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.operator.OperationName;
 
 import java.util.List;
+import java.util.Set;
 
 public class LikeOperator extends AbstractComparisonOperator {
     private final Expression operand;
@@ -74,6 +76,12 @@ public class LikeOperator extends AbstractComparisonOperator {
     @Override
     public OperationName getOperationName() {
         return !negate ? ComparisonName.LIKE : ComparisonName.NOT_LIKE;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        getInvolvedTables(operand, tables);
+        getInvolvedTables(pattern, tables);
     }
 
     @Override
