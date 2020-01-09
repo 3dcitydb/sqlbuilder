@@ -39,13 +39,15 @@ import java.util.List;
 import java.util.Set;
 
 public class Select implements SQLStatement, SubQueryExpression {
-    private final List<CommonTableExpression> ctes;
-    private final Set<ProjectionToken> projectionTokens;
-    private final List<Join> joins;
-    private final List<PredicateToken> predicateTokens;
-    private final List<GroupByToken> groupByTokens;
-    private final List<HavingToken> havingTokens;
-    private final List<OrderByToken> orderByTokens;
+    private final List<CommonTableExpression> ctes = new ArrayList<>();
+    private final Set<ProjectionToken> projectionTokens = new LinkedHashSet<>();
+    private final List<Join> joins = new ArrayList<>();
+    private final List<PredicateToken> predicateTokens = new ArrayList<>();
+    private final List<GroupByToken> groupByTokens = new ArrayList<>();
+    private final List<HavingToken> havingTokens = new ArrayList<>();
+    private final List<OrderByToken> orderByTokens = new ArrayList<>();
+    private OffsetToken offsetToken;
+    private FetchToken fetchToken;
 
     private boolean distinct;
     private String optimizerString;
@@ -53,17 +55,9 @@ public class Select implements SQLStatement, SubQueryExpression {
     private String pseudoTable;
 
     public Select() {
-        ctes = new ArrayList<>();
-        projectionTokens = new LinkedHashSet<>();
-        joins = new ArrayList<>();
-        predicateTokens = new ArrayList<>();
-        groupByTokens = new ArrayList<>();
-        havingTokens = new ArrayList<>();
-        orderByTokens = new ArrayList<>();
     }
 
     public Select(Select other) {
-        this();
         if (!other.ctes.isEmpty()) ctes.addAll(other.ctes);
         if (!other.projectionTokens.isEmpty()) projectionTokens.addAll(other.projectionTokens);
         if (!other.joins.isEmpty()) joins.addAll(other.joins);
@@ -71,6 +65,9 @@ public class Select implements SQLStatement, SubQueryExpression {
         if (!other.groupByTokens.isEmpty()) groupByTokens.addAll(other.groupByTokens);
         if (!other.havingTokens.isEmpty()) havingTokens.addAll(other.havingTokens);
         if (!other.orderByTokens.isEmpty()) orderByTokens.addAll(other.orderByTokens);
+
+        offsetToken = other.offsetToken;
+        fetchToken = other.fetchToken;
 
         distinct = other.distinct;
         optimizerString = other.optimizerString;
@@ -277,6 +274,34 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
+    public Select withOffset(OffsetToken token) {
+        offsetToken = token;
+        return this;
+    }
+
+    public OffsetToken getOffset() {
+        return offsetToken;
+    }
+
+    public Select unsetOffset() {
+        offsetToken = null;
+        return this;
+    }
+
+    public Select withFetch(FetchToken token) {
+        fetchToken = token;
+        return this;
+    }
+
+    public FetchToken getFetch() {
+        return fetchToken;
+    }
+
+    public Select unsetFetch() {
+        fetchToken = null;
+        return this;
+    }
+
     @Override
     public Set<Table> getInvolvedTables() {
         Set<Table> tables = new LinkedHashSet<>();
@@ -323,16 +348,19 @@ public class Select implements SQLStatement, SubQueryExpression {
         for (HavingToken token : havingTokens)
             token.getInvolvedPlaceHolders(statements);
 
+        if (offsetToken != null)
+            offsetToken.getInvolvedPlaceHolders(statements);
+
+        if (fetchToken != null)
+            fetchToken.getInvolvedPlaceHolders(statements);
+
         return statements;
     }
 
     @Override
     public void print(PrintWriter writer, boolean indent) {
         if (!ctes.isEmpty()) {
-            writer.print("with ");
-            if (indent)
-                writer.println();
-
+            print(writer, "with ", indent);
             print(writer, ctes, ",", indent, false);
         }
 
@@ -353,9 +381,7 @@ public class Select implements SQLStatement, SubQueryExpression {
 
         Set<Table> tables = getInvolvedTables();
         if (!joins.isEmpty() || !tables.isEmpty()) {
-            writer.print("from ");
-            if (indent)
-                writer.println();
+            print(writer, "from ", indent);
 
             if (!joins.isEmpty()) {
                 Set<Table> removeTables = new HashSet<>();
@@ -373,44 +399,44 @@ public class Select implements SQLStatement, SubQueryExpression {
                 print(writer, joins, "", indent, !tables.isEmpty());
 
         } else if (pseudoTable != null) {
-            writer.print("from ");
-            if (indent)
-                writer.println();
-
+            print(writer, "from ", indent);
             writer.print(pseudoTable);
             writer.print(' ');
         }
 
         if (!predicateTokens.isEmpty()) {
-            writer.print("where ");
-            if (indent)
-                writer.println();
-
+            print(writer, "where ", indent);
             print(writer, predicateTokens, " and", indent, false);
         }
 
         if (!groupByTokens.isEmpty()) {
-            writer.print("group by ");
-            if (indent)
-                writer.println();
-
+            print(writer, "group by ", indent);
             print(writer, groupByTokens, ",", indent, false);
         }
 
         if (!havingTokens.isEmpty()) {
-            writer.print("having ");
-            if (indent)
-                writer.println();
-
+            print(writer, "having ", indent);
             print(writer, havingTokens, ",", indent, false);
         }
 
         if (!orderByTokens.isEmpty()) {
-            writer.print("order by ");
-            if (indent)
-                writer.println();
-
+            print(writer, "order by ", indent);
             print(writer, orderByTokens, ",", indent, false);
+        }
+
+        if (offsetToken == null && fetchToken != null && fetchToken.isForceOffset())
+            offsetToken = new OffsetToken(0);
+
+        if (offsetToken != null) {
+            writer.print("offset ");
+            writer.print(offsetToken.getExpression());
+            print(writer, " rows ", indent);
+        }
+
+        if (fetchToken != null) {
+            writer.print("fetch " + (offsetToken != null ? "next" : "first") + " ");
+            writer.print(fetchToken.getExpression());
+            print(writer, " rows only", indent);
         }
 
         writer.flush();
@@ -426,10 +452,14 @@ public class Select implements SQLStatement, SubQueryExpression {
             if (keepLastDelimiter || iter.hasNext())
                 writer.print(delimiter);
 
-            writer.print(' ');
-            if (indent)
-                writer.println();
+            print(writer, " ", indent);
         }
+    }
+
+    private void print(PrintWriter writer, String text, boolean indent) {
+        writer.print(text);
+        if (indent)
+            writer.println();
     }
 
     @Override
