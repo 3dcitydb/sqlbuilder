@@ -85,9 +85,9 @@ public class LikeOperator extends AbstractComparisonOperator {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-        getInvolvedPlaceHolders(operand, statements);
-        getInvolvedPlaceHolders(pattern, statements);
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        getInvolvedPlaceHolders(operand, placeHolders);
+        getInvolvedPlaceHolders(pattern, placeHolders);
     }
 
     @Override

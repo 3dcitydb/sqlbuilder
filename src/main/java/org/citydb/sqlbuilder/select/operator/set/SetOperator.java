@@ -96,9 +96,9 @@ public class SetOperator implements SQLStatement, SubQueryExpression {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
         for (Select operand : operands)
-            statements.addAll(operand.getInvolvedPlaceHolders());
+            placeHolders.addAll(operand.getInvolvedPlaceHolders());
     }
 
     @Override

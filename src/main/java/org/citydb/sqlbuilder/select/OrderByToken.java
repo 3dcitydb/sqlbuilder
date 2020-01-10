@@ -19,10 +19,15 @@
 
 package org.citydb.sqlbuilder.select;
 
+import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
+import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.orderBy.SortOrder;
 
-public class OrderByToken {
+import java.util.List;
+import java.util.Set;
+
+public class OrderByToken implements SelectToken {
     private final Column column;
     private final SortOrder sortOrder;
 
@@ -41,6 +46,16 @@ public class OrderByToken {
 
     public SortOrder getSortOrder() {
         return sortOrder;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        column.getInvolvedTables(tables);
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        column.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

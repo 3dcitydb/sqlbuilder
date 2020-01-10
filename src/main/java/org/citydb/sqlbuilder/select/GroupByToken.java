@@ -19,9 +19,14 @@
 
 package org.citydb.sqlbuilder.select;
 
+import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
+import org.citydb.sqlbuilder.schema.Table;
 
-public class GroupByToken {
+import java.util.List;
+import java.util.Set;
+
+public class GroupByToken implements SelectToken {
     private final Column column;
 
     public GroupByToken(Column column) {
@@ -30,6 +35,16 @@ public class GroupByToken {
 
     public Column getColumn() {
         return column;
+    }
+
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        column.getInvolvedTables(tables);
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        column.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

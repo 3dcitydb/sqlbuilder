@@ -40,7 +40,7 @@ public class Function implements ProjectionToken, Expression {
         this.name = name;
         this.asName = asName;
         this.useParentheses = useParentheses;
-        this.arguments = new ArrayList<Expression>();
+        this.arguments = new ArrayList<>();
     }
 
     public Function(String name) {
@@ -96,10 +96,10 @@ public class Function implements ProjectionToken, Expression {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
         for (Expression argument : arguments)
             if (argument instanceof PlaceHolder<?>)
-                statements.add((PlaceHolder<?>) argument);
+                placeHolders.add((PlaceHolder<?>) argument);
     }
 
     @Override
@@ -120,8 +120,7 @@ public class Function implements ProjectionToken, Expression {
             tmp.append(")");
 
         if (asName != null)
-            tmp.append(" as ")
-                    .append(asName);
+            tmp.append(" as ").append(asName);
 
         return tmp.toString();
     }

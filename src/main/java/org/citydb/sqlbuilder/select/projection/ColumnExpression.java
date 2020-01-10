@@ -54,8 +54,8 @@ public class ColumnExpression implements ProjectionToken {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-        select.getInvolvedPlaceHolders(statements);
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        select.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

@@ -74,9 +74,9 @@ public class InOperator extends AbstractComparisonOperator {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-        getInvolvedPlaceHolders(operand, statements);
-        subQueryExpression.getInvolvedPlaceHolders(statements);
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        getInvolvedPlaceHolders(operand, placeHolders);
+        subQueryExpression.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

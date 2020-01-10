@@ -19,13 +19,5 @@
 
 package org.citydb.sqlbuilder.select;
 
-import org.citydb.sqlbuilder.expression.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
-
-import java.util.List;
-import java.util.Set;
-
-public interface PredicateToken {
-    void getInvolvedTables(Set<Table> tables);
-    void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements);
+public interface PredicateToken extends SelectToken {
 }

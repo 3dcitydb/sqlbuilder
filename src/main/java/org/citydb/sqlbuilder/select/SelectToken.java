@@ -1,8 +1,17 @@
 /*
- * sqlbuilder - Dynamic SQL builder for the 3D City Database
+ * 3D City Database - The Open Source CityGML Database
  * http://www.3dcitydb.org/
  *
- * Copyright 2013-2018 Claus Nagel <claus.nagel@gmail.com>
+ * Copyright 2013 - 2020
+ * Chair of Geoinformatics
+ * Technical University of Munich, Germany
+ * https://www.gis.bgu.tum.de/
+ *
+ * The 3D City Database is jointly developed with the following
+ * cooperation partners:
+ *
+ * virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+ * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +26,15 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.expression;
+package org.citydb.sqlbuilder.select;
+
+import org.citydb.sqlbuilder.expression.PlaceHolder;
+import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
+import java.util.Set;
 
-public interface SubQueryExpression extends Expression {
+public interface SelectToken {
+    void getInvolvedTables(Set<Table> tables);
     void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders);
 }

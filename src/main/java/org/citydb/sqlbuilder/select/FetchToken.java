@@ -23,10 +23,12 @@ import org.citydb.sqlbuilder.expression.Expression;
 import org.citydb.sqlbuilder.expression.IntegerLiteral;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
+import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
+import java.util.Set;
 
-public class FetchToken {
+public class FetchToken implements SelectToken {
     private final Expression expression;
     private boolean forceOffset;
 
@@ -51,13 +53,22 @@ public class FetchToken {
         return this;
     }
 
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        if (expression instanceof ProjectionToken)
+            ((ProjectionToken) expression).getInvolvedTables(tables);
+        else if (expression instanceof PredicateToken)
+            ((PredicateToken) expression).getInvolvedTables(tables);
+    }
+
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
         if (expression instanceof PlaceHolder<?>)
-            statements.add((PlaceHolder<?>) expression);
+            placeHolders.add((PlaceHolder<?>) expression);
         else if (expression instanceof ProjectionToken)
-            ((ProjectionToken) expression).getInvolvedPlaceHolders(statements);
+            ((ProjectionToken) expression).getInvolvedPlaceHolders(placeHolders);
         else if (expression instanceof SubQueryExpression)
-            ((SubQueryExpression) expression).getInvolvedPlaceHolders(statements);
+            ((SubQueryExpression) expression).getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

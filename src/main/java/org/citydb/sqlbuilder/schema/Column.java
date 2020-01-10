@@ -59,7 +59,7 @@ public class Column implements ProjectionToken, Expression {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
         // nothing to do here
     }
 

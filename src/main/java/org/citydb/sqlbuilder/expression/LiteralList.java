@@ -89,10 +89,10 @@ public class LiteralList implements SubQueryExpression {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
         for (AbstractSQLLiteral<?> literal : literals) {
             if (literal instanceof PlaceHolder<?>)
-                statements.add((PlaceHolder<?>) literal);
+                placeHolders.add((PlaceHolder<?>) literal);
             else
                 break;
         }

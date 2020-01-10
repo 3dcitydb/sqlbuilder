@@ -84,12 +84,12 @@ public class ConstantColumn implements ProjectionToken, Expression {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
         if (literal instanceof PlaceHolder<?>)
-            statements.add((PlaceHolder<?>) literal);
+            placeHolders.add((PlaceHolder<?>) literal);
 
         if (table != null && table.isSetQueryExpression())
-            table.getQueryExpression().getInvolvedPlaceHolders(statements);
+            table.getQueryExpression().getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

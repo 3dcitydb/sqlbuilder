@@ -57,8 +57,8 @@ public class UnaryComparisonOperator extends AbstractComparisonOperator {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-        getInvolvedPlaceHolders(operand, statements);
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        getInvolvedPlaceHolders(operand, placeHolders);
     }
 
     @Override

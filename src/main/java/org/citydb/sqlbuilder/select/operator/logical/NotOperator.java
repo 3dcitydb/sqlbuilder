@@ -44,8 +44,8 @@ public class NotOperator extends AbstractLogicalOperator {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-        operand.getInvolvedPlaceHolders(statements);
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        operand.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

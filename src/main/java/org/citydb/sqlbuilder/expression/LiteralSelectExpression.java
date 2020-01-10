@@ -10,7 +10,7 @@ public class LiteralSelectExpression implements SubQueryExpression {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
         // nothing to do
     }
 

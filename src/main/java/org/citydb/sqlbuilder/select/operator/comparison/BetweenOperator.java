@@ -77,10 +77,10 @@ public class BetweenOperator extends AbstractComparisonOperator {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-        getInvolvedPlaceHolders(operand, statements);
-        getInvolvedPlaceHolders(lowerBound, statements);
-        getInvolvedPlaceHolders(upperBound, statements);
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        getInvolvedPlaceHolders(operand, placeHolders);
+        getInvolvedPlaceHolders(lowerBound, placeHolders);
+        getInvolvedPlaceHolders(upperBound, placeHolders);
     }
 
     @Override

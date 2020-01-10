@@ -75,9 +75,9 @@ public class BinaryLogicalOperator extends AbstractLogicalOperator {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
         for (PredicateToken operand : operands)
-            operand.getInvolvedPlaceHolders(statements);
+            operand.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

@@ -74,9 +74,9 @@ public class BinaryComparisonOperator extends AbstractComparisonOperator {
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> statements) {
-        getInvolvedPlaceHolders(leftOperand, statements);
-        getInvolvedPlaceHolders(rightOperand, statements);
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        getInvolvedPlaceHolders(leftOperand, placeHolders);
+        getInvolvedPlaceHolders(rightOperand, placeHolders);
     }
 
     @Override
