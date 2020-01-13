@@ -29,13 +29,19 @@ import java.util.Set;
 
 public class WildCardColumn implements ProjectionToken, Expression {
     private final Table table;
+    private final boolean useTableAlias;
 
-    public WildCardColumn() {
-        table = null;
+    public WildCardColumn(Table table, boolean useTableAlias) {
+        this.table = table;
+        this.useTableAlias = useTableAlias;
     }
 
     public WildCardColumn(Table table) {
-        this.table = table;
+        this(table, true);
+    }
+
+    public WildCardColumn() {
+        this(null, false);
     }
 
     public Table getTable() {
@@ -56,11 +62,9 @@ public class WildCardColumn implements ProjectionToken, Expression {
     @Override
     public String toString() {
         StringBuilder tmp = new StringBuilder();
-        if (table != null)
+        if (table != null && useTableAlias)
             tmp.append(table.getAlias()).append(".");
 
         return tmp.append("*").toString();
     }
-
-
 }
