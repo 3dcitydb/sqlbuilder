@@ -46,11 +46,11 @@ public class Select implements SQLStatement, SubQueryExpression {
     private final List<GroupByToken> groupByTokens = new ArrayList<>();
     private final List<HavingToken> havingTokens = new ArrayList<>();
     private final List<OrderByToken> orderByTokens = new ArrayList<>();
+    private final List<String> optimizerHints = new ArrayList<>();
     private OffsetToken offsetToken;
     private FetchToken fetchToken;
 
     private boolean distinct;
-    private String optimizerString;
     private String indentString = "  ";
     private String pseudoTable;
 
@@ -65,12 +65,12 @@ public class Select implements SQLStatement, SubQueryExpression {
         if (!other.groupByTokens.isEmpty()) groupByTokens.addAll(other.groupByTokens);
         if (!other.havingTokens.isEmpty()) havingTokens.addAll(other.havingTokens);
         if (!other.orderByTokens.isEmpty()) orderByTokens.addAll(other.orderByTokens);
+        if (!other.optimizerHints.isEmpty()) optimizerHints.addAll(other.optimizerHints);
 
         offsetToken = other.offsetToken;
         fetchToken = other.fetchToken;
 
         distinct = other.distinct;
-        optimizerString = other.optimizerString;
         indentString = other.indentString;
         pseudoTable = other.pseudoTable;
     }
@@ -93,12 +93,26 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public String getOptimizerString() {
-        return optimizerString;
+    public Select addOptimizerHint(String hint) {
+        optimizerHints.add(hint);
+        return this;
     }
 
-    public Select setOptimizerString(String optimizerString) {
-        this.optimizerString = optimizerString;
+    public Select addOptimizerHint(String... hints) {
+        optimizerHints.addAll(Arrays.asList(hints));
+        return this;
+    }
+
+    public List<String> getOptimizerHints() {
+        return new ArrayList<>(optimizerHints);
+    }
+
+    public boolean removeOptimizerHint(String hint) {
+        return optimizerHints.remove(hint);
+    }
+
+    public Select unsetOptimizerHints() {
+        optimizerHints.clear();
         return this;
     }
 
@@ -153,7 +167,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select addJoins(Join... joins) {
+    public Select addJoin(Join... joins) {
         this.joins.addAll(Arrays.asList(joins));
         return this;
     }
@@ -166,7 +180,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return joins.remove(join);
     }
 
-    public Select unsetJoin() {
+    public Select unsetJoins() {
         joins.clear();
         return this;
     }
@@ -366,9 +380,10 @@ public class Select implements SQLStatement, SubQueryExpression {
 
         writer.print("select ");
 
-        if (optimizerString != null) {
-            writer.print(optimizerString);
-            writer.print(" ");
+        if (!optimizerHints.isEmpty()) {
+            writer.print("/*+ ");
+            print(writer, optimizerHints, " ", false, false);
+            writer.print("*/ ");
         }
 
         if (distinct)
