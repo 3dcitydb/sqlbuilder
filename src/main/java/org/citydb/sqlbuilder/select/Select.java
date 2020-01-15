@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class Select implements SQLStatement, SubQueryExpression {
     private final List<CommonTableExpression> ctes = new ArrayList<>();
@@ -107,8 +108,14 @@ public class Select implements SQLStatement, SubQueryExpression {
         return new ArrayList<>(optimizerHints);
     }
 
-    public boolean removeOptimizerHint(String hint) {
-        return optimizerHints.remove(hint);
+    public Select removeOptimizerHint(String hint) {
+        optimizerHints.remove(hint);
+        return this;
+    }
+
+    public Select filterOptimizerHints(Predicate<String> filter) {
+        optimizerHints.removeIf(filter);
+        return this;
     }
 
     public Select unsetOptimizerHints() {
@@ -130,8 +137,14 @@ public class Select implements SQLStatement, SubQueryExpression {
         return new ArrayList<>(ctes);
     }
 
-    public boolean removeWith(CommonTableExpression cte) {
-        return ctes.remove(cte);
+    public Select removeWith(CommonTableExpression cte) {
+        ctes.remove(cte);
+        return this;
+    }
+
+    public Select filterWith(Predicate<CommonTableExpression> filter) {
+        ctes.removeIf(filter);
+        return this;
     }
 
     public Select unsetWith() {
@@ -153,8 +166,14 @@ public class Select implements SQLStatement, SubQueryExpression {
         return new ArrayList<>(projectionTokens);
     }
 
-    public boolean removeProjection(ProjectionToken token) {
-        return projectionTokens.remove(token);
+    public Select removeProjection(ProjectionToken token) {
+        projectionTokens.remove(token);
+        return this;
+    }
+
+    public Select filterProjection(Predicate<ProjectionToken> filter) {
+        projectionTokens.removeIf(filter);
+        return this;
     }
 
     public Select unsetProjection() {
@@ -176,8 +195,14 @@ public class Select implements SQLStatement, SubQueryExpression {
         return new ArrayList<>(joins);
     }
 
-    public boolean removeJoin(Join join) {
-        return joins.remove(join);
+    public Select removeJoin(Join join) {
+        joins.remove(join);
+        return this;
+    }
+
+    public Select filterJoins(Predicate<Join> filter) {
+        joins.removeIf(filter);
+        return this;
     }
 
     public Select unsetJoins() {
@@ -199,8 +224,14 @@ public class Select implements SQLStatement, SubQueryExpression {
         return new ArrayList<>(predicateTokens);
     }
 
-    public boolean removeSelection(PredicateToken token) {
-        return predicateTokens.remove(token);
+    public Select removeSelection(PredicateToken token) {
+        predicateTokens.remove(token);
+        return this;
+    }
+
+    public Select filterSelection(Predicate<PredicateToken> filter) {
+        predicateTokens.removeIf(filter);
+        return this;
     }
 
     public Select unsetSelection() {
@@ -222,8 +253,14 @@ public class Select implements SQLStatement, SubQueryExpression {
         return new ArrayList<>(havingTokens);
     }
 
-    public boolean removeHaving(HavingToken token) {
-        return havingTokens.remove(token);
+    public Select removeHaving(HavingToken token) {
+        havingTokens.remove(token);
+        return this;
+    }
+
+    public Select filterHaving(Predicate<HavingToken> filter) {
+        havingTokens.removeIf(filter);
+        return this;
     }
 
     public Select unsetHaving() {
@@ -256,8 +293,14 @@ public class Select implements SQLStatement, SubQueryExpression {
         return new ArrayList<>(groupByTokens);
     }
 
-    public boolean removeGroupBy(GroupByToken token) {
-        return groupByTokens.remove(token);
+    public Select removeGroupBy(GroupByToken token) {
+        groupByTokens.remove(token);
+        return this;
+    }
+
+    public Select filterGroupBy(Predicate<GroupByToken> filter) {
+        groupByTokens.removeIf(filter);
+        return this;
     }
 
     public Select unsetGroupBy() {
@@ -279,8 +322,14 @@ public class Select implements SQLStatement, SubQueryExpression {
         return new ArrayList<>(orderByTokens);
     }
 
-    public boolean removeOrderBy(OrderByToken token) {
-        return orderByTokens.remove(token);
+    public Select removeOrderBy(OrderByToken token) {
+        orderByTokens.remove(token);
+        return this;
+    }
+
+    public Select filterOrderBy(Predicate<OrderByToken> filter) {
+        orderByTokens.removeIf(filter);
+        return this;
     }
 
     public Select unsetOrderBy() {
