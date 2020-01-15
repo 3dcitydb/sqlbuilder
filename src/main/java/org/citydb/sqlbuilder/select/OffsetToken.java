@@ -20,7 +20,7 @@
 package org.citydb.sqlbuilder.select;
 
 import org.citydb.sqlbuilder.expression.Expression;
-import org.citydb.sqlbuilder.expression.IntegerLiteral;
+import org.citydb.sqlbuilder.expression.LongLiteral;
 import org.citydb.sqlbuilder.expression.PlaceHolder;
 import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import org.citydb.sqlbuilder.schema.Table;
@@ -35,8 +35,8 @@ public class OffsetToken implements SelectToken {
         this.expression = expression;
     }
 
-    public OffsetToken(int offset) {
-        this(new IntegerLiteral(Math.max(offset, 0)));
+    public OffsetToken(long offset) {
+        this(new LongLiteral(Math.max(offset, 0)));
     }
 
     public Expression getExpression() {
