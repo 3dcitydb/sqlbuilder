@@ -37,7 +37,7 @@ public class FetchToken implements SelectToken {
     }
 
     public FetchToken(long offset) {
-        this(new LongLiteral(Math.max(offset, 1)));
+        this(new LongLiteral(Math.max(offset, 0)));
     }
 
     public Expression getExpression() {
