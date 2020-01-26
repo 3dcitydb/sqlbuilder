@@ -113,7 +113,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select removeOptimizerHints(Predicate<String> filter) {
+    public Select removeOptimizerHintsIf(Predicate<String> filter) {
         optimizerHints.removeIf(filter);
         return this;
     }
@@ -142,7 +142,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select removeWith(Predicate<CommonTableExpression> filter) {
+    public Select removeWithIf(Predicate<CommonTableExpression> filter) {
         ctes.removeIf(filter);
         return this;
     }
@@ -171,7 +171,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select removeProjection(Predicate<ProjectionToken> filter) {
+    public Select removeProjectionIf(Predicate<ProjectionToken> filter) {
         projectionTokens.removeIf(filter);
         return this;
     }
@@ -200,7 +200,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select removeJoins(Predicate<Join> filter) {
+    public Select removeJoinsIf(Predicate<Join> filter) {
         joins.removeIf(filter);
         return this;
     }
@@ -229,7 +229,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select removeSelection(Predicate<PredicateToken> filter) {
+    public Select removeSelectionIf(Predicate<PredicateToken> filter) {
         predicateTokens.removeIf(filter);
         return this;
     }
@@ -258,7 +258,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select removeHaving(Predicate<HavingToken> filter) {
+    public Select removeHavingIf(Predicate<HavingToken> filter) {
         havingTokens.removeIf(filter);
         return this;
     }
@@ -298,7 +298,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select removeGroupBy(Predicate<GroupByToken> filter) {
+    public Select removeGroupByIf(Predicate<GroupByToken> filter) {
         groupByTokens.removeIf(filter);
         return this;
     }
@@ -327,7 +327,7 @@ public class Select implements SQLStatement, SubQueryExpression {
         return this;
     }
 
-    public Select removeOrderBy(Predicate<OrderByToken> filter) {
+    public Select removeOrderByIf(Predicate<OrderByToken> filter) {
         orderByTokens.removeIf(filter);
         return this;
     }
