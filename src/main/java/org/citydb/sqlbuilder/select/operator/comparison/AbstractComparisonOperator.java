@@ -25,6 +25,7 @@ import org.citydb.sqlbuilder.expression.SubQueryExpression;
 import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.PredicateToken;
 import org.citydb.sqlbuilder.select.ProjectionToken;
+import org.citydb.sqlbuilder.select.Select;
 import org.citydb.sqlbuilder.select.operator.Operator;
 
 import java.util.List;
@@ -37,6 +38,8 @@ public abstract class AbstractComparisonOperator implements Operator {
             ((ProjectionToken) operand).getInvolvedTables(tables);
         else if (operand instanceof PredicateToken)
             ((PredicateToken) operand).getInvolvedTables(tables);
+        else if (operand instanceof Select)
+            tables.addAll(((Select) operand).getOuterTables());
     }
 
     public void getInvolvedPlaceHolders(Expression operand, List<PlaceHolder<?>> statements) {

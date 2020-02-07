@@ -50,7 +50,7 @@ public class ColumnExpression implements ProjectionToken {
 
     @Override
     public void getInvolvedTables(Set<Table> tables) {
-        // nothing to do here
+        tables.addAll(select.getOuterTables());
     }
 
     @Override

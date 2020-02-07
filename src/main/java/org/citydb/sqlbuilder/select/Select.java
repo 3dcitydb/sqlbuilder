@@ -378,6 +378,29 @@ public class Select implements SQLStatement, SubQueryExpression {
         return tables;
     }
 
+    public Set<Table> getOuterTables() {
+        Set<Table> tables = new LinkedHashSet<>();
+
+        for (PredicateToken token : predicateTokens)
+            token.getInvolvedTables(tables);
+
+        for (HavingToken token : havingTokens)
+            token.getInvolvedTables(tables);
+
+        for (OrderByToken token : orderByTokens)
+            token.getInvolvedTables(tables);
+
+        if (offsetToken != null)
+            offsetToken.getInvolvedTables(tables);
+
+        if (fetchToken != null)
+            fetchToken.getInvolvedTables(tables);
+
+        tables.removeAll(getInvolvedTables());
+
+        return tables;
+    }
+
     @Override
     public List<PlaceHolder<?>> getInvolvedPlaceHolders() {
         List<PlaceHolder<?>> statements = new ArrayList<>();
