@@ -65,12 +65,12 @@ public class ComparisonFactory {
         return greaterThan(leftOperand, rightOperand, false);
     }
 
-    public static BinaryComparisonOperator greaterThanOrEqual(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static BinaryComparisonOperator greaterThanOrEqualTo(Expression leftOperand, Expression rightOperand, boolean negate) {
         return new BinaryComparisonOperator(leftOperand, !negate ? ComparisonName.GREATER_THAN_OR_EQUAL_TO : ComparisonName.LESS_THAN, rightOperand);
     }
 
-    public static BinaryComparisonOperator greaterThanOrEqual(Expression leftOperand, Expression rightOperand) {
-        return greaterThanOrEqual(leftOperand, rightOperand, false);
+    public static BinaryComparisonOperator greaterThanOrEqualTo(Expression leftOperand, Expression rightOperand) {
+        return greaterThanOrEqualTo(leftOperand, rightOperand, false);
     }
 
     public static UnaryComparisonOperator isNull(Expression operand, boolean negate) {
