@@ -124,8 +124,8 @@ public final class Table {
 
         if (obj instanceof Table) {
             Table other = (Table) obj;
-            return (schema == null ? other.schema == null : schema.toUpperCase().equals(other.schema.toUpperCase()))
-                    && name.toUpperCase().equals(other.name.toUpperCase())
+            return (schema == null ? other.schema == null : schema.equalsIgnoreCase(other.schema))
+                    && name.equalsIgnoreCase(other.name)
                     && alias.equals(other.alias);
         }
 
