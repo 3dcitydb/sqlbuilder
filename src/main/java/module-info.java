@@ -1,4 +1,6 @@
 module org.citydb.sqlbuilder {
+    requires transitive java.sql;
+
     exports org.citydb.sqlbuilder;
     exports org.citydb.sqlbuilder.expression;
     exports org.citydb.sqlbuilder.schema;

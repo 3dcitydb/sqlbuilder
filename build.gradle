@@ -9,10 +9,8 @@ description 'Dynamic SQL builder for the 3D City Database'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(17)
     }
-    withJavadocJar()
-    withSourcesJar()
 }
 
 tasks.named('compileJava') {
