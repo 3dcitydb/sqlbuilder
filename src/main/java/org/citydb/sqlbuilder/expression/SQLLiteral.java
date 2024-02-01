@@ -1,17 +1,10 @@
 /*
- * 3D City Database - The Open Source CityGML Database
+ * sqlbuilder - Dynamic SQL builder for the 3D City Database
  * https://www.3dcitydb.org/
  *
- * Copyright 2013 - 2021
- * Chair of Geoinformatics
- * Technical University of Munich, Germany
- * https://www.lrg.tum.de/gis/
- *
- * The 3D City Database is jointly developed with the following
- * cooperation partners:
- *
- * Virtual City Systems, Berlin <https://vc.systems/>
- * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+ * Copyright 2022-2024
+ * virtualcitysystems GmbH, Germany
+ * https://vc.systems/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +19,23 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.select.operator.logical;
+package org.citydb.sqlbuilder.expression;
 
-import org.citydb.sqlbuilder.select.operator.Operator;
+public abstract class SQLLiteral<T> implements Expression {
+    protected T value;
 
-public abstract class AbstractLogicalOperator implements Operator {
+    public SQLLiteral(T value) {
+        this.value = value;
+    }
+
+    public abstract SQLLiteralType getType();
+
+    public T getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

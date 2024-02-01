@@ -19,7 +19,9 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.select;
+package org.citydb.sqlbuilder.select.operator.logical;
 
-public interface PredicateToken extends SelectToken {
+import org.citydb.sqlbuilder.select.operator.Operator;
+
+public abstract class LogicalOperator implements Operator {
 }

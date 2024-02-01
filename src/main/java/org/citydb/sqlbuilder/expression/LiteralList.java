@@ -1,17 +1,10 @@
 /*
- * 3D City Database - The Open Source CityGML Database
+ * sqlbuilder - Dynamic SQL builder for the 3D City Database
  * https://www.3dcitydb.org/
  *
- * Copyright 2013 - 2021
- * Chair of Geoinformatics
- * Technical University of Munich, Germany
- * https://www.lrg.tum.de/gis/
- *
- * The 3D City Database is jointly developed with the following
- * cooperation partners:
- *
- * Virtual City Systems, Berlin <https://vc.systems/>
- * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+ * Copyright 2022-2024
+ * virtualcitysystems GmbH, Germany
+ * https://vc.systems/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +24,7 @@ package org.citydb.sqlbuilder.expression;
 import java.util.List;
 
 public class LiteralList implements SubQueryExpression {
-    private final AbstractSQLLiteral<?>[] literals;
+    private final SQLLiteral<?>[] literals;
 
     public LiteralList(boolean... literals) {
         this.literals = new BooleanLiteral[literals.length];
@@ -93,13 +86,13 @@ public class LiteralList implements SubQueryExpression {
         System.arraycopy(literals, 0, this.literals, 0, literals.length);
     }
 
-    public AbstractSQLLiteral<?>[] getLiterals() {
+    public SQLLiteral<?>[] getLiterals() {
         return literals;
     }
 
     @Override
     public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
-        for (AbstractSQLLiteral<?> literal : literals) {
+        for (SQLLiteral<?> literal : literals) {
             if (literal instanceof PlaceHolder<?>)
                 placeHolders.add((PlaceHolder<?>) literal);
             else
@@ -119,6 +112,4 @@ public class LiteralList implements SubQueryExpression {
 
         return tmp.toString();
     }
-
-
 }

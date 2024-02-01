@@ -1,17 +1,10 @@
 /*
- * 3D City Database - The Open Source CityGML Database
+ * sqlbuilder - Dynamic SQL builder for the 3D City Database
  * https://www.3dcitydb.org/
  *
- * Copyright 2013 - 2021
- * Chair of Geoinformatics
- * Technical University of Munich, Germany
- * https://www.lrg.tum.de/gis/
- *
- * The 3D City Database is jointly developed with the following
- * cooperation partners:
- *
- * Virtual City Systems, Berlin <https://vc.systems/>
- * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+ * Copyright 2022-2024
+ * virtualcitysystems GmbH, Germany
+ * https://vc.systems/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,16 +29,16 @@ import java.util.List;
 import java.util.Set;
 
 public class ConstantColumn implements ProjectionToken, Expression {
-    private final AbstractSQLLiteral<?> literal;
+    private final SQLLiteral<?> literal;
     private final String asName;
     private Table table;
 
-    public ConstantColumn(AbstractSQLLiteral<?> literal, String asName) {
+    public ConstantColumn(SQLLiteral<?> literal, String asName) {
         this.literal = literal;
         this.asName = asName;
     }
 
-    public ConstantColumn(AbstractSQLLiteral<?> literal) {
+    public ConstantColumn(SQLLiteral<?> literal) {
         this(literal, null);
     }
 
@@ -65,7 +58,7 @@ public class ConstantColumn implements ProjectionToken, Expression {
         this(new StringLiteral(value), null);
     }
 
-    public AbstractSQLLiteral<?> getLiteral() {
+    public SQLLiteral<?> getLiteral() {
         return literal;
     }
 
@@ -106,5 +99,4 @@ public class ConstantColumn implements ProjectionToken, Expression {
 
         return tmp.toString();
     }
-
 }
