@@ -1,22 +1,22 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'com.jfrog.artifactory' version '4.16.1'
 }
 
 group 'org.citydb'
-version '2.2.1'
+version '2.3.0-SNAPSHOT'
 description 'Dynamic SQL builder for the 3D City Database'
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(11)
     }
-    compileJava {
-        options.release = 8
-    }
     withJavadocJar()
     withSourcesJar()
+}
+
+tasks.named('compileJava') {
+    options.javaModuleVersion = provider { project.version }
 }
 
 repositories {
@@ -35,6 +35,19 @@ jar {
 }
 
 publishing {
+    repositories {
+        maven {
+            url project.hasProperty('gitLab_maven_url') ? project.property('gitLab_maven_url') : System.getenv('GITLAB_MAVEN_URL')
+            name 'gitlab-maven'
+            credentials(HttpHeaderCredentials) {
+                name = 'Private-Token'
+                value = project.hasProperty('gitLab_private_token') ? project.property('gitLab_private_token') : System.getenv('GITLAB_PRIVATE_TOKEN')
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+    }
     publications {
         mavenJava(MavenPublication) {
             from components.java
@@ -42,42 +55,11 @@ publishing {
                 name = project.name
                 description = project.description
                 url = 'https://github.com/3dcitydb'
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution = 'repo'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'clausnagel'
-                        name = 'Claus Nagel'
-                        email = 'claus.nagel@gmail.com'
-                        roles = ['architect', 'developer']
-                        timezone = '+1'
-                    }
-                }
                 scm {
                     url = 'https://github.com/3dcitydb/sqlbuilder'
                     connection = 'scm:git:https://github.com/3dcitydb/sqlbuilder.git'
                 }
             }
-        }
-    }
-}
-
-artifactory {
-    contextUrl = project.hasProperty('artifactory_contextUrl') ? project.property('artifactory_contextUrl') : System.getenv('artifactory_contextUrl')
-    publish {
-        repository {
-            repoKey = 'maven'
-            username = project.hasProperty('artifactory_user') ? project.property('artifactory_user') : System.getenv('artifactory_user')
-            password = project.hasProperty('artifactory_password') ? project.property('artifactory_password') : System.getenv('artifactory_password')
-            maven = true
-        }
-        defaults {
-            publications('mavenJava')
         }
     }
 }
