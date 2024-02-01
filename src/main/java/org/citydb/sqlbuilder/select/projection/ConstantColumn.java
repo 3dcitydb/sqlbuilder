@@ -28,11 +28,7 @@
 
 package org.citydb.sqlbuilder.select.projection;
 
-import org.citydb.sqlbuilder.expression.AbstractSQLLiteral;
-import org.citydb.sqlbuilder.expression.Expression;
-import org.citydb.sqlbuilder.expression.IntegerLiteral;
-import org.citydb.sqlbuilder.expression.PlaceHolder;
-import org.citydb.sqlbuilder.expression.StringLiteral;
+import org.citydb.sqlbuilder.expression.*;
 import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.select.ProjectionToken;
 
