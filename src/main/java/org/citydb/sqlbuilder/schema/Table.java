@@ -1,17 +1,10 @@
 /*
- * 3D City Database - The Open Source CityGML Database
+ * sqlbuilder - Dynamic SQL builder for the 3D City Database
  * https://www.3dcitydb.org/
  *
- * Copyright 2013 - 2021
- * Chair of Geoinformatics
- * Technical University of Munich, Germany
- * https://www.lrg.tum.de/gis/
- *
- * The 3D City Database is jointly developed with the following
- * cooperation partners:
- *
- * Virtual City Systems, Berlin <https://vc.systems/>
- * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+ * Copyright 2022-2024
+ * virtualcitysystems GmbH, Germany
+ * https://vc.systems/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,130 +21,152 @@
 
 package org.citydb.sqlbuilder.schema;
 
-import org.citydb.sqlbuilder.expression.SubQueryExpression;
-import org.citydb.sqlbuilder.select.Select;
-import org.citydb.sqlbuilder.select.operator.set.SetOperator;
+import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.common.SQLObject;
+import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.CommonTableExpression;
+import org.citydb.sqlbuilder.query.QueryExpression;
+import org.citydb.sqlbuilder.query.Select;
+import org.citydb.sqlbuilder.query.SetOperator;
+import org.citydb.sqlbuilder.util.AliasGenerator;
+import org.citydb.sqlbuilder.util.GlobalAliasGenerator;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public final class Table {
-    private String name;
-    private String alias;
-    private String schema;
-    private SubQueryExpression queryExpression;
+public final class Table implements SQLObject {
+    private final String name;
+    private final String alias;
+    private final String schema;
+    private final QueryExpression queryExpression;
 
-    public Table(String name, String schema, AliasGenerator aliasGenerator) {
-        this.name = name;
+    private Table(String name, String schema, QueryExpression queryExpression, AliasGenerator aliasGenerator) {
+        this.name = Objects.requireNonNull(name, "The table name must not be null.");
         this.schema = schema;
-
-        if (name == null || name.length() == 0)
-            throw new IllegalArgumentException("The table name shall neither be null nor empty.");
-
-        alias = aliasGenerator.nextAlias();
+        this.queryExpression = queryExpression;
+        alias = aliasGenerator != null ?
+                aliasGenerator.next() :
+                GlobalAliasGenerator.getInstance().next();
     }
 
-    public Table(String name, AliasGenerator aliasGenerator) {
-        this(name, null, aliasGenerator);
+    public static Table of(String name, String schema, AliasGenerator aliasGenerator) {
+        return new Table(name, schema, null, aliasGenerator);
     }
 
-    public Table(Select select, AliasGenerator aliasGenerator) {
-        this("(" + select + ")", aliasGenerator);
-        queryExpression = select;
+    public static Table of(String name, AliasGenerator aliasGenerator) {
+        return new Table(name, null, null, aliasGenerator);
     }
 
-    public Table(SetOperator setOperator, AliasGenerator aliasGenerator) {
-        this("(" + setOperator + ")", aliasGenerator);
-        queryExpression = setOperator;
+    public static Table of(Select select, AliasGenerator aliasGenerator) {
+        return new Table("", null, select, aliasGenerator);
     }
 
-    public Table(String name, String schema) {
-        this(name, schema, GlobalAliasGenerator.getInstance());
+    public static Table of(SetOperator setOperator, AliasGenerator aliasGenerator) {
+        return new Table("", null, setOperator, aliasGenerator);
     }
 
-    public Table(String name) {
-        this(name, GlobalAliasGenerator.getInstance());
+    public static Table of(CommonTableExpression cte, AliasGenerator aliasGenerator) {
+        return new Table(cte.getName(), null, null, aliasGenerator);
     }
 
-    public Table(Select select) {
-        this(select, GlobalAliasGenerator.getInstance());
+    public static Table of(String name, String schema) {
+        return of(name, schema, GlobalAliasGenerator.getInstance());
     }
 
-    public Table(SetOperator setOperator) {
-        this(setOperator, GlobalAliasGenerator.getInstance());
+    public static Table of(String name) {
+        return of(name, GlobalAliasGenerator.getInstance());
+    }
+
+    public static Table of(Select select) {
+        return of(select, GlobalAliasGenerator.getInstance());
+    }
+
+    public static Table of(SetOperator setOperator) {
+        return of(setOperator, GlobalAliasGenerator.getInstance());
+    }
+
+    public static Table of(CommonTableExpression cte) {
+        return of(cte, GlobalAliasGenerator.getInstance());
     }
 
     public String getName() {
         return name;
     }
 
-    public String getSchema() {
-        return schema;
+    public Optional<String> getSchema() {
+        return Optional.ofNullable(schema);
     }
 
     public String getAlias() {
         return alias;
     }
 
-    public boolean isSetQueryExpression() {
-        return queryExpression != null;
+    public Optional<QueryExpression> getQueryExpression() {
+        return Optional.ofNullable(queryExpression);
     }
 
-    public SubQueryExpression getQueryExpression() {
-        return queryExpression;
+    public Column column(String name) {
+        return Column.of(this, name);
     }
 
-    public Column getColumn(String columnName) {
-        return new Column(this, columnName);
+    public Column column(String name, String alias) {
+        return Column.of(this, name, alias);
     }
 
-    public Column getColumn(String columnName, String asName) {
-        return new Column(this, columnName, asName);
+    public List<Column> columns(String... columns) {
+        return columns != null ?
+                columns(Arrays.asList(columns)) :
+                Collections.emptyList();
     }
 
-    public Column[] getColumns(String... columnNames) {
-        Objects.requireNonNull(columnNames, "The column names array must not be null.");
-        Column[] columns = new Column[columnNames.length];
-        for (int i = 0; i < columnNames.length; i++)
-            columns[i] = getColumn(columnNames[i]);
+    public List<Column> columns(List<String> columns) {
+        return columns != null ?
+                columns.stream()
+                        .map(name -> Column.of(this, name))
+                        .collect(Collectors.toList()) :
+                Collections.emptyList();
+    }
 
-        return columns;
+    public List<Column> columns(Map<String, String> columns) {
+        return columns != null ?
+                columns.entrySet().stream()
+                        .map(e -> Column.of(this, e.getKey(), e.getValue()))
+                        .collect(Collectors.toList()) :
+                Collections.emptyList();
+    }
+
+    @Override
+    public void buildInvolvedTables(Set<Table> tables) {
+        tables.add(this);
+        if (queryExpression != null) {
+            queryExpression.buildInvolvedTables(tables);
+        }
+    }
+
+    @Override
+    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        if (queryExpression != null) {
+            queryExpression.buildInvolvedPlaceHolders(placeHolders);
+        }
+    }
+
+    @Override
+    public void buildSQL(SQLBuilder builder) {
+        if (queryExpression == null) {
+            if (schema != null && !schema.isEmpty()) {
+                builder.append(schema + ".");
+            }
+
+            builder.append(builder.identifier(name));
+        } else {
+            builder.append(queryExpression);
+        }
+
+        builder.append(" " + alias);
     }
 
     @Override
     public String toString() {
-        StringBuilder tmp = new StringBuilder();
-        if (schema != null && schema.length() > 0)
-            tmp.append(schema).append(".");
-
-        return tmp.append(name).append(" ").append(alias).toString();
+        return toSQL();
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-
-        if (obj instanceof Table) {
-            Table other = (Table) obj;
-            return (schema == null ? other.schema == null : schema.equalsIgnoreCase(other.schema))
-                    && name.equalsIgnoreCase(other.name)
-                    && alias.equals(other.alias);
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 1;
-
-        if (schema != null)
-            hash = hash * 31 + schema.toUpperCase().hashCode();
-
-        hash = hash * 31 + name.toUpperCase().hashCode();
-        hash = hash * 31 + alias.hashCode();
-
-        return hash;
-    }
-
 }

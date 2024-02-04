@@ -25,62 +25,50 @@ import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class Column implements ColumnExpression, Projection {
+public class WildCardColumn implements Projection {
     private final Table table;
-    private final String name;
-    private final String alias;
 
-    private Column(Table table, String name, String alias) {
-        this.table = Objects.requireNonNull(table, "The table must not be null.");
-        this.name = Objects.requireNonNull(name, "The column name must not be null.");
-        this.alias = alias;
+    private WildCardColumn(Table table) {
+        this.table = table;
     }
 
-    public static Column of(Table table, String name, String alias) {
-        return new Column(table, name, alias);
+    public static WildCardColumn newInstance() {
+        return new WildCardColumn(null);
     }
 
-    public static Column of(Table table, String name) {
-        return new Column(table, name, null);
+    public static WildCardColumn of(Table table) {
+        return new WildCardColumn(table);
     }
 
-    public Table getTable() {
-        return table;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Optional<String> getAlias() {
-        return Optional.ofNullable(alias);
+    public Optional<Table> getTable() {
+        return Optional.ofNullable(table);
     }
 
     @Override
     public void buildInvolvedTables(Set<Table> tables) {
-        table.buildInvolvedTables(tables);
-    }
-
-    @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        table.buildInvolvedPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSQL(SQLBuilder builder, boolean withAlias) {
-        builder.append(table.getAlias() + "." + builder.identifier(name));
-        if (withAlias && alias != null) {
-            builder.append(builder.keyword(" as ") + alias);
+        if (table != null) {
+            table.buildInvolvedTables(tables);
         }
     }
 
     @Override
+    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        if (table != null) {
+            table.buildInvolvedPlaceHolders(placeHolders);
+        }
+    }
+
+    @Override
+    public void buildSQL(SQLBuilder builder, boolean withAlias) {
+        buildSQL(builder);
+    }
+
+    @Override
     public void buildSQL(SQLBuilder builder) {
-        buildSQL(builder, false);
+        builder.append(table != null ? table.getAlias() + ".*" : "*");
     }
 
     @Override

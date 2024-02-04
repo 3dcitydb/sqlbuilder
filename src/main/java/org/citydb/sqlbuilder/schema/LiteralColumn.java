@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
@@ -29,31 +30,25 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class Column implements ColumnExpression, Projection {
-    private final Table table;
-    private final String name;
+public class LiteralColumn implements ColumnExpression, Projection {
+    private final Literal<?> literal;
     private final String alias;
 
-    private Column(Table table, String name, String alias) {
-        this.table = Objects.requireNonNull(table, "The table must not be null.");
-        this.name = Objects.requireNonNull(name, "The column name must not be null.");
+    private LiteralColumn(Literal<?> literal, String alias) {
+        this.literal = Objects.requireNonNull(literal, "The literal must not be null.");
         this.alias = alias;
     }
 
-    public static Column of(Table table, String name, String alias) {
-        return new Column(table, name, alias);
+    public static LiteralColumn of(Literal<?> literal, String alias) {
+        return new LiteralColumn(literal, alias);
     }
 
-    public static Column of(Table table, String name) {
-        return new Column(table, name, null);
+    public static LiteralColumn of(Literal<?> literal) {
+        return new LiteralColumn(literal, null);
     }
 
-    public Table getTable() {
-        return table;
-    }
-
-    public String getName() {
-        return name;
+    public Literal<?> getLiteral() {
+        return literal;
     }
 
     public Optional<String> getAlias() {
@@ -62,17 +57,17 @@ public class Column implements ColumnExpression, Projection {
 
     @Override
     public void buildInvolvedTables(Set<Table> tables) {
-        table.buildInvolvedTables(tables);
+        literal.buildInvolvedTables(tables);
     }
 
     @Override
     public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        table.buildInvolvedPlaceHolders(placeHolders);
+        literal.buildInvolvedPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder, boolean withAlias) {
-        builder.append(table.getAlias() + "." + builder.identifier(name));
+        builder.append(literal);
         if (withAlias && alias != null) {
             builder.append(builder.keyword(" as ") + alias);
         }
