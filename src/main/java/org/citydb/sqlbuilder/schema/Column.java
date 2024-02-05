@@ -23,6 +23,8 @@ package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.OrderBy;
+import org.citydb.sqlbuilder.query.SortOrder;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,6 +69,14 @@ public class Column implements ColumnExpression, Projection<Column> {
     public Column as(String alias) {
         this.alias = alias;
         return this;
+    }
+
+    public OrderBy asc() {
+        return OrderBy.of(this, SortOrder.ASCENDING);
+    }
+
+    public OrderBy desc() {
+        return OrderBy.of(this, SortOrder.DESCENDING);
     }
 
     @Override

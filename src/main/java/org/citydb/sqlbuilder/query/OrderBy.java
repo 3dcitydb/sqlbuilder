@@ -29,23 +29,34 @@ import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 public class OrderBy implements SQLObject {
     private final Column column;
     private final SortOrder sortOrder;
+    private NullOrder nullOrder;
 
-    private OrderBy(Column column, SortOrder sortOrder) {
+    private OrderBy(Column column, SortOrder sortOrder, NullOrder nullOrder) {
         this.column = Objects.requireNonNull(column, "The column must not be null.");
-        this.sortOrder = Objects.requireNonNull(sortOrder, "The sort order must not be null.");
+        this.sortOrder = sortOrder != null ? sortOrder : SortOrder.ASCENDING;
+        this.nullOrder = nullOrder;
+    }
+
+    public static OrderBy of(Column column, SortOrder sortOrder, NullOrder nullOrder) {
+        return new OrderBy(column, sortOrder, nullOrder);
     }
 
     public static OrderBy of(Column column, SortOrder sortOrder) {
-        return new OrderBy(column, sortOrder);
+        return new OrderBy(column, sortOrder, null);
+    }
+
+    public static OrderBy of(Column column, NullOrder nullOrder) {
+        return new OrderBy(column, SortOrder.ASCENDING, nullOrder);
     }
 
     public static OrderBy of(Column column) {
-        return new OrderBy(column, SortOrder.ASCENDING);
+        return new OrderBy(column, SortOrder.ASCENDING, null);
     }
 
     public Column getColumn() {
@@ -54,6 +65,20 @@ public class OrderBy implements SQLObject {
 
     public SortOrder getSortOrder() {
         return sortOrder;
+    }
+
+    public Optional<NullOrder> getNullOrder() {
+        return Optional.ofNullable(nullOrder);
+    }
+
+    public OrderBy nullsFirst() {
+        nullOrder = NullOrder.NULLS_FIRST;
+        return this;
+    }
+
+    public OrderBy nullsLast() {
+        nullOrder = NullOrder.NULLS_LAST;
+        return this;
     }
 
     @Override
@@ -71,6 +96,10 @@ public class OrderBy implements SQLObject {
         builder.append(column);
         if (sortOrder != SortOrder.ASCENDING) {
             builder.append(" " + sortOrder.toSQL(builder));
+        }
+
+        if (nullOrder != null) {
+            builder.append(" " + nullOrder.toSQL(builder));
         }
     }
 

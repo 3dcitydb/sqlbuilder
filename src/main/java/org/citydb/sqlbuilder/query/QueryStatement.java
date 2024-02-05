@@ -93,11 +93,6 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
         return self();
     }
 
-    public T orderBy(Column column, SortOrder sortOrder) {
-        orderBy.add(OrderBy.of(column, sortOrder));
-        return self();
-    }
-
     public Optional<Long> getOffset() {
         return Optional.ofNullable(offset);
     }
