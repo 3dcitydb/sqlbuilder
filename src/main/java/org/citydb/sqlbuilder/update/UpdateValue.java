@@ -67,7 +67,7 @@ public class UpdateValue implements SQLObject {
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(column.getName())
+        builder.append(builder.identifier(column.getName()))
                 .append(" = ")
                 .append(value);
     }
