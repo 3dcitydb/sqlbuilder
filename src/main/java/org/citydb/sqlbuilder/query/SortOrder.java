@@ -22,9 +22,8 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLEnum;
 
-public enum SortOrder implements SQLEnum {
+public enum SortOrder {
     ASCENDING("asc"),
     DESCENDING("desc");
 
@@ -34,13 +33,12 @@ public enum SortOrder implements SQLEnum {
         this.sql = sql;
     }
 
-    @Override
     public String toSQL(SQLBuilder builder) {
         return builder.keyword(sql);
     }
 
     @Override
     public String toString() {
-        return toSQL(SQLBuilder.newInstance());
+        return sql;
     }
 }

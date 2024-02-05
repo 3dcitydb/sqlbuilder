@@ -24,8 +24,11 @@ package org.citydb.sqlbuilder.query;
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.join.Join;
+import org.citydb.sqlbuilder.join.JoinType;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.predicate.Predicate;
+import org.citydb.sqlbuilder.predicate.comparison.ComparisonOperator;
+import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Projection;
 import org.citydb.sqlbuilder.schema.Table;
 
@@ -125,6 +128,10 @@ public class Select extends QueryStatement<Select> {
         return this;
     }
 
+    public JoinBuilder join(Table table) {
+        return new JoinBuilder(table);
+    }
+
     public List<Predicate> getWhere() {
         return where;
     }
@@ -132,6 +139,18 @@ public class Select extends QueryStatement<Select> {
     public Select where(Predicate... predicates) {
         where.addAll(Arrays.asList(predicates));
         return this;
+    }
+
+    public SetOperator union(Select other) {
+        return Sets.union(this, other);
+    }
+
+    public SetOperator unionAll(Select other) {
+        return Sets.unionAll(this, other);
+    }
+
+    public SetOperator intersect(Select other) {
+        return Sets.intersect(this, other);
     }
 
     @Override
@@ -159,15 +178,6 @@ public class Select extends QueryStatement<Select> {
         groupBy.forEach(groupBy -> groupBy.buildInvolvedTables(tables));
         having.forEach(having -> having.buildInvolvedTables(tables));
         orderBy.forEach(orderBy -> orderBy.buildInvolvedTables(tables));
-
-        if (offset != null) {
-            offset.buildInvolvedTables(tables);
-        }
-
-        if (fetch != null) {
-            fetch.buildInvolvedTables(tables);
-        }
-
         tables.removeAll(getInvolvedTables());
     }
 
@@ -185,14 +195,6 @@ public class Select extends QueryStatement<Select> {
         groupBy.forEach(groupBy -> groupBy.buildInvolvedPlaceHolders(placeHolders));
         having.forEach(having -> having.buildInvolvedPlaceHolders(placeHolders));
         orderBy.forEach(orderBy -> orderBy.buildInvolvedPlaceHolders(placeHolders));
-
-        if (offset != null) {
-            offset.buildInvolvedPlaceHolders(placeHolders);
-        }
-
-        if (fetch != null) {
-            fetch.buildInvolvedPlaceHolders(placeHolders);
-        }
     }
 
     @Override
@@ -264,5 +266,44 @@ public class Select extends QueryStatement<Select> {
     @Override
     protected Select self() {
         return this;
+    }
+
+    public class JoinBuilder {
+        private final Table table;
+
+        private JoinBuilder(Table table) {
+            this.table = table;
+        }
+
+        public Select on(ComparisonOperator operator) {
+            return build(JoinType.INNER_JOIN, operator);
+        }
+
+        public Select inner(ComparisonOperator operator) {
+            return build(JoinType.INNER_JOIN, operator);
+        }
+
+        public Select left(ComparisonOperator operator) {
+            return build(JoinType.LEFT_JOIN, operator);
+        }
+
+        public Select right(ComparisonOperator operator) {
+            return build(JoinType.RIGHT_JOIN, operator);
+        }
+
+        public Select full(ComparisonOperator operator) {
+            return build(JoinType.FULL_JOIN, operator);
+        }
+
+        private Select build(JoinType type, ComparisonOperator operator) {
+            if (operator.getLeftOperand() instanceof Column toColumn
+                    && operator.getRightOperand() instanceof Column fromColumn
+                    && (toColumn.getTable() == table
+                    || fromColumn.getTable() == table)) {
+                joins.add(Join.of(type, toColumn, operator.getType(), fromColumn));
+            }
+
+            return Select.this;
+        }
     }
 }

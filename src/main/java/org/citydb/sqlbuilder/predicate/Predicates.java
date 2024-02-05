@@ -32,64 +32,54 @@ import java.util.List;
 
 public class Predicates {
 
-    public static ComparisonOperator equalTo(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static ComparisonOperator eq(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
                 !negate ? ComparisonOperatorType.EQUAL_TO : ComparisonOperatorType.NOT_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperator equalTo(Expression leftOperand, Expression rightOperand) {
-        return equalTo(leftOperand, rightOperand, false);
+    public static ComparisonOperator eq(Expression leftOperand, Expression rightOperand) {
+        return eq(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperator notEqualTo(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperator.of(leftOperand,
-                !negate ? ComparisonOperatorType.NOT_EQUAL_TO : ComparisonOperatorType.EQUAL_TO,
-                rightOperand);
-    }
-
-    public static ComparisonOperator notEqualTo(Expression leftOperand, Expression rightOperand) {
-        return notEqualTo(leftOperand, rightOperand, false);
-    }
-
-    public static ComparisonOperator lessThan(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static ComparisonOperator lt(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
                 !negate ? ComparisonOperatorType.LESS_THAN : ComparisonOperatorType.GREATER_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperator lessThan(Expression leftOperand, Expression rightOperand) {
-        return lessThan(leftOperand, rightOperand, false);
+    public static ComparisonOperator lt(Expression leftOperand, Expression rightOperand) {
+        return lt(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperator lessThanOrEqualTo(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static ComparisonOperator le(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
                 !negate ? ComparisonOperatorType.LESS_THAN_OR_EQUAL_TO : ComparisonOperatorType.GREATER_THAN,
                 rightOperand);
     }
 
-    public static ComparisonOperator lessThanOrEqualTo(Expression leftOperand, Expression rightOperand) {
-        return lessThanOrEqualTo(leftOperand, rightOperand, false);
+    public static ComparisonOperator le(Expression leftOperand, Expression rightOperand) {
+        return le(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperator greaterThan(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static ComparisonOperator gt(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
                 !negate ? ComparisonOperatorType.GREATER_THAN : ComparisonOperatorType.LESS_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperator greaterThan(Expression leftOperand, Expression rightOperand) {
-        return greaterThan(leftOperand, rightOperand, false);
+    public static ComparisonOperator gt(Expression leftOperand, Expression rightOperand) {
+        return gt(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperator greaterThanOrEqualTo(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static ComparisonOperator ge(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
                 !negate ? ComparisonOperatorType.GREATER_THAN_OR_EQUAL_TO : ComparisonOperatorType.LESS_THAN,
                 rightOperand);
     }
 
-    public static ComparisonOperator greaterThanOrEqualTo(Expression leftOperand, Expression rightOperand) {
-        return greaterThanOrEqualTo(leftOperand, rightOperand, false);
+    public static ComparisonOperator ge(Expression leftOperand, Expression rightOperand) {
+        return ge(leftOperand, rightOperand, false);
     }
 
     public static UnaryLogicalOperator isNull(Expression operand, boolean negate) {
@@ -101,15 +91,6 @@ public class Predicates {
         return isNull(operand, false);
     }
 
-    public static UnaryLogicalOperator isNotNull(Expression operand, boolean negate) {
-        return UnaryLogicalOperator.of(operand,
-                !negate ? LogicalOperatorType.IS_NOT_NULL : LogicalOperatorType.IS_NULL);
-    }
-
-    public static UnaryLogicalOperator isNotNull(Expression operand) {
-        return isNotNull(operand, false);
-    }
-
     public static UnaryLogicalOperator exists(Expression operand, boolean negate) {
         return UnaryLogicalOperator.of(operand,
                 !negate ? LogicalOperatorType.EXISTS : LogicalOperatorType.NOT_EXISTS);
@@ -117,15 +98,6 @@ public class Predicates {
 
     public static UnaryLogicalOperator exists(Expression operand) {
         return exists(operand, false);
-    }
-
-    public static UnaryLogicalOperator notExists(Expression operand, boolean negate) {
-        return UnaryLogicalOperator.of(operand,
-                !negate ? LogicalOperatorType.NOT_EXISTS : LogicalOperatorType.EXISTS);
-    }
-
-    public static UnaryLogicalOperator notExists(Expression operand) {
-        return notExists(operand, false);
     }
 
     public static UnaryLogicalOperator all(Expression operand) {
@@ -152,18 +124,6 @@ public class Predicates {
         return Like.of(operand, pattern);
     }
 
-    public static Like notLike(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
-        return Like.of(operand, pattern, escapeCharacter, !negate);
-    }
-
-    public static Like notLike(Expression operand, Expression pattern, StringLiteral escapeCharacter) {
-        return Like.of(operand, pattern, escapeCharacter, true);
-    }
-
-    public static Like notLike(Expression operand, Expression pattern) {
-        return Like.of(operand, pattern, true);
-    }
-
     public static Between between(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
         return Between.of(operand, lowerBound, upperBound, negate);
     }
@@ -172,28 +132,12 @@ public class Predicates {
         return Between.of(operand, lowerBound, upperBound);
     }
 
-    public static Between notBetween(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
-        return Between.of(operand, lowerBound, upperBound, !negate);
-    }
-
-    public static Between notBetween(Expression operand, Expression lowerBound, Expression upperBound) {
-        return Between.of(operand, lowerBound, upperBound, true);
-    }
-
     public static In in(Expression operand, QueryExpression queryExpression, boolean negate) {
         return In.of(operand, queryExpression, negate);
     }
 
     public static In in(Expression operand, QueryExpression queryExpression) {
         return In.of(operand, queryExpression);
-    }
-
-    public static In notIn(Expression operand, QueryExpression queryExpression, boolean negate) {
-        return In.of(operand, queryExpression, !negate);
-    }
-
-    public static In notIn(Expression operand, QueryExpression queryExpression) {
-        return In.of(operand, queryExpression, true);
     }
 
     public static BinaryLogicalOperator and(List<Predicate> operands) {

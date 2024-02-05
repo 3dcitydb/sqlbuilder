@@ -41,7 +41,7 @@ public class LiteralList implements QueryExpression {
     }
 
     public static LiteralList of(Object... values) {
-        return of(values != null ? Arrays.asList(values) : null);
+        return of(values != null ? new ArrayList<>(Arrays.asList(values)) : null);
     }
 
     public static LiteralList of(List<Object> values) {

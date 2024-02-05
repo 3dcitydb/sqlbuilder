@@ -135,6 +135,10 @@ public final class Table implements SQLObject {
                 Collections.emptyList();
     }
 
+    public WildCardColumn wildCard() {
+        return WildCardColumn.of(this);
+    }
+
     @Override
     public void buildInvolvedTables(Set<Table> tables) {
         tables.add(this);

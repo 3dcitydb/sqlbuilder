@@ -22,11 +22,10 @@
 package org.citydb.sqlbuilder.predicate.logical;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLEnum;
 
 import java.util.EnumSet;
 
-public enum LogicalOperatorType implements SQLEnum {
+public enum LogicalOperatorType {
     AND("and"),
     OR("or"),
     NOT("not"),
@@ -53,13 +52,12 @@ public enum LogicalOperatorType implements SQLEnum {
         this.sql = sql;
     }
 
-    @Override
     public String toSQL(SQLBuilder builder) {
         return builder.keyword(sql);
     }
 
     @Override
     public String toString() {
-        return toSQL(SQLBuilder.newInstance());
+        return sql;
     }
 }

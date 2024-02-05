@@ -48,7 +48,9 @@ public class Function implements ColumnExpression, Projection {
     }
 
     public static Function of(String name, String alias, boolean useParentheses, Expression... arguments) {
-        return new Function(name, alias, useParentheses, arguments != null ? Arrays.asList(arguments) : null);
+        return new Function(name, alias, useParentheses, arguments != null ?
+                new ArrayList<>(Arrays.asList(arguments)) :
+                null);
     }
 
     public static Function of(String name) {

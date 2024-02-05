@@ -22,9 +22,8 @@
 package org.citydb.sqlbuilder.join;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLEnum;
 
-public enum JoinType implements SQLEnum {
+public enum JoinType {
     INNER_JOIN("inner join"),
     LEFT_JOIN("left join"),
     RIGHT_JOIN("right join"),
@@ -36,13 +35,12 @@ public enum JoinType implements SQLEnum {
         this.sql = sql;
     }
 
-    @Override
     public String toSQL(SQLBuilder builder) {
         return builder.keyword(sql);
     }
 
     @Override
     public String toString() {
-        return toSQL(SQLBuilder.newInstance());
+        return sql;
     }
 }

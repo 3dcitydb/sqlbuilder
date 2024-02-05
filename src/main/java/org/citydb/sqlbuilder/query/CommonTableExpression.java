@@ -30,37 +30,31 @@ import java.util.*;
 
 public class CommonTableExpression implements SQLObject {
     private final String name;
-    private final QueryExpression queryExpression;
+    private final QueryStatement<?> queryStatement;
     private final List<String> columns;
 
-    private CommonTableExpression(String name, QueryExpression queryExpression, List<String> columns) {
+    private CommonTableExpression(String name, QueryStatement<?> queryStatement, List<String> columns) {
         this.name = Objects.requireNonNull(name, "The name must not be null.");
-        this.queryExpression = Objects.requireNonNull(queryExpression, "The query expression must not be null.");
+        this.queryStatement = Objects.requireNonNull(queryStatement, "The query statement must not be null.");
         this.columns = columns;
     }
 
-    public static CommonTableExpression of(String name, Select select, String... columns) {
-        return of(name, select, columns != null ? Arrays.asList(columns) : null);
+    public static CommonTableExpression of(String name, QueryStatement<?> queryStatement, String... columns) {
+        return of(name, queryStatement, columns != null ?
+                new ArrayList<>(Arrays.asList(columns)) :
+                null);
     }
 
-    public static CommonTableExpression of(String name, Select select, List<String> columns) {
-        return new CommonTableExpression(name, select, columns);
-    }
-
-    public static CommonTableExpression of(String name, SetOperator setOperator, String... columns) {
-        return new CommonTableExpression(name, setOperator, columns != null ? Arrays.asList(columns) : null);
-    }
-
-    public static CommonTableExpression of(String name, SetOperator setOperator, List<String> columns) {
-        return new CommonTableExpression(name, setOperator, columns);
+    public static CommonTableExpression of(String name, QueryStatement<?> queryStatement, List<String> columns) {
+        return new CommonTableExpression(name, queryStatement, columns);
     }
 
     public String getName() {
         return name;
     }
 
-    public QueryExpression getQueryExpression() {
-        return queryExpression;
+    public QueryStatement<?> getQueryStatement() {
+        return queryStatement;
     }
 
     public List<String> getColumns() {
@@ -69,12 +63,12 @@ public class CommonTableExpression implements SQLObject {
 
     @Override
     public void buildInvolvedTables(Set<Table> tables) {
-        queryExpression.buildInvolvedTables(tables);
+        queryStatement.buildInvolvedTables(tables);
     }
 
     @Override
     public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        queryExpression.buildInvolvedPlaceHolders(placeHolders);
+        queryStatement.buildInvolvedPlaceHolders(placeHolders);
     }
 
     @Override
@@ -87,7 +81,7 @@ public class CommonTableExpression implements SQLObject {
         }
 
         builder.append(builder.keyword(" as "))
-                .append(queryExpression);
+                .append(queryStatement);
     }
 
     @Override

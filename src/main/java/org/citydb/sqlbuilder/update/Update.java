@@ -22,15 +22,18 @@
 package org.citydb.sqlbuilder.update;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLStatement;
+import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.Statement;
+import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.predicate.Predicate;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
+import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
 
-public class Update implements SQLStatement {
+public class Update implements Statement {
     private final List<CommonTableExpression> with;
     private final List<UpdateValue> set;
     private final List<Predicate> where;
@@ -82,6 +85,10 @@ public class Update implements SQLStatement {
     public Update set(UpdateValue... values) {
         set.addAll(Arrays.asList(values));
         return this;
+    }
+
+    public UpdateValueBuilder set(Column column) {
+        return new UpdateValueBuilder(column);
     }
 
     public List<Predicate> getWhere() {
@@ -165,5 +172,20 @@ public class Update implements SQLStatement {
     @Override
     public String toString() {
         return toSQL();
+    }
+
+    public class UpdateValueBuilder {
+        private final Column column;
+
+        private UpdateValueBuilder(Column column) {
+            this.column = column;
+        }
+
+        public Update value(Object value) {
+            set.add(UpdateValue.of(column, value instanceof Expression expression ?
+                    expression :
+                    Literals.of(value)));
+            return Update.this;
+        }
     }
 }

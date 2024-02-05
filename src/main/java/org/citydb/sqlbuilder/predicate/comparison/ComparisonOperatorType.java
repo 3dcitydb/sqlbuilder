@@ -22,9 +22,8 @@
 package org.citydb.sqlbuilder.predicate.comparison;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLEnum;
 
-public enum ComparisonOperatorType implements SQLEnum {
+public enum ComparisonOperatorType {
     EQUAL_TO("="),
     NOT_EQUAL_TO("<>"),
     LESS_THAN("<"),
@@ -38,13 +37,12 @@ public enum ComparisonOperatorType implements SQLEnum {
         this.sql = sql;
     }
 
-    @Override
     public String toSQL(SQLBuilder builder) {
         return builder.keyword(sql);
     }
 
     @Override
     public String toString() {
-        return toSQL(SQLBuilder.newInstance());
+        return sql;
     }
 }

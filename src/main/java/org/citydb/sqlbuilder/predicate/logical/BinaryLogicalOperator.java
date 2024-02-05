@@ -48,7 +48,9 @@ public class BinaryLogicalOperator implements LogicalOperator {
     }
 
     public static BinaryLogicalOperator of(LogicalOperatorType type, Predicate... operands) {
-        return new BinaryLogicalOperator(type, operands != null ? Arrays.asList(operands) : null);
+        return new BinaryLogicalOperator(type, operands != null ?
+                new ArrayList<>(Arrays.asList(operands)) :
+                null);
     }
 
     public static BinaryLogicalOperator of(Predicate leftOperand, LogicalOperatorType type, Predicate rightOperand) {
@@ -62,7 +64,7 @@ public class BinaryLogicalOperator implements LogicalOperator {
         return operands;
     }
 
-    public BinaryLogicalOperator operand(Predicate operand) {
+    public BinaryLogicalOperator add(Predicate operand) {
         if (operand != null) {
             operands.add(operand);
         }

@@ -22,9 +22,8 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLEnum;
 
-public enum SetOperationType implements SQLEnum {
+public enum SetOperationType {
     INTERSECT("intersect"),
     UNION("union"),
     UNION_ALL("union all");
@@ -35,13 +34,12 @@ public enum SetOperationType implements SQLEnum {
         this.sql = sql;
     }
 
-    @Override
     public String toSQL(SQLBuilder builder) {
         return builder.keyword(sql);
     }
 
     @Override
     public String toString() {
-        return toSQL(SQLBuilder.newInstance());
+        return sql;
     }
 }

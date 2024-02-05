@@ -30,6 +30,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class Column implements ColumnExpression, Projection {
+    public static final WildCardColumn WILDCARD = WildCardColumn.newInstance();
+
     private final Table table;
     private final String name;
     private final String alias;

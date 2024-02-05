@@ -23,22 +23,22 @@ package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
-import org.citydb.sqlbuilder.common.SQLStatement;
+import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.function.Function;
-import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.predicate.Predicate;
 import org.citydb.sqlbuilder.schema.Column;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-public abstract class QueryStatement<T extends QueryStatement<?>> implements SQLStatement, QueryExpression {
+public abstract class QueryStatement<T extends QueryStatement<?>> implements Statement, QueryExpression {
     protected final List<Column> groupBy;
     protected final List<Expression> having;
     protected final List<OrderBy> orderBy;
-    protected Literal<?> offset;
-    protected Literal<?> fetch;
+    protected Long offset;
+    protected Long fetch;
 
     protected abstract T self();
 
@@ -88,27 +88,42 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements SQL
         return self();
     }
 
-    public Literal<?> getOffset() {
-        return offset;
+    public T orderBy(Column column) {
+        orderBy.add(OrderBy.of(column));
+        return self();
     }
 
-    public T offset(Literal<?> offset) {
-        return offset(offset, null);
+    public T orderBy(Column column, SortOrder sortOrder) {
+        orderBy.add(OrderBy.of(column, sortOrder));
+        return self();
     }
 
-    public T offset(Literal<?> offset, Literal<?> fetch) {
+    public Optional<Long> getOffset() {
+        return Optional.ofNullable(offset);
+    }
+
+    public T offset(long offset) {
+        this.offset = offset;
+        return self();
+    }
+
+    public T offset(long offset, long fetch) {
         this.offset = offset;
         this.fetch = fetch;
         return self();
     }
 
-    public Literal<?> getFetch() {
-        return fetch;
+    public Optional<Long> getFetch() {
+        return Optional.ofNullable(fetch);
     }
 
-    public T fetch(Literal<?> fetch) {
+    public T fetch(long fetch) {
         this.fetch = fetch;
         return self();
+    }
+
+    public CommonTableExpression cte(String name, String... columns) {
+        return CommonTableExpression.of(name, this, columns);
     }
 
     @Override
@@ -137,7 +152,7 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements SQL
         if (offset != null) {
             builder.newline()
                     .append(builder.keyword("offset "))
-                    .append(offset)
+                    .append(String.valueOf(offset))
                     .append(builder.keyword(" rows "));
         }
 
@@ -148,7 +163,7 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements SQL
 
             builder.append(builder.keyword("fetch "))
                     .append(builder.keyword(offset != null ? "next " : "first "))
-                    .append(fetch)
+                    .append(String.valueOf(fetch))
                     .append(builder.keyword(" rows only "));
         }
     }

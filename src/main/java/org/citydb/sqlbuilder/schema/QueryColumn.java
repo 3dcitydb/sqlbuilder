@@ -30,7 +30,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class QueryColumn implements Projection {
+public class QueryColumn implements ColumnExpression, Projection {
     private final Select select;
     private final String alias;
 

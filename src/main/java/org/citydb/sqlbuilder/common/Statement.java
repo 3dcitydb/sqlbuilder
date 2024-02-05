@@ -27,7 +27,7 @@ import org.citydb.sqlbuilder.schema.Table;
 import java.util.List;
 import java.util.Set;
 
-public interface SQLStatement extends SQLObject {
+public interface Statement extends SQLObject {
     Set<Table> getInvolvedTables();
 
     List<PlaceHolder> getInvolvedPlaceHolders();
