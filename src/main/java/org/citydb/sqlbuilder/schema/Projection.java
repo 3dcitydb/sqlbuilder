@@ -24,6 +24,10 @@ package org.citydb.sqlbuilder.schema;
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.SQLObject;
 
-public interface Projection extends SQLObject {
+import java.util.Optional;
+
+public interface Projection<T extends Projection<?>> extends SQLObject {
+    Optional<String> getAlias();
+    T as(String alias);
     void buildSQL(SQLBuilder builder, boolean withAlias);
 }

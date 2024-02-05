@@ -30,9 +30,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class LiteralColumn implements ColumnExpression, Projection {
+public class LiteralColumn implements ColumnExpression, Projection<LiteralColumn> {
     private final Literal<?> literal;
-    private final String alias;
+    private String alias;
 
     private LiteralColumn(Literal<?> literal, String alias) {
         this.literal = Objects.requireNonNull(literal, "The literal must not be null.");
@@ -51,8 +51,15 @@ public class LiteralColumn implements ColumnExpression, Projection {
         return literal;
     }
 
+    @Override
     public Optional<String> getAlias() {
         return Optional.ofNullable(alias);
+    }
+
+    @Override
+    public LiteralColumn as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override

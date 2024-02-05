@@ -29,12 +29,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class Column implements ColumnExpression, Projection {
-    public static final WildCardColumn WILDCARD = WildCardColumn.newInstance();
+public class Column implements ColumnExpression, Projection<Column> {
+    public static final WildcardColumn WILDCARD = WildcardColumn.newInstance();
 
     private final Table table;
     private final String name;
-    private final String alias;
+    private String alias;
 
     private Column(Table table, String name, String alias) {
         this.table = Objects.requireNonNull(table, "The table must not be null.");
@@ -58,8 +58,15 @@ public class Column implements ColumnExpression, Projection {
         return name;
     }
 
+    @Override
     public Optional<String> getAlias() {
         return Optional.ofNullable(alias);
+    }
+
+    @Override
+    public Column as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override

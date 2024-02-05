@@ -135,8 +135,8 @@ public final class Table implements SQLObject {
                 Collections.emptyList();
     }
 
-    public WildCardColumn wildCard() {
-        return WildCardColumn.of(this);
+    public WildcardColumn wildcard() {
+        return WildcardColumn.of(this);
     }
 
     @Override

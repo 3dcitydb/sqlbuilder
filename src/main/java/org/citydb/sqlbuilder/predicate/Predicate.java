@@ -26,6 +26,7 @@ import org.citydb.sqlbuilder.predicate.logical.BinaryLogicalOperator;
 import org.citydb.sqlbuilder.predicate.logical.Not;
 
 public interface Predicate extends Expression {
+
     default BinaryLogicalOperator and(Predicate operand) {
         return Predicates.and(this, operand);
     }

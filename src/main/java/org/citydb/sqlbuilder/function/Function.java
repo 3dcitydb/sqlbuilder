@@ -30,11 +30,11 @@ import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
 
-public class Function implements ColumnExpression, Projection {
+public class Function implements ColumnExpression, Projection<Function> {
     private final String name;
-    private final String alias;
     private final List<Expression> arguments;
     private final boolean useParentheses;
+    private String alias;
 
     private Function(String name, String alias, boolean useParentheses, List<Expression> arguments) {
         this.name = Objects.requireNonNull(name, "The name must not be null.");
@@ -81,15 +81,22 @@ public class Function implements ColumnExpression, Projection {
         return name;
     }
 
+    @Override
     public Optional<String> getAlias() {
         return Optional.ofNullable(alias);
+    }
+
+    @Override
+    public Function as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     public List<Expression> getArguments() {
         return arguments;
     }
 
-    public Function argument(Expression argument) {
+    public Function add(Expression argument) {
         if (argument != null) {
             arguments.add(argument);
         }
@@ -113,7 +120,7 @@ public class Function implements ColumnExpression, Projection {
 
     @Override
     public void buildSQL(SQLBuilder builder, boolean withAlias) {
-        builder.append(name)
+        builder.append(builder.identifier(name))
                 .append(useParentheses ? "(" : " ")
                 .append(arguments, ", ");
 

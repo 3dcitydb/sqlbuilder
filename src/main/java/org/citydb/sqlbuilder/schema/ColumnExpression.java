@@ -34,6 +34,7 @@ import org.citydb.sqlbuilder.query.LiteralList;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
 public interface ColumnExpression extends Expression {
+
     default ComparisonOperator eq(Object operand) {
         return Predicates.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }

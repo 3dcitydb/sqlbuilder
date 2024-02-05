@@ -30,9 +30,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class QueryColumn implements ColumnExpression, Projection {
+public class QueryColumn implements ColumnExpression, Projection<QueryColumn> {
     private final Select select;
-    private final String alias;
+    private String alias;
 
     private QueryColumn(Select select, String alias) {
         this.select = Objects.requireNonNull(select, "The select must not be null.");
@@ -51,8 +51,15 @@ public class QueryColumn implements ColumnExpression, Projection {
         return select;
     }
 
+    @Override
     public Optional<String> getAlias() {
         return Optional.ofNullable(alias);
+    }
+
+    @Override
+    public QueryColumn as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override

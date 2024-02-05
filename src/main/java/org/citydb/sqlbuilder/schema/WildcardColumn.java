@@ -22,29 +22,40 @@
 package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public class WildCardColumn implements Projection {
+public class WildcardColumn implements Expression, Projection<WildcardColumn> {
     private final Table table;
 
-    private WildCardColumn(Table table) {
+    private WildcardColumn(Table table) {
         this.table = table;
     }
 
-    public static WildCardColumn newInstance() {
-        return new WildCardColumn(null);
+    public static WildcardColumn newInstance() {
+        return new WildcardColumn(null);
     }
 
-    public static WildCardColumn of(Table table) {
-        return new WildCardColumn(table);
+    public static WildcardColumn of(Table table) {
+        return new WildcardColumn(table);
     }
 
     public Optional<Table> getTable() {
         return Optional.ofNullable(table);
+    }
+
+    @Override
+    public Optional<String> getAlias() {
+        return Optional.empty();
+    }
+
+    @Override
+    public WildcardColumn as(String alias) {
+        return this;
     }
 
     @Override
