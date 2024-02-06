@@ -37,7 +37,7 @@ import java.util.*;
 public class Select extends QueryStatement<Select> {
     private final List<String> hints;
     private final List<CommonTableExpression> with;
-    private final List<Projection> select;
+    private final List<Projection<?>> select;
     private final List<Join> joins;
     private final List<Predicate> where;
     private boolean distinct;
@@ -101,11 +101,11 @@ public class Select extends QueryStatement<Select> {
         return this;
     }
 
-    public List<Projection> getSelect() {
+    public List<Projection<?>> getSelect() {
         return select;
     }
 
-    public Select select(Projection... projections) {
+    public Select select(Projection<?>... projections) {
         select.addAll(Arrays.asList(projections));
         return this;
     }
