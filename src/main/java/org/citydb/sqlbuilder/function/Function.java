@@ -24,6 +24,7 @@ package org.citydb.sqlbuilder.function;
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.Window;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
 import org.citydb.sqlbuilder.schema.Projection;
 import org.citydb.sqlbuilder.schema.Table;
@@ -33,48 +34,30 @@ import java.util.*;
 public class Function implements ColumnExpression, Projection<Function> {
     private final String name;
     private final List<Expression> arguments;
-    private final boolean useParentheses;
     private String alias;
 
-    private Function(String name, String alias, boolean useParentheses, List<Expression> arguments) {
+    private Function(String name, String alias, List<Expression> arguments) {
         this.name = Objects.requireNonNull(name, "The name must not be null.");
         this.alias = alias;
         this.arguments = arguments != null ? arguments : new ArrayList<>();
-        this.useParentheses = useParentheses;
     }
 
-    public static Function of(String name, String alias, boolean useParentheses, List<Expression> arguments) {
-        return new Function(name, alias, useParentheses, arguments);
+    public static Function of(String name, String alias, List<Expression> arguments) {
+        return new Function(name, alias, arguments);
     }
 
-    public static Function of(String name, String alias, boolean useParentheses, Expression... arguments) {
-        return new Function(name, alias, useParentheses, arguments != null ?
+    public static Function of(String name, String alias, Expression... arguments) {
+        return new Function(name, alias, arguments != null ?
                 new ArrayList<>(Arrays.asList(arguments)) :
                 null);
     }
 
-    public static Function of(String name) {
-        return of(name, null, true);
-    }
-
-    public static Function of(String name, String alias) {
-        return of(name, alias, true);
-    }
-
     public static Function of(String name, List<Expression> arguments) {
-        return of(name, null, true, arguments);
+        return new Function(name, null, arguments);
     }
 
     public static Function of(String name, Expression... arguments) {
-        return of(name, null, true, arguments);
-    }
-
-    public static Function of(String name, String alias, List<Expression> arguments) {
-        return of(name, alias, true, arguments);
-    }
-
-    public static Function of(String name, String alias, Expression... arguments) {
-        return of(name, alias, true, arguments);
+        return of(name, null, arguments);
     }
 
     public String getName() {
@@ -104,8 +87,16 @@ public class Function implements ColumnExpression, Projection<Function> {
         return this;
     }
 
-    public boolean isUseParentheses() {
-        return useParentheses;
+    public WindowFunction over() {
+        return WindowFunction.of(this, Window.empty());
+    }
+
+    public WindowFunction over(Window window) {
+        return WindowFunction.of(this, window);
+    }
+
+    public WindowFunction over(java.util.function.Function<Window, Window> builder) {
+        return WindowFunction.of(this, builder.apply(Window.newInstance()));
     }
 
     @Override
@@ -121,13 +112,9 @@ public class Function implements ColumnExpression, Projection<Function> {
     @Override
     public void buildSQL(SQLBuilder builder, boolean withAlias) {
         builder.append(builder.identifier(name))
-                .append(useParentheses ? "(" : " ")
-                .append(arguments, ", ");
-
-        if (useParentheses) {
-            builder.append(")");
-        }
-
+                .append("(")
+                .append(arguments, ", ")
+                .append(")");
         if (withAlias && alias != null) {
             builder.append(builder.keyword(" as ") + alias);
         }

@@ -38,6 +38,7 @@ import java.util.Optional;
 public abstract class QueryStatement<T extends QueryStatement<?>> implements Statement, QueryExpression {
     protected final List<Column> groupBy;
     protected final List<Expression> having;
+    protected final List<Window> window;
     protected final List<OrderBy> orderBy;
     protected Literal<?> offset;
     protected Literal<?> fetch;
@@ -47,12 +48,14 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
     protected QueryStatement() {
         groupBy = new ArrayList<>();
         having = new ArrayList<>();
+        window = new ArrayList<>();
         orderBy = new ArrayList<>();
     }
 
     protected QueryStatement(QueryStatement<?> other) {
         groupBy = new ArrayList<>(other.groupBy);
         having = new ArrayList<>(other.having);
+        window = new ArrayList<>(other.window);
         orderBy = new ArrayList<>(other.orderBy);
         offset = other.offset;
         fetch = other.fetch;
@@ -78,6 +81,20 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
 
     public T having(Function... functions) {
         having.addAll(Arrays.asList(functions));
+        return self();
+    }
+
+    public List<Window> getWindow() {
+        return window;
+    }
+
+    public T window(Window... window) {
+        this.window.addAll(Arrays.asList(window));
+        return self();
+    }
+
+    public T window(java.util.function.Function<Window, Window> builder) {
+        window.add(builder.apply(Window.newInstance()));
         return self();
     }
 
@@ -146,6 +163,12 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
             builder.appendln()
                     .appendln(builder.keyword("having "))
                     .indentln(having, ", ");
+        }
+
+        if (!window.isEmpty()) {
+            builder.appendln()
+                    .appendln(builder.keyword("window "))
+                    .indentln(window, ", ", (window, i) -> window.getName() + builder.keyword(" as "));
         }
 
         if (!orderBy.isEmpty()) {

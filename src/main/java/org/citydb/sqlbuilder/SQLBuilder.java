@@ -28,6 +28,7 @@ import org.citydb.sqlbuilder.query.QueryExpression;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.function.BiFunction;
 
 public class SQLBuilder {
     private final StringBuilder builder = new StringBuilder();
@@ -122,32 +123,45 @@ public class SQLBuilder {
     }
 
     public SQLBuilder append(Collection<? extends Buildable> objects, String delimiter) {
-        return append(objects, delimiter, false, null);
+        return append(objects, delimiter, false, (object, i) -> null);
     }
 
     public SQLBuilder appendln(Collection<? extends Buildable> objects, String delimiter) {
-        return append(objects, delimiter, true, null);
+        return append(objects, delimiter, true, (object, i) -> null);
     }
 
     public SQLBuilder append(Collection<? extends Buildable> objects, String delimiter, String prefix) {
-        return append(objects, delimiter, false, prefix);
+        return append(objects, delimiter, false, (object, i) -> i > 0 ? prefix : null);
     }
 
     public SQLBuilder appendln(Collection<? extends Buildable> objects, String delimiter, String prefix) {
-        return append(objects, delimiter, true, prefix);
+        return append(objects, delimiter, true, (object, i) -> i > 0 ? prefix : null);
     }
 
-    private SQLBuilder append(Collection<? extends Buildable> objects, String delimiter, boolean newline, String prefix) {
-        for (Iterator<? extends Buildable> iterator = objects.iterator(); iterator.hasNext(); ) {
-            append(iterator.next());
+    public <T extends Buildable> SQLBuilder append(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
+        return append(objects, delimiter, false, prefixBuilder);
+    }
+
+    public <T extends Buildable> SQLBuilder appendln(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
+        return append(objects, delimiter, true, prefixBuilder);
+    }
+
+    private <T extends Buildable> SQLBuilder append(Collection<T> objects, String delimiter, boolean newline, BiFunction<T, Integer, String> prefixBuilder) {
+        Iterator<T> iterator = objects.iterator();
+        int counter = 0;
+
+        while (iterator.hasNext()) {
+            T object = iterator.next();
+            String prefix = prefixBuilder.apply(object, counter++);
+            if (prefix != null) {
+                builder.append(prefix);
+            }
+
+            append(object);
             if (iterator.hasNext()) {
                 builder.append(delimiter);
                 if (newline) {
                     newline();
-                }
-
-                if (prefix != null && !prefix.isEmpty()) {
-                    builder.append(prefix);
                 }
             }
         }
@@ -180,25 +194,33 @@ public class SQLBuilder {
     }
 
     public SQLBuilder indent(Collection<? extends Buildable> objects, String delimiter) {
-        return indent(objects, delimiter, false, null);
+        return indent(objects, delimiter, false, (object, i) -> null);
     }
 
     public SQLBuilder indentln(Collection<? extends Buildable> objects, String delimiter) {
-        return indent(objects, delimiter, true, null);
+        return indent(objects, delimiter, true, (object, i) -> null);
     }
 
     public SQLBuilder indent(Collection<? extends Buildable> objects, String delimiter, String prefix) {
-        return indent(objects, delimiter, false, prefix);
+        return indent(objects, delimiter, false, (object, i) -> i > 0 ? prefix : null);
     }
 
     public SQLBuilder indentln(Collection<? extends Buildable> objects, String delimiter, String prefix) {
-        return indent(objects, delimiter, true, prefix);
+        return indent(objects, delimiter, true, (object, i) -> i > 0 ? prefix : null);
     }
 
-    private SQLBuilder indent(Collection<? extends Buildable> objects, String delimiter, boolean newline, String prefix) {
+    public <T extends Buildable> SQLBuilder indent(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
+        return indent(objects, delimiter, false, prefixBuilder);
+    }
+
+    public <T extends Buildable> SQLBuilder indentln(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
+        return indent(objects, delimiter, true, prefixBuilder);
+    }
+
+    private <T extends Buildable> SQLBuilder indent(Collection<T> objects, String delimiter, boolean newline, BiFunction<T, Integer, String> prefixBuilder) {
         return indent(1)
                 .increaseIndent()
-                .append(objects, delimiter, newline, prefix)
+                .append(objects, delimiter, newline, prefixBuilder)
                 .append(" ")
                 .decreaseIndent();
     }
