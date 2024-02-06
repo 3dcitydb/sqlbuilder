@@ -25,6 +25,8 @@ import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.function.Function;
+import org.citydb.sqlbuilder.literal.IntegerLiteral;
+import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.predicate.Predicate;
 import org.citydb.sqlbuilder.schema.Column;
 
@@ -37,8 +39,8 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
     protected final List<Column> groupBy;
     protected final List<Expression> having;
     protected final List<OrderBy> orderBy;
-    protected Long offset;
-    protected Long fetch;
+    protected Literal<?> offset;
+    protected Literal<?> fetch;
 
     protected abstract T self();
 
@@ -93,26 +95,37 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
         return self();
     }
 
-    public Optional<Long> getOffset() {
+    public Optional<Literal<?>> getOffset() {
         return Optional.ofNullable(offset);
     }
 
     public T offset(long offset) {
-        this.offset = offset;
-        return self();
+        return offset(IntegerLiteral.of(offset));
     }
 
     public T offset(long offset, long fetch) {
+        return offset(IntegerLiteral.of(offset), IntegerLiteral.of(fetch));
+    }
+
+    public T offset(Literal<?> offset) {
+        return offset(offset, null);
+    }
+
+    public T offset(Literal<?> offset, Literal<?> fetch) {
         this.offset = offset;
         this.fetch = fetch;
         return self();
     }
 
-    public Optional<Long> getFetch() {
+    public Optional<Literal<?>> getFetch() {
         return Optional.ofNullable(fetch);
     }
 
     public T fetch(long fetch) {
+        return fetch(IntegerLiteral.of(fetch));
+    }
+
+    public T fetch(Literal<?> fetch) {
         this.fetch = fetch;
         return self();
     }
@@ -147,7 +160,7 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
         if (offset != null) {
             builder.newline()
                     .append(builder.keyword("offset "))
-                    .append(String.valueOf(offset))
+                    .append(offset)
                     .append(builder.keyword(" rows "));
         }
 
@@ -158,7 +171,7 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
 
             builder.append(builder.keyword("fetch "))
                     .append(builder.keyword(offset != null ? "next " : "first "))
-                    .append(String.valueOf(fetch))
+                    .append(fetch)
                     .append(builder.keyword(" rows only "));
         }
     }
