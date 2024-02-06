@@ -28,6 +28,8 @@ import java.util.Optional;
 
 public interface Projection<T extends Projection<?>> extends SQLObject {
     Optional<String> getAlias();
+
     T as(String alias);
+
     void buildSQL(SQLBuilder builder, boolean withAlias);
 }

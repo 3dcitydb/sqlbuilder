@@ -40,6 +40,7 @@ public class Select extends QueryStatement<Select> {
     private final List<Projection<?>> select;
     private final List<Join> joins;
     private final List<Predicate> where;
+    private boolean withRecursive;
     private boolean distinct;
     private Table from;
 
@@ -58,6 +59,7 @@ public class Select extends QueryStatement<Select> {
         select = new ArrayList<>(other.select);
         joins = new ArrayList<>(other.joins);
         where = new ArrayList<>(other.where);
+        withRecursive = other.withRecursive;
         distinct = other.distinct;
         from = other.from;
     }
@@ -96,8 +98,22 @@ public class Select extends QueryStatement<Select> {
         return with;
     }
 
+    public Select with(String name, QueryStatement<?> statement) {
+        return with(CommonTableExpression.of(name, statement));
+    }
+
     public Select with(CommonTableExpression... ctes) {
         with.addAll(Arrays.asList(ctes));
+        return this;
+    }
+
+    public Select withRecursive(String name, QueryStatement<?> statement) {
+        return withRecursive(CommonTableExpression.of(name, statement));
+    }
+
+    public Select withRecursive(CommonTableExpression... ctes) {
+        with.addAll(Arrays.asList(ctes));
+        withRecursive = true;
         return this;
     }
 
@@ -200,9 +216,13 @@ public class Select extends QueryStatement<Select> {
     @Override
     public void buildSQL(SQLBuilder builder) {
         if (!with.isEmpty()) {
-            builder.append(builder.keyword("with "))
-                    .append(with, ", ")
-                    .append(" ");
+            builder.append(builder.keyword("with "));
+            if (withRecursive) {
+                builder.append(builder.keyword("recursive "));
+            }
+
+            builder.append(with, ", ")
+                    .appendln(" ");
         }
 
         builder.append(builder.keyword("select "));

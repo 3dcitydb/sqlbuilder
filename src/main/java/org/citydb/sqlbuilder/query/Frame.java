@@ -143,4 +143,9 @@ public class Frame implements SQLObject {
             builder.append(end.toSQL(builder));
         }
     }
+
+    @Override
+    public String toString() {
+        return toSQL();
+    }
 }

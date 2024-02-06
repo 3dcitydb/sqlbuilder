@@ -28,6 +28,7 @@ import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.predicate.Predicate;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
+import org.citydb.sqlbuilder.query.QueryStatement;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 
@@ -37,6 +38,7 @@ public class Update implements Statement {
     private final List<CommonTableExpression> with;
     private final List<UpdateValue> set;
     private final List<Predicate> where;
+    private boolean withRecursive;
     private Table table;
 
     private Update() {
@@ -49,6 +51,7 @@ public class Update implements Statement {
         with = new ArrayList<>(other.with);
         set = new ArrayList<>(other.set);
         where = new ArrayList<>(other.where);
+        withRecursive = other.withRecursive;
         table = other.table;
     }
 
@@ -73,8 +76,22 @@ public class Update implements Statement {
         return with;
     }
 
+    public Update with(String name, QueryStatement<?> statement) {
+        return with(CommonTableExpression.of(name, statement));
+    }
+
     public Update with(CommonTableExpression... ctes) {
         with.addAll(Arrays.asList(ctes));
+        return this;
+    }
+
+    public Update withRecursive(String name, QueryStatement<?> statement) {
+        return withRecursive(CommonTableExpression.of(name, statement));
+    }
+
+    public Update withRecursive(CommonTableExpression... ctes) {
+        with.addAll(Arrays.asList(ctes));
+        withRecursive = true;
         return this;
     }
 
@@ -139,9 +156,13 @@ public class Update implements Statement {
     @Override
     public void buildSQL(SQLBuilder builder) {
         if (!with.isEmpty()) {
-            builder.append(builder.keyword("with "))
-                    .append(with, ", ")
-                    .append(" ");
+            builder.append(builder.keyword("with "));
+            if (withRecursive) {
+                builder.append(builder.keyword("recursive "));
+            }
+
+            builder.append(with, ", ")
+                    .appendln(" ");
         }
 
         builder.append(builder.keyword("update "));
