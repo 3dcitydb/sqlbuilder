@@ -97,11 +97,9 @@ public class SetOperator extends QueryStatement<SetOperator> {
         for (Iterator<Select> iterator = operands.iterator(); iterator.hasNext(); ) {
             builder.append(iterator.next());
             if (iterator.hasNext()) {
-                builder.append(" ")
-                        .newline()
+                builder.appendln(" ")
                         .append(type.toSQL(builder))
-                        .append(" ")
-                        .newline();
+                        .appendln(" ");
             }
         }
 

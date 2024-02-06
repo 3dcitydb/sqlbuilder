@@ -148,24 +148,21 @@ public class Update implements Statement {
 
         Set<Table> tables = getInvolvedTables();
         if (!tables.isEmpty()) {
-            builder.newlineAndIncreaseIndent()
-                    .append(tables.iterator().next())
-                    .append(" ")
-                    .decreaseIndent();
+            builder.appendln()
+                    .indent(tables.iterator().next())
+                    .append(" ");
         }
 
         if (!set.isEmpty()) {
-            builder.newline()
-                    .append(builder.keyword("set "))
-                    .newline()
-                    .indentAndAppend(set, ", ", true);
+            builder.appendln()
+                    .appendln(builder.keyword("set "))
+                    .indentln(set, ", ");
         }
 
         if (!where.isEmpty()) {
-            builder.newline()
-                    .append(builder.keyword("where "))
-                    .newline()
-                    .indentAndAppend(where, " ", true, builder.keyword("and "));
+            builder.appendln()
+                    .appendln(builder.keyword("where "))
+                    .indentln(where, " ", builder.keyword("and "));
         }
     }
 

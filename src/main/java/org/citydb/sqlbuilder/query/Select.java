@@ -216,10 +216,10 @@ public class Select extends QueryStatement<Select> {
         }
 
         if (!select.isEmpty()) {
-            builder.newline()
-                    .indentAndAppend(select.stream()
+            builder.appendln()
+                    .indentln(select.stream()
                             .map(projection -> (Buildable) b -> projection.buildSQL(b, true))
-                            .toList(), ", ", true);
+                            .toList(), ", ");
         }
 
         Set<Table> from = getInvolvedTables();
@@ -233,26 +233,22 @@ public class Select extends QueryStatement<Select> {
                 }
             }
 
-            builder.newline()
-                    .append(builder.keyword("from "))
-                    .newlineAndIncreaseIndent()
-                    .append(from, ", ", true)
+            builder.appendln()
+                    .appendln(builder.keyword("from "))
+                    .indentln(from, ", ")
                     .append(" ");
 
             if (!joins.isEmpty()) {
-                builder.newline()
-                        .append(joins, " ", true)
+                builder.appendln()
+                        .indentln(joins, " ")
                         .append(" ");
             }
-
-            builder.decreaseIndent();
         }
 
         if (!where.isEmpty()) {
-            builder.newline()
-                    .append(builder.keyword("where "))
-                    .newline()
-                    .indentAndAppend(where, " ", true, builder.keyword("and "));
+            builder.appendln()
+                    .appendln(builder.keyword("where "))
+                    .indentln(where, " ", builder.keyword("and "));
         }
 
         super.buildSQL(builder);

@@ -76,6 +76,14 @@ public class SQLBuilder {
                 keyword;
     }
 
+    public SQLBuilder appendln() {
+        return newline();
+    }
+
+    public SQLBuilder appendln(Buildable object) {
+        return append(object).newline();
+    }
+
     public SQLBuilder append(Buildable object) {
         if (object instanceof QueryExpression expression) {
             append(expression);
@@ -84,6 +92,10 @@ public class SQLBuilder {
         }
 
         return this;
+    }
+
+    public SQLBuilder appendln(QueryExpression expression) {
+        return append(expression).newline();
     }
 
     public SQLBuilder append(QueryExpression expression) {
@@ -100,6 +112,10 @@ public class SQLBuilder {
         return this;
     }
 
+    public SQLBuilder appendln(String sql) {
+        return append(sql).newline();
+    }
+
     public SQLBuilder append(String sql) {
         builder.append(sql);
         return this;
@@ -109,11 +125,19 @@ public class SQLBuilder {
         return append(objects, delimiter, false, null);
     }
 
-    public SQLBuilder append(Collection<? extends Buildable> objects, String delimiter, boolean newline) {
-        return append(objects, delimiter, newline, null);
+    public SQLBuilder appendln(Collection<? extends Buildable> objects, String delimiter) {
+        return append(objects, delimiter, true, null);
     }
 
-    public SQLBuilder append(Collection<? extends Buildable> objects, String delimiter, boolean newline, String prefix) {
+    public SQLBuilder append(Collection<? extends Buildable> objects, String delimiter, String prefix) {
+        return append(objects, delimiter, false, prefix);
+    }
+
+    public SQLBuilder appendln(Collection<? extends Buildable> objects, String delimiter, String prefix) {
+        return append(objects, delimiter, true, prefix);
+    }
+
+    private SQLBuilder append(Collection<? extends Buildable> objects, String delimiter, boolean newline, String prefix) {
         for (Iterator<? extends Buildable> iterator = objects.iterator(); iterator.hasNext(); ) {
             append(iterator.next());
             if (iterator.hasNext()) {
@@ -131,15 +155,47 @@ public class SQLBuilder {
         return this;
     }
 
-    public SQLBuilder indentAndAppend(Collection<? extends Buildable> objects, String delimiter) {
-        return indentAndAppend(objects, delimiter, false, null);
+    public SQLBuilder indentln(Buildable object) {
+        return indent(object).newline();
     }
 
-    public SQLBuilder indentAndAppend(Collection<? extends Buildable> objects, String delimiter, boolean newline) {
-        return indentAndAppend(objects, delimiter, newline, null);
+    public SQLBuilder indent(Buildable object) {
+        return indent(1).append(object);
     }
 
-    public SQLBuilder indentAndAppend(Collection<? extends Buildable> objects, String delimiter, boolean newline, String prefix) {
+    public SQLBuilder indentln(QueryExpression expression) {
+        return indent(expression).newline();
+    }
+
+    public SQLBuilder indent(QueryExpression expression) {
+        return indent(1).append(expression);
+    }
+
+    public SQLBuilder indentln(String sql) {
+        return indent(sql).newline();
+    }
+
+    public SQLBuilder indent(String sql) {
+        return indent(1).append(sql);
+    }
+
+    public SQLBuilder indent(Collection<? extends Buildable> objects, String delimiter) {
+        return indent(objects, delimiter, false, null);
+    }
+
+    public SQLBuilder indentln(Collection<? extends Buildable> objects, String delimiter) {
+        return indent(objects, delimiter, true, null);
+    }
+
+    public SQLBuilder indent(Collection<? extends Buildable> objects, String delimiter, String prefix) {
+        return indent(objects, delimiter, false, prefix);
+    }
+
+    public SQLBuilder indentln(Collection<? extends Buildable> objects, String delimiter, String prefix) {
+        return indent(objects, delimiter, true, prefix);
+    }
+
+    private SQLBuilder indent(Collection<? extends Buildable> objects, String delimiter, boolean newline, String prefix) {
         return indent(1)
                 .increaseIndent()
                 .append(objects, delimiter, newline, prefix)
@@ -149,53 +205,43 @@ public class SQLBuilder {
 
     public SQLBuilder openParenthesis() {
         builder.append("(");
-        return newlineAndIncreaseIndent();
+        return increaseIndent().newline();
     }
 
     public SQLBuilder closeParenthesis() {
-        newlineAndDecreaseIndent();
+        decreaseIndent().newline();
         builder.append(")");
         return this;
     }
 
-    public SQLBuilder newline() {
+    private SQLBuilder newline() {
         if (options.isSetIndent()) {
-            builder.append("\n");
+            builder.append(options.getNewline());
             return indent();
         } else {
             return this;
         }
     }
 
-    public SQLBuilder newlineAndIncreaseIndent() {
-        return increaseIndent()
-                .newline();
-    }
-
-    public SQLBuilder newlineAndDecreaseIndent() {
-        return decreaseIndent()
-                .newline();
-    }
-
-    public SQLBuilder increaseIndent() {
-        level++;
-        return this;
-    }
-
-    public SQLBuilder decreaseIndent() {
-        level = Math.max(--level, 0);
-        return this;
-    }
-
-    public SQLBuilder indent() {
+    private SQLBuilder indent() {
         return indent(level);
     }
 
-    public SQLBuilder indent(int repeat) {
+    private SQLBuilder indent(int repeat) {
         if (options.isSetIndent()) {
             builder.append(options.getIndent().repeat(repeat));
         }
 
+        return this;
+    }
+
+    private SQLBuilder increaseIndent() {
+        level++;
+        return this;
+    }
+
+    private SQLBuilder decreaseIndent() {
+        level = Math.max(--level, 0);
         return this;
     }
 

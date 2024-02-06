@@ -91,7 +91,7 @@ public class BinaryLogicalOperator implements LogicalOperator {
     public void buildSQL(SQLBuilder builder) {
         if (operands.size() > 1) {
             builder.openParenthesis()
-                    .append(operands, " ", true, type.toSQL(builder) + " ")
+                    .appendln(operands, " ", type.toSQL(builder) + " ")
                     .closeParenthesis();
         } else {
             builder.append(operands.get(0));

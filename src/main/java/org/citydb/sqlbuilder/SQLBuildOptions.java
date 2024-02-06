@@ -22,11 +22,12 @@
 package org.citydb.sqlbuilder;
 
 public class SQLBuildOptions {
+    private String newline = "\n";
     private String indent;
     private String identifierDelimiter;
     private IdentifierCase identifierCase = IdentifierCase.UNCHANGED;
     private KeywordCase keywordCase = KeywordCase.LOWERCASE;
-    private boolean useJdbcEscapeNotation = true;
+    private boolean useJDBCEscapeNotation = true;
 
     public enum IdentifierCase {
         UPPERCASE,
@@ -44,6 +45,15 @@ public class SQLBuildOptions {
 
     public static SQLBuildOptions defaults() {
         return new SQLBuildOptions();
+    }
+
+    public String getNewline() {
+        return newline;
+    }
+
+    public SQLBuildOptions setNewline(String newline) {
+        this.newline = newline;
+        return this;
     }
 
     public String getIndent() {
@@ -97,11 +107,11 @@ public class SQLBuildOptions {
     }
 
     public boolean isUseJDBCEscapeNotation() {
-        return useJdbcEscapeNotation;
+        return useJDBCEscapeNotation;
     }
 
     public SQLBuildOptions setUseJDBCEscapeNotation(boolean useJdbcEscapeNotation) {
-        this.useJdbcEscapeNotation = useJdbcEscapeNotation;
+        this.useJDBCEscapeNotation = useJdbcEscapeNotation;
         return this;
     }
 }

@@ -137,28 +137,25 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
     @Override
     public void buildSQL(SQLBuilder builder) {
         if (!groupBy.isEmpty()) {
-            builder.newline()
-                    .append(builder.keyword("group by "))
-                    .newline()
-                    .indentAndAppend(groupBy, ", ", true);
+            builder.appendln()
+                    .appendln(builder.keyword("group by "))
+                    .indentln(groupBy, ", ");
         }
 
         if (!having.isEmpty()) {
-            builder.newline()
-                    .append(builder.keyword("having "))
-                    .newline()
-                    .indentAndAppend(having, ", ", true);
+            builder.appendln()
+                    .appendln(builder.keyword("having "))
+                    .indentln(having, ", ");
         }
 
         if (!orderBy.isEmpty()) {
-            builder.newline()
-                    .append(builder.keyword("order by "))
-                    .newline()
-                    .indentAndAppend(orderBy, ", ", true);
+            builder.appendln()
+                    .appendln(builder.keyword("order by "))
+                    .indentln(orderBy, ", ");
         }
 
         if (offset != null) {
-            builder.newline()
+            builder.appendln()
                     .append(builder.keyword("offset "))
                     .append(offset)
                     .append(builder.keyword(" rows "));
@@ -166,7 +163,7 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
 
         if (fetch != null) {
             if (offset == null) {
-                builder.newline();
+                builder.appendln();
             }
 
             builder.append(builder.keyword("fetch "))
