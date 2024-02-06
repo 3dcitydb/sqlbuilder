@@ -27,6 +27,7 @@ import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CommonTableExpression implements SQLObject {
     private final String name;
@@ -76,7 +77,9 @@ public class CommonTableExpression implements SQLObject {
         builder.append(name);
         if (columns != null && !columns.isEmpty()) {
             builder.append(" (")
-                    .append(String.join(", ", columns))
+                    .append(columns.stream()
+                            .map(builder::identifier)
+                            .collect(Collectors.joining(", ")))
                     .append(")");
         }
 

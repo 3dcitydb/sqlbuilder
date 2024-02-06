@@ -22,6 +22,8 @@
 package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.function.Function;
+import org.citydb.sqlbuilder.function.Functions;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.OrderBy;
 import org.citydb.sqlbuilder.query.SortOrder;
@@ -69,6 +71,38 @@ public class Column implements ColumnExpression, Projection<Column> {
     public Column as(String alias) {
         this.alias = alias;
         return this;
+    }
+
+    public Function count() {
+        return Functions.count(this);
+    }
+
+    public Function max() {
+        return Functions.max(this);
+    }
+
+    public Function min() {
+        return Functions.min(this);
+    }
+
+    public Function sum() {
+        return Functions.sum(this);
+    }
+
+    public Function length() {
+        return Functions.length(this);
+    }
+
+    public Function upper() {
+        return Functions.upper(this);
+    }
+
+    public Function lower() {
+        return Functions.lower(this);
+    }
+
+    public Function trim() {
+        return Functions.trim(this);
     }
 
     public OrderBy asc() {

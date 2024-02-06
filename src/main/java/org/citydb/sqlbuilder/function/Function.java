@@ -30,13 +30,15 @@ import org.citydb.sqlbuilder.schema.Projection;
 import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Function implements ColumnExpression, Projection<Function> {
     private final String name;
     private final List<Expression> arguments;
+    private final List<String> qualifiers = new ArrayList<>();
     private String alias;
 
-    private Function(String name, String alias, List<Expression> arguments) {
+    protected Function(String name, String alias, List<Expression> arguments) {
         this.name = Objects.requireNonNull(name, "The name must not be null.");
         this.alias = alias;
         this.arguments = arguments != null ? arguments : new ArrayList<>();
@@ -62,6 +64,15 @@ public class Function implements ColumnExpression, Projection<Function> {
 
     public String getName() {
         return name;
+    }
+
+    public List<String> getQualifiers() {
+        return qualifiers;
+    }
+
+    public Function qualifier(String qualifier) {
+        qualifiers.add(qualifier);
+        return this;
     }
 
     @Override
@@ -111,9 +122,16 @@ public class Function implements ColumnExpression, Projection<Function> {
 
     @Override
     public void buildSQL(SQLBuilder builder, boolean withAlias) {
-        builder.append(builder.identifier(name))
-                .append("(")
-                .append(arguments, ", ")
+        builder.append(builder.keyword(name))
+                .append("(");
+        if (!qualifiers.isEmpty()) {
+            builder.append(qualifiers.stream()
+                            .map(builder::keyword)
+                            .collect(Collectors.joining(" ")))
+                    .append(" ");
+        }
+
+        builder.append(arguments, ", ")
                 .append(")");
         if (withAlias && alias != null) {
             builder.append(builder.keyword(" as ") + alias);
