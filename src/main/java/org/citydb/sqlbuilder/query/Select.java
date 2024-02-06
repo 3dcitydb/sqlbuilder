@@ -235,13 +235,11 @@ public class Select extends QueryStatement<Select> {
 
             builder.appendln()
                     .appendln(builder.keyword("from "))
-                    .indentln(from, ", ")
-                    .append(" ");
+                    .indentln(from, ", ");
 
             if (!joins.isEmpty()) {
                 builder.appendln()
-                        .indentln(joins, " ")
-                        .append(" ");
+                        .indentln(joins, " ");
             }
         }
 
