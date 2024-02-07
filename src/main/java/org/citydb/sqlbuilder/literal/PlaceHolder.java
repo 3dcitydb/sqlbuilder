@@ -25,6 +25,7 @@ import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.util.UserProperties;
 
 import java.util.List;
+import java.util.Map;
 
 public class PlaceHolder extends Literal<Object> {
     private UserProperties userProperties;
@@ -39,6 +40,15 @@ public class PlaceHolder extends Literal<Object> {
 
     public static PlaceHolder of(Object value) {
         return new PlaceHolder(value);
+    }
+
+    public static PlaceHolder of(Object value, Map<String, Object> properties) {
+        PlaceHolder placeHolder = new PlaceHolder(value);
+        if (properties != null) {
+            properties.forEach(placeHolder.getUserProperties()::set);
+        }
+
+        return placeHolder;
     }
 
     public PlaceHolder setValue(Object value) {
