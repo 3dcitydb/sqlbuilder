@@ -140,17 +140,17 @@ public final class Table implements SQLObject {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
+    public void getInvolvedTables(Set<Table> tables) {
         tables.add(this);
         if (queryExpression != null) {
-            queryExpression.buildInvolvedTables(tables);
+            queryExpression.getInvolvedTables(tables);
         }
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
         if (queryExpression != null) {
-            queryExpression.buildInvolvedPlaceHolders(placeHolders);
+            queryExpression.getInvolvedPlaceHolders(placeHolders);
         }
     }
 

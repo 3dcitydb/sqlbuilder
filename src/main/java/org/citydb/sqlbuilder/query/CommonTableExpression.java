@@ -63,13 +63,13 @@ public class CommonTableExpression implements SQLObject {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        queryStatement.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        queryStatement.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        queryStatement.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        queryStatement.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

@@ -111,13 +111,13 @@ public class Function implements ColumnExpression, Projection<Function> {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        arguments.forEach(argument -> argument.buildInvolvedTables(tables));
+    public void getInvolvedTables(Set<Table> tables) {
+        arguments.forEach(argument -> argument.getInvolvedTables(tables));
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        arguments.forEach(argument -> argument.buildInvolvedPlaceHolders(placeHolders));
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        arguments.forEach(argument -> argument.getInvolvedPlaceHolders(placeHolders));
     }
 
     @Override

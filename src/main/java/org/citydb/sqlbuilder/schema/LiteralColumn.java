@@ -63,13 +63,13 @@ public class LiteralColumn implements ColumnExpression, Projection<LiteralColumn
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        literal.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        literal.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        literal.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        literal.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

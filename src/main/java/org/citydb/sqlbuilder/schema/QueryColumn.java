@@ -63,13 +63,13 @@ public class QueryColumn implements ColumnExpression, Projection<QueryColumn> {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        select.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        select.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        select.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        select.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

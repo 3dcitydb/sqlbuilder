@@ -77,17 +77,17 @@ public class Between implements LogicalOperator {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        operand.buildInvolvedTables(tables);
-        lowerBound.buildInvolvedTables(tables);
-        upperBound.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        operand.getInvolvedTables(tables);
+        lowerBound.getInvolvedTables(tables);
+        upperBound.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.buildInvolvedPlaceHolders(placeHolders);
-        lowerBound.buildInvolvedPlaceHolders(placeHolders);
-        upperBound.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        operand.getInvolvedPlaceHolders(placeHolders);
+        lowerBound.getInvolvedPlaceHolders(placeHolders);
+        upperBound.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

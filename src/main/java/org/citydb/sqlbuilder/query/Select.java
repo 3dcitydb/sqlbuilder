@@ -173,44 +173,44 @@ public class Select extends QueryStatement<Select> {
     public Set<Table> getInvolvedTables() {
         Set<Table> tables = new LinkedHashSet<>();
         if (from != null) {
-            from.buildInvolvedTables(tables);
+            from.getInvolvedTables(tables);
         }
 
-        select.forEach(projection -> projection.buildInvolvedTables(tables));
-        joins.forEach(join -> join.buildInvolvedTables(tables));
+        select.forEach(projection -> projection.getInvolvedTables(tables));
+        joins.forEach(join -> join.getInvolvedTables(tables));
         return tables;
     }
 
     @Override
     public List<PlaceHolder> getInvolvedPlaceHolders() {
         List<PlaceHolder> placeHolders = new ArrayList<>();
-        buildInvolvedPlaceHolders(placeHolders);
+        getInvolvedPlaceHolders(placeHolders);
         return placeHolders;
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        where.forEach(predicate -> predicate.buildInvolvedTables(tables));
-        groupBy.forEach(groupBy -> groupBy.buildInvolvedTables(tables));
-        having.forEach(having -> having.buildInvolvedTables(tables));
-        orderBy.forEach(orderBy -> orderBy.buildInvolvedTables(tables));
+    public void getInvolvedTables(Set<Table> tables) {
+        where.forEach(predicate -> predicate.getInvolvedTables(tables));
+        groupBy.forEach(groupBy -> groupBy.getInvolvedTables(tables));
+        having.forEach(having -> having.getInvolvedTables(tables));
+        orderBy.forEach(orderBy -> orderBy.getInvolvedTables(tables));
         tables.removeAll(getInvolvedTables());
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        with.forEach(cte -> cte.buildInvolvedPlaceHolders(placeHolders));
-        select.forEach(projection -> projection.buildInvolvedPlaceHolders(placeHolders));
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        with.forEach(cte -> cte.getInvolvedPlaceHolders(placeHolders));
+        select.forEach(projection -> projection.getInvolvedPlaceHolders(placeHolders));
 
         if (from != null) {
-            from.buildInvolvedPlaceHolders(placeHolders);
+            from.getInvolvedPlaceHolders(placeHolders);
         }
 
-        joins.forEach(join -> join.buildInvolvedPlaceHolders(placeHolders));
-        where.forEach(predicate -> predicate.buildInvolvedPlaceHolders(placeHolders));
-        groupBy.forEach(groupBy -> groupBy.buildInvolvedPlaceHolders(placeHolders));
-        having.forEach(having -> having.buildInvolvedPlaceHolders(placeHolders));
-        orderBy.forEach(orderBy -> orderBy.buildInvolvedPlaceHolders(placeHolders));
+        joins.forEach(join -> join.getInvolvedPlaceHolders(placeHolders));
+        where.forEach(predicate -> predicate.getInvolvedPlaceHolders(placeHolders));
+        groupBy.forEach(groupBy -> groupBy.getInvolvedPlaceHolders(placeHolders));
+        having.forEach(having -> having.getInvolvedPlaceHolders(placeHolders));
+        orderBy.forEach(orderBy -> orderBy.getInvolvedPlaceHolders(placeHolders));
     }
 
     @Override
@@ -246,7 +246,7 @@ public class Select extends QueryStatement<Select> {
         if (!from.isEmpty()) {
             if (!joins.isEmpty()) {
                 Set<Table> joinTables = new HashSet<>();
-                joins.forEach(join -> join.buildInvolvedTables(joinTables));
+                joins.forEach(join -> join.getInvolvedTables(joinTables));
                 from.removeAll(joinTables);
                 if (from.isEmpty()) {
                     from.add(joins.get(0).getFromColumn().getTable());

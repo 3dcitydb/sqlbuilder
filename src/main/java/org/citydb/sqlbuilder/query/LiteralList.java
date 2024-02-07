@@ -65,13 +65,13 @@ public class LiteralList implements QueryExpression {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        literals.forEach(literal -> literal.buildInvolvedTables(tables));
+    public void getInvolvedTables(Set<Table> tables) {
+        literals.forEach(literal -> literal.getInvolvedTables(tables));
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        literals.forEach(literal -> literal.buildInvolvedPlaceHolders(placeHolders));
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        literals.forEach(literal -> literal.getInvolvedPlaceHolders(placeHolders));
     }
 
     @Override

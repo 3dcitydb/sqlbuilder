@@ -84,15 +84,15 @@ public class Join implements SQLObject {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        toColumn.buildInvolvedTables(tables);
-        conditions.forEach(condition -> condition.buildInvolvedTables(tables));
+    public void getInvolvedTables(Set<Table> tables) {
+        toColumn.getInvolvedTables(tables);
+        conditions.forEach(condition -> condition.getInvolvedTables(tables));
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        toColumn.buildInvolvedPlaceHolders(placeHolders);
-        conditions.forEach(condition -> condition.buildInvolvedPlaceHolders(placeHolders));
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        toColumn.getInvolvedPlaceHolders(placeHolders);
+        conditions.forEach(condition -> condition.getInvolvedPlaceHolders(placeHolders));
     }
 
     @Override

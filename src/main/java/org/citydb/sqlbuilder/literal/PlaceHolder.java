@@ -69,7 +69,7 @@ public class PlaceHolder extends Literal<Object> {
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
         placeHolders.add(this);
     }
 

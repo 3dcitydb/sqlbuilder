@@ -32,16 +32,16 @@ import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
 
-public class PlainSQLText implements Expression, ColumnExpression, Projection<PlainSQLText>, QueryExpression, Statement {
+public class PlainText implements Expression, ColumnExpression, Projection<PlainText>, QueryExpression, Statement {
     private final String sql;
     private String alias;
 
-    private PlainSQLText(String sql) {
+    private PlainText(String sql) {
         this.sql = Objects.requireNonNull(sql, "The plain SQL text must not be null.");
     }
 
-    public static PlainSQLText of(String sql) {
-        return new PlainSQLText(sql);
+    public static PlainText of(String sql) {
+        return new PlainText(sql);
     }
 
     @Override
@@ -55,11 +55,11 @@ public class PlainSQLText implements Expression, ColumnExpression, Projection<Pl
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
+    public void getInvolvedTables(Set<Table> tables) {
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
     }
 
     @Override
@@ -68,7 +68,7 @@ public class PlainSQLText implements Expression, ColumnExpression, Projection<Pl
     }
 
     @Override
-    public PlainSQLText as(String alias) {
+    public PlainText as(String alias) {
         this.alias = alias;
         return this;
     }

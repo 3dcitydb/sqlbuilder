@@ -54,15 +54,15 @@ public class UpdateValue implements SQLObject {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        column.buildInvolvedTables(tables);
-        value.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        column.getInvolvedTables(tables);
+        value.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        column.buildInvolvedPlaceHolders(placeHolders);
-        value.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        column.getInvolvedPlaceHolders(placeHolders);
+        value.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

@@ -51,13 +51,13 @@ public class Not implements LogicalOperator {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        predicate.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        predicate.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        predicate.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        predicate.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

@@ -87,17 +87,17 @@ public class Like implements LogicalOperator {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        operand.buildInvolvedTables(tables);
-        pattern.buildInvolvedTables(tables);
-        escapeCharacter.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        operand.getInvolvedTables(tables);
+        pattern.getInvolvedTables(tables);
+        escapeCharacter.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.buildInvolvedPlaceHolders(placeHolders);
-        pattern.buildInvolvedPlaceHolders(placeHolders);
-        escapeCharacter.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        operand.getInvolvedPlaceHolders(placeHolders);
+        pattern.getInvolvedPlaceHolders(placeHolders);
+        escapeCharacter.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

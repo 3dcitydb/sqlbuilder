@@ -98,24 +98,24 @@ public class Frame implements SQLObject {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
+    public void getInvolvedTables(Set<Table> tables) {
         if (startExpression != null) {
-            startExpression.buildInvolvedTables(tables);
+            startExpression.getInvolvedTables(tables);
         }
 
         if (endExpression != null) {
-            endExpression.buildInvolvedTables(tables);
+            endExpression.getInvolvedTables(tables);
         }
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
         if (startExpression != null) {
-            startExpression.buildInvolvedPlaceHolders(placeHolders);
+            startExpression.getInvolvedPlaceHolders(placeHolders);
         }
 
         if (endExpression != null) {
-            endExpression.buildInvolvedPlaceHolders(placeHolders);
+            endExpression.getInvolvedPlaceHolders(placeHolders);
         }
     }
 

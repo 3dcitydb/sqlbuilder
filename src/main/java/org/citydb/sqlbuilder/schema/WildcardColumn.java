@@ -59,16 +59,16 @@ public class WildcardColumn implements Expression, Projection<WildcardColumn> {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
+    public void getInvolvedTables(Set<Table> tables) {
         if (table != null) {
-            table.buildInvolvedTables(tables);
+            table.getInvolvedTables(tables);
         }
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
         if (table != null) {
-            table.buildInvolvedPlaceHolders(placeHolders);
+            table.getInvolvedPlaceHolders(placeHolders);
         }
     }
 

@@ -56,13 +56,13 @@ public class UnaryLogicalOperator implements LogicalOperator {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        operand.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        operand.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        operand.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

@@ -82,13 +82,13 @@ public class OrderBy implements SQLObject {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        column.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        column.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        column.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        column.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

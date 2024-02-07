@@ -79,15 +79,15 @@ public class WindowFunction implements Projection<WindowFunction> {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        function.buildInvolvedTables(tables);
-        window.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        function.getInvolvedTables(tables);
+        window.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        function.buildInvolvedPlaceHolders(placeHolders);
-        window.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        function.getInvolvedPlaceHolders(placeHolders);
+        window.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

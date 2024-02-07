@@ -121,36 +121,36 @@ public class Update implements Statement {
     public Set<Table> getInvolvedTables() {
         Set<Table> tables = new LinkedHashSet<>();
         if (table != null) {
-            table.buildInvolvedTables(tables);
+            table.getInvolvedTables(tables);
         }
 
-        set.forEach(value -> value.buildInvolvedTables(tables));
+        set.forEach(value -> value.getInvolvedTables(tables));
         return tables;
     }
 
     @Override
     public List<PlaceHolder> getInvolvedPlaceHolders() {
         List<PlaceHolder> placeHolders = new ArrayList<>();
-        buildInvolvedPlaceHolders(placeHolders);
+        getInvolvedPlaceHolders(placeHolders);
         return placeHolders;
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        where.forEach(predicate -> predicate.buildInvolvedTables(tables));
+    public void getInvolvedTables(Set<Table> tables) {
+        where.forEach(predicate -> predicate.getInvolvedTables(tables));
         tables.removeAll(getInvolvedTables());
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        with.forEach(cte -> cte.buildInvolvedPlaceHolders(placeHolders));
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        with.forEach(cte -> cte.getInvolvedPlaceHolders(placeHolders));
 
         if (table != null) {
-            table.buildInvolvedPlaceHolders(placeHolders);
+            table.getInvolvedPlaceHolders(placeHolders);
         }
 
-        set.forEach(value -> value.buildInvolvedPlaceHolders(placeHolders));
-        where.forEach(predicate -> predicate.buildInvolvedPlaceHolders(placeHolders));
+        set.forEach(value -> value.getInvolvedPlaceHolders(placeHolders));
+        where.forEach(predicate -> predicate.getInvolvedPlaceHolders(placeHolders));
     }
 
     @Override

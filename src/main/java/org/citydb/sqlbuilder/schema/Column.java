@@ -114,13 +114,13 @@ public class Column implements ColumnExpression, Projection<Column> {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        table.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        table.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        table.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        table.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override

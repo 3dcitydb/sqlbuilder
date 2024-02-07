@@ -166,20 +166,20 @@ public class Window implements SQLObject {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        partitionBy.forEach(partitionBy -> partitionBy.buildInvolvedTables(tables));
-        orderBy.forEach(orderBy -> orderBy.buildInvolvedTables(tables));
+    public void getInvolvedTables(Set<Table> tables) {
+        partitionBy.forEach(partitionBy -> partitionBy.getInvolvedTables(tables));
+        orderBy.forEach(orderBy -> orderBy.getInvolvedTables(tables));
         if (frame != null) {
-            frame.buildInvolvedTables(tables);
+            frame.getInvolvedTables(tables);
         }
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        partitionBy.forEach(partitionBy -> partitionBy.buildInvolvedPlaceHolders(placeHolders));
-        orderBy.forEach(orderBy -> orderBy.buildInvolvedPlaceHolders(placeHolders));
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        partitionBy.forEach(partitionBy -> partitionBy.getInvolvedPlaceHolders(placeHolders));
+        orderBy.forEach(orderBy -> orderBy.getInvolvedPlaceHolders(placeHolders));
         if (frame != null) {
-            frame.buildInvolvedPlaceHolders(placeHolders);
+            frame.getInvolvedPlaceHolders(placeHolders);
         }
     }
 

@@ -83,13 +83,13 @@ public class SetOperator extends QueryStatement<SetOperator> {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        operands.forEach(operand -> operand.buildInvolvedTables(tables));
+    public void getInvolvedTables(Set<Table> tables) {
+        operands.forEach(operand -> operand.getInvolvedTables(tables));
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operands.forEach(operand -> operand.buildInvolvedPlaceHolders(placeHolders));
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        operands.forEach(operand -> operand.getInvolvedPlaceHolders(placeHolders));
     }
 
     @Override

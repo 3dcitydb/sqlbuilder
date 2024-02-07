@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface SQLObject extends Buildable {
-    void buildInvolvedTables(Set<Table> tables);
+    void getInvolvedTables(Set<Table> tables);
 
-    void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders);
+    void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders);
 }

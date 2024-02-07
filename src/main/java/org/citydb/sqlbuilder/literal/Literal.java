@@ -40,11 +40,11 @@ public abstract class Literal<T> implements Expression {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
+    public void getInvolvedTables(Set<Table> tables) {
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
     }
 
     @Override

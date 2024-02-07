@@ -59,15 +59,15 @@ public class ComparisonOperator implements Predicate {
     }
 
     @Override
-    public void buildInvolvedTables(Set<Table> tables) {
-        leftOperand.buildInvolvedTables(tables);
-        rightOperand.buildInvolvedTables(tables);
+    public void getInvolvedTables(Set<Table> tables) {
+        leftOperand.getInvolvedTables(tables);
+        rightOperand.getInvolvedTables(tables);
     }
 
     @Override
-    public void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        leftOperand.buildInvolvedPlaceHolders(placeHolders);
-        rightOperand.buildInvolvedPlaceHolders(placeHolders);
+    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+        leftOperand.getInvolvedPlaceHolders(placeHolders);
+        rightOperand.getInvolvedPlaceHolders(placeHolders);
     }
 
     @Override
