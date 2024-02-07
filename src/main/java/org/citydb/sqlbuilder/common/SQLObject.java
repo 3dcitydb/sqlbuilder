@@ -21,8 +21,6 @@
 
 package org.citydb.sqlbuilder.common;
 
-import org.citydb.sqlbuilder.SQLBuildOptions;
-import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Table;
 
@@ -33,14 +31,4 @@ public interface SQLObject extends Buildable {
     void buildInvolvedTables(Set<Table> tables);
 
     void buildInvolvedPlaceHolders(List<PlaceHolder> placeHolders);
-
-    default String toSQL(SQLBuildOptions options) {
-        SQLBuilder builder = SQLBuilder.of(options);
-        buildSQL(builder);
-        return builder.build();
-    }
-
-    default String toSQL() {
-        return toSQL(SQLBuildOptions.defaults());
-    }
 }
