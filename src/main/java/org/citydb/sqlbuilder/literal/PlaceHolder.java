@@ -22,10 +22,12 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.util.UserProperties;
 
 import java.util.List;
 
 public class PlaceHolder extends Literal<Object> {
+    private UserProperties userProperties;
 
     private PlaceHolder(Object value) {
         super(value);
@@ -42,6 +44,18 @@ public class PlaceHolder extends Literal<Object> {
     public PlaceHolder setValue(Object value) {
         this.value = value;
         return this;
+    }
+
+    public boolean hasUserProperties() {
+        return userProperties != null && !userProperties.isEmpty();
+    }
+
+    public UserProperties getUserProperties() {
+        if (userProperties == null) {
+            userProperties = new UserProperties();
+        }
+
+        return userProperties;
     }
 
     @Override
