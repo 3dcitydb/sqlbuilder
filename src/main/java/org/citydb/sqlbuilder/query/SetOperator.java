@@ -23,35 +23,33 @@ package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SetOperator extends QueryStatement<SetOperator> {
-    private final SetOperationType type;
+    private final String name;
     private final List<Select> operands;
 
-    private SetOperator(SetOperationType type, List<Select> operands) {
-        this.type = Objects.requireNonNull(type, "The operation type must not be null.");
+    private SetOperator(String name, List<Select> operands) {
+        this.name = Objects.requireNonNull(name, "The operation type must not be null.");
         this.operands = Objects.requireNonNull(operands, "The operands list must not be null.");
         if (operands.size() < 2) {
             throw new IllegalArgumentException("A set operator requires at leas two or more operands.");
         }
     }
 
-    public static SetOperator of(SetOperationType type, List<Select> operands) {
-        return new SetOperator(type, operands);
+    public static SetOperator of(String name, List<Select> operands) {
+        return new SetOperator(name, operands);
     }
 
-    public static SetOperator of(SetOperationType name, Select... operands) {
+    public static SetOperator of(String name, Select... operands) {
         return new SetOperator(name, operands != null ?
                 new ArrayList<>(Arrays.asList(operands)) :
                 null);
     }
 
-    public SetOperationType getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     public List<Select> getOperands() {
@@ -67,29 +65,16 @@ public class SetOperator extends QueryStatement<SetOperator> {
     }
 
     @Override
-    public Set<Table> getInvolvedTables() {
+    public List<PlaceHolder> getPlaceHolders() {
         return operands.stream()
-                .map(Select::getInvolvedTables)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
-    @Override
-    public List<PlaceHolder> getInvolvedPlaceHolders() {
-        return operands.stream()
-                .map(Select::getInvolvedPlaceHolders)
+                .map(Select::getPlaceHolders)
                 .flatMap(Collection::stream)
                 .toList();
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        operands.forEach(operand -> operand.getInvolvedTables(tables));
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operands.forEach(operand -> operand.getInvolvedPlaceHolders(placeHolders));
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        operands.forEach(operand -> operand.getPlaceHolders(placeHolders));
     }
 
     @Override
@@ -98,7 +83,7 @@ public class SetOperator extends QueryStatement<SetOperator> {
             builder.append(iterator.next());
             if (iterator.hasNext()) {
                 builder.appendln(" ")
-                        .append(type.toSQL(builder))
+                        .append(builder.keyword(name))
                         .appendln(" ");
             }
         }

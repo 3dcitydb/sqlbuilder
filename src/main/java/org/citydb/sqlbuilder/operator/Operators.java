@@ -19,22 +19,71 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.StringLiteral;
-import org.citydb.sqlbuilder.predicate.comparison.ComparisonOperator;
-import org.citydb.sqlbuilder.predicate.comparison.ComparisonOperatorType;
-import org.citydb.sqlbuilder.predicate.logical.*;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.List;
 
-public class Predicates {
+public class Operators {
+    public static final String ADD = "+";
+    public static final String SUBTRACT = "-";
+    public static final String MULTIPLY = "*";
+    public static final String DIVIDE = "/";
+    public static final String MODULO = "%";
+    public static final String CONCAT = "||";
+    public static final String EQUAL_TO = "=";
+    public static final String NOT_EQUAL_TO = "<>";
+    public static final String LESS_THAN = "<";
+    public static final String GREATER_THAN = ">";
+    public static final String LESS_THAN_OR_EQUAL_TO = "<=";
+    public static final String GREATER_THAN_OR_EQUAL_TO = ">=";
+    public static final String AND = "and";
+    public static final String OR = "or";
+    public static final String NOT = "not";
+    public static final String LIKE = "like";
+    public static final String NOT_LIKE = "not like";
+    public static final String BETWEEN = "between";
+    public static final String NOT_BETWEEN = "not between";
+    public static final String IN = "in";
+    public static final String NOT_IN = "not in";
+    public static final String IS_NULL = "is null";
+    public static final String IS_NOT_NULL = "is not null";
+    public static final String EXISTS = "exists";
+    public static final String NOT_EXISTS = "not exists";
+    public static final String ALL = "all";
+    public static final String ANY = "any";
+    public static final String SOME = "some";
+
+    public static ArithmeticOperator add(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperator.of(leftOperand, ADD, rightOperand);
+    }
+
+    public static ArithmeticOperator subtract(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperator.of(leftOperand, SUBTRACT, rightOperand);
+    }
+
+    public static ArithmeticOperator multiply(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperator.of(leftOperand, MULTIPLY, rightOperand);
+    }
+
+    public static ArithmeticOperator divide(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperator.of(leftOperand, DIVIDE, rightOperand);
+    }
+
+    public static ArithmeticOperator modulo(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperator.of(leftOperand, MODULO, rightOperand);
+    }
+
+    public static ArithmeticOperator concat(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperator.of(leftOperand, CONCAT, rightOperand);
+    }
 
     public static ComparisonOperator eq(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
-                !negate ? ComparisonOperatorType.EQUAL_TO : ComparisonOperatorType.NOT_EQUAL_TO,
+                !negate ? EQUAL_TO : NOT_EQUAL_TO,
                 rightOperand);
     }
 
@@ -44,7 +93,7 @@ public class Predicates {
 
     public static ComparisonOperator lt(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
-                !negate ? ComparisonOperatorType.LESS_THAN : ComparisonOperatorType.GREATER_THAN_OR_EQUAL_TO,
+                !negate ? LESS_THAN : GREATER_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
@@ -54,7 +103,7 @@ public class Predicates {
 
     public static ComparisonOperator le(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
-                !negate ? ComparisonOperatorType.LESS_THAN_OR_EQUAL_TO : ComparisonOperatorType.GREATER_THAN,
+                !negate ? LESS_THAN_OR_EQUAL_TO : GREATER_THAN,
                 rightOperand);
     }
 
@@ -64,7 +113,7 @@ public class Predicates {
 
     public static ComparisonOperator gt(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
-                !negate ? ComparisonOperatorType.GREATER_THAN : ComparisonOperatorType.LESS_THAN_OR_EQUAL_TO,
+                !negate ? GREATER_THAN : LESS_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
@@ -74,7 +123,7 @@ public class Predicates {
 
     public static ComparisonOperator ge(Expression leftOperand, Expression rightOperand, boolean negate) {
         return ComparisonOperator.of(leftOperand,
-                !negate ? ComparisonOperatorType.GREATER_THAN_OR_EQUAL_TO : ComparisonOperatorType.LESS_THAN,
+                !negate ? GREATER_THAN_OR_EQUAL_TO : LESS_THAN,
                 rightOperand);
     }
 
@@ -82,18 +131,17 @@ public class Predicates {
         return ge(leftOperand, rightOperand, false);
     }
 
-    public static UnaryLogicalOperator isNull(Expression operand, boolean negate) {
-        return UnaryLogicalOperator.of(operand,
-                !negate ? LogicalOperatorType.IS_NULL : LogicalOperatorType.IS_NOT_NULL);
+    public static IsNull isNull(Expression operand, boolean negate) {
+        return IsNull.of(operand, negate);
     }
 
-    public static UnaryLogicalOperator isNull(Expression operand) {
+    public static IsNull isNull(Expression operand) {
         return isNull(operand, false);
     }
 
     public static UnaryLogicalOperator exists(Expression operand, boolean negate) {
         return UnaryLogicalOperator.of(operand,
-                !negate ? LogicalOperatorType.EXISTS : LogicalOperatorType.NOT_EXISTS);
+                !negate ? EXISTS : NOT_EXISTS);
     }
 
     public static UnaryLogicalOperator exists(Expression operand) {
@@ -101,15 +149,15 @@ public class Predicates {
     }
 
     public static UnaryLogicalOperator all(Expression operand) {
-        return UnaryLogicalOperator.of(operand, LogicalOperatorType.ALL);
+        return UnaryLogicalOperator.of(operand, ALL);
     }
 
     public static UnaryLogicalOperator any(Expression operand) {
-        return UnaryLogicalOperator.of(operand, LogicalOperatorType.ANY);
+        return UnaryLogicalOperator.of(operand, ANY);
     }
 
     public static UnaryLogicalOperator some(Expression operand) {
-        return UnaryLogicalOperator.of(operand, LogicalOperatorType.SOME);
+        return UnaryLogicalOperator.of(operand, SOME);
     }
 
     public static Like like(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
@@ -140,23 +188,23 @@ public class Predicates {
         return In.of(operand, queryExpression);
     }
 
-    public static BinaryLogicalOperator and(List<Predicate> operands) {
-        return BinaryLogicalOperator.of(LogicalOperatorType.AND, operands);
+    public static BinaryLogicalOperator and(List<LogicalOperator> operands) {
+        return BinaryLogicalOperator.of(AND, operands);
     }
 
-    public static BinaryLogicalOperator and(Predicate... operands) {
-        return BinaryLogicalOperator.of(LogicalOperatorType.AND, operands);
+    public static BinaryLogicalOperator and(LogicalOperator... operands) {
+        return BinaryLogicalOperator.of(AND, operands);
     }
 
-    public static BinaryLogicalOperator or(List<Predicate> operands) {
-        return BinaryLogicalOperator.of(LogicalOperatorType.OR, operands);
+    public static BinaryLogicalOperator or(List<LogicalOperator> operands) {
+        return BinaryLogicalOperator.of(OR, operands);
     }
 
-    public static BinaryLogicalOperator or(Predicate... operands) {
-        return BinaryLogicalOperator.of(LogicalOperatorType.OR, operands);
+    public static BinaryLogicalOperator or(LogicalOperator... operands) {
+        return BinaryLogicalOperator.of(OR, operands);
     }
 
-    public static Not not(Predicate operand) {
+    public static Not not(LogicalOperator operand) {
         return Not.of(operand);
     }
 }

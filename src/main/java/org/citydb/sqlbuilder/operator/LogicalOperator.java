@@ -19,44 +19,43 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.common.Expression;
-import org.citydb.sqlbuilder.predicate.logical.BinaryLogicalOperator;
-import org.citydb.sqlbuilder.predicate.logical.Not;
+import org.citydb.sqlbuilder.query.Selection;
 
-public interface Predicate extends Expression {
+public interface LogicalOperator extends Operator, Selection<LogicalOperator> {
 
-    default BinaryLogicalOperator and(Predicate operand) {
-        return Predicates.and(this, operand);
+    default BinaryLogicalOperator and(LogicalOperator operand) {
+        return Operators.and(this, operand);
     }
 
     default BinaryLogicalOperator andExists(Expression operand) {
-        return Predicates.and(this, Predicates.exists(operand));
+        return Operators.and(this, Operators.exists(operand));
     }
 
-    default BinaryLogicalOperator andNot(Predicate operand) {
-        return Predicates.and(this, Not.of(operand));
+    default BinaryLogicalOperator andNot(LogicalOperator operand) {
+        return Operators.and(this, Not.of(operand));
     }
 
     default BinaryLogicalOperator andNotExists(Expression operand) {
-        return Predicates.and(this, Not.of(Predicates.exists(operand)));
+        return Operators.and(this, Not.of(Operators.exists(operand)));
     }
 
-    default BinaryLogicalOperator or(Predicate operand) {
-        return Predicates.or(this, operand);
+    default BinaryLogicalOperator or(LogicalOperator operand) {
+        return Operators.or(this, operand);
     }
 
     default BinaryLogicalOperator orExists(Expression operand) {
-        return Predicates.or(this, Predicates.exists(operand));
+        return Operators.or(this, Operators.exists(operand));
     }
 
-    default BinaryLogicalOperator orNot(Predicate operand) {
-        return Predicates.or(this, Not.of(operand));
+    default BinaryLogicalOperator orNot(LogicalOperator operand) {
+        return Operators.or(this, Not.of(operand));
     }
 
     default BinaryLogicalOperator orNotExists(Expression operand) {
-        return Predicates.or(this, Not.of(Predicates.exists(operand)));
+        return Operators.or(this, Not.of(Operators.exists(operand)));
     }
 
     default Not not() {

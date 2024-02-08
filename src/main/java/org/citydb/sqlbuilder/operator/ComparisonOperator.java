@@ -19,42 +19,41 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.schema;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.query.OrderBy;
-import org.citydb.sqlbuilder.query.Selection;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Column implements ColumnExpression, Selection<Column> {
-    public static final WildcardColumn WILDCARD = WildcardColumn.newInstance();
-
-    private final Table table;
+public class ComparisonOperator implements LogicalOperator {
+    private final Expression leftOperand;
+    private final Expression rightOperand;
     private final String name;
     private String alias;
 
-    private Column(Table table, String name, String alias) {
-        this.table = Objects.requireNonNull(table, "The table must not be null.");
-        this.name = Objects.requireNonNull(name, "The column name must not be null.");
-        this.alias = alias;
+    protected ComparisonOperator(Expression leftOperand, String name, Expression rightOperand) {
+        this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
+        this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
+        this.name = Objects.requireNonNull(name, "The operator name must not be null.");
     }
 
-    public static Column of(Table table, String name, String alias) {
-        return new Column(table, name, alias);
+    public static ComparisonOperator of(Expression leftOperand, String name, Expression rightOperand) {
+        return new ComparisonOperator(leftOperand, name, rightOperand);
     }
 
-    public static Column of(Table table, String name) {
-        return new Column(table, name, null);
+    public Expression getLeftOperand() {
+        return leftOperand;
     }
 
-    public Table getTable() {
-        return table;
+    public Expression getRightOperand() {
+        return rightOperand;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -65,35 +64,22 @@ public class Column implements ColumnExpression, Selection<Column> {
     }
 
     @Override
-    public Column as(String alias) {
+    public ComparisonOperator as(String alias) {
         this.alias = alias;
         return this;
     }
 
-    public OrderBy orderBy() {
-        return asc();
-    }
-
-    public OrderBy asc() {
-        return OrderBy.of(this, OrderBy.ASCENDING);
-    }
-
-    public OrderBy desc() {
-        return OrderBy.of(this, OrderBy.DESCENDING);
-    }
-
-    public OrderBy orderBy(String sortOrder) {
-        return OrderBy.of(this, sortOrder);
-    }
-
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        table.getPlaceHolders(placeHolders);
+        leftOperand.getPlaceHolders(placeHolders);
+        rightOperand.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(table.getAlias() + "." + builder.identifier(name));
+        builder.append(leftOperand)
+                .append(" " + builder.keyword(name) + " ")
+                .append(rightOperand);
     }
 
     @Override

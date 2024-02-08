@@ -19,24 +19,23 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate.logical;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.StringLiteral;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 public class Like implements LogicalOperator {
     private final Expression operand;
     private final Expression pattern;
     private final StringLiteral escapeCharacter;
     private boolean negate;
+    private String alias;
 
     private Like(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
@@ -82,28 +81,32 @@ public class Like implements LogicalOperator {
     }
 
     @Override
-    public LogicalOperatorType getType() {
-        return !negate ? LogicalOperatorType.LIKE : LogicalOperatorType.NOT_LIKE;
+    public String getName() {
+        return !negate ? Operators.LIKE : Operators.NOT_LIKE;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        operand.getInvolvedTables(tables);
-        pattern.getInvolvedTables(tables);
-        escapeCharacter.getInvolvedTables(tables);
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getInvolvedPlaceHolders(placeHolders);
-        pattern.getInvolvedPlaceHolders(placeHolders);
-        escapeCharacter.getInvolvedPlaceHolders(placeHolders);
+    public Like as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        operand.getPlaceHolders(placeHolders);
+        pattern.getPlaceHolders(placeHolders);
+        escapeCharacter.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
-                .append(" " + getType().toSQL(builder) + " ")
+                .append(" " + builder.keyword(getName()) + " ")
                 .append(pattern);
         if (escapeCharacter != null) {
             if (builder.isUseJdbcEscapeNotation()) {

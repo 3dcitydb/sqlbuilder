@@ -22,66 +22,69 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLObject;
+import org.citydb.sqlbuilder.SQLObject;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 public class Frame implements SQLObject {
-    private final FrameUnits units;
-    private final FramePosition start;
+    public static final String CURRENT_ROW = "current row";
+    public static final String UNBOUNDED_PRECEDING = "unbounded preceding";
+    public static final String UNBOUNDED_FOLLOWING = "unbounded following";
+    public static final String PRECEDING = "preceding";
+    public static final String FOLLOWING = "following";
+    public static final String GROUPS = "groups";
+    public static final String ROWS = "rows";
+    public static final String RANGE = "range";
+
+    private final String units;
+    private final String start;
     private final Literal<?> startExpression;
-    private final FramePosition end;
+    private final String end;
     private final Literal<?> endExpression;
 
-    private Frame(FrameUnits units, FramePosition start, Literal<?> startExpression, FramePosition end, Literal<?> endExpression) {
+    private Frame(String units, String start, Literal<?> startExpression, String end, Literal<?> endExpression) {
         this.units = Objects.requireNonNull(units, "The frame units must not be null.");
         this.start = Objects.requireNonNull(start, "The frame start must not be null.");
         this.startExpression = startExpression;
         this.end = end;
         this.endExpression = endExpression;
 
-        if (startExpression == null && FramePosition.REQUIRES_EXPRESSION.contains(start)) {
+        if (startExpression == null && requiresExpression(start)) {
             throw new IllegalArgumentException("The frame start '" + start + "' requires an expression.");
-        } else if (startExpression != null && !FramePosition.REQUIRES_EXPRESSION.contains(start)) {
-            throw new IllegalArgumentException("A start expression cannot be used with '" + start + "'.");
-        } else if (endExpression == null && FramePosition.REQUIRES_EXPRESSION.contains(end)) {
+        } else if (endExpression == null && requiresExpression(end)) {
             throw new IllegalArgumentException("The frame end '" + end + "' requires an expression.");
-        } else if (endExpression != null && !FramePosition.REQUIRES_EXPRESSION.contains(end)) {
-            throw new IllegalArgumentException("An end expression cannot be used with '" + end + "'.");
         }
     }
 
-    public static Frame of(FrameUnits units, FramePosition start, Literal<?> startExpression, FramePosition end, Literal<?> endExpression) {
+    public static Frame of(String units, String start, Literal<?> startExpression, String end, Literal<?> endExpression) {
         return new Frame(units, start, startExpression, end, endExpression);
     }
 
-    public static Frame of(FrameUnits units, FramePosition start, FramePosition end) {
+    public static Frame of(String units, String start, String end) {
         return new Frame(units, start, null, end, null);
     }
 
-    public static Frame of(FrameUnits units, FramePosition start, Literal<?> startExpression, FramePosition end) {
+    public static Frame of(String units, String start, Literal<?> startExpression, String end) {
         return new Frame(units, start, startExpression, end, null);
     }
 
-    public static Frame of(FrameUnits units, FramePosition start, Literal<?> startExpression) {
+    public static Frame of(String units, String start, Literal<?> startExpression) {
         return of(units, start, startExpression, null);
     }
 
-    public static Frame of(FrameUnits units, FramePosition start) {
+    public static Frame of(String units, String start) {
         return of(units, start, null, null);
     }
 
-    public FrameUnits getUnits() {
+    public String getUnits() {
         return units;
     }
 
-    public FramePosition getStart() {
+    public String getStart() {
         return start;
     }
 
@@ -89,7 +92,7 @@ public class Frame implements SQLObject {
         return Optional.ofNullable(startExpression);
     }
 
-    public Optional<FramePosition> getEnd() {
+    public Optional<String> getEnd() {
         return Optional.ofNullable(end);
     }
 
@@ -97,31 +100,24 @@ public class Frame implements SQLObject {
         return Optional.ofNullable(endExpression);
     }
 
-    @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        if (startExpression != null) {
-            startExpression.getInvolvedTables(tables);
-        }
-
-        if (endExpression != null) {
-            endExpression.getInvolvedTables(tables);
-        }
+    private boolean requiresExpression(String position) {
+        return PRECEDING.equalsIgnoreCase(position) || FOLLOWING.equalsIgnoreCase(position);
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         if (startExpression != null) {
-            startExpression.getInvolvedPlaceHolders(placeHolders);
+            startExpression.getPlaceHolders(placeHolders);
         }
 
         if (endExpression != null) {
-            endExpression.getInvolvedPlaceHolders(placeHolders);
+            endExpression.getPlaceHolders(placeHolders);
         }
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(units.toSQL(builder))
+        builder.append(builder.keyword(units))
                 .append(" ");
         if (end != null) {
             builder.append(builder.keyword("between "));
@@ -132,7 +128,7 @@ public class Frame implements SQLObject {
                     .append(" ");
         }
 
-        builder.append(start.toSQL(builder));
+        builder.append(builder.keyword(start));
         if (end != null) {
             builder.append(builder.keyword(" and "));
             if (endExpression != null) {
@@ -140,7 +136,7 @@ public class Frame implements SQLObject {
                         .append(" ");
             }
 
-            builder.append(end.toSQL(builder));
+            builder.append(builder.keyword(end));
         }
     }
 

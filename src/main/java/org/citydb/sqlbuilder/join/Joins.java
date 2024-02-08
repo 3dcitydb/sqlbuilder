@@ -21,25 +21,28 @@
 
 package org.citydb.sqlbuilder.join;
 
-import org.citydb.sqlbuilder.predicate.comparison.ComparisonOperatorType;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 
 public class Joins {
+    public static final String INNER_JOIN = "inner join";
+    public static final String LEFT_JOIN = "left join";
+    public static final String RIGHT_JOIN = "right join";
+    public static final String FULL_JOIN = "full join";
 
-    public static Join inner(Table table, String column, ComparisonOperatorType name, Column fromColumn) {
-        return Join.of(JoinType.INNER_JOIN, table, column, name, fromColumn);
+    public static Join inner(Table table, String column, String operator, Column fromColumn) {
+        return Join.of(INNER_JOIN, table, column, operator, fromColumn);
     }
 
-    public static Join left(Table table, String column, ComparisonOperatorType name, Column fromColumn) {
-        return Join.of(JoinType.LEFT_JOIN, table, column, name, fromColumn);
+    public static Join left(Table table, String column, String operator, Column fromColumn) {
+        return Join.of(LEFT_JOIN, table, column, operator, fromColumn);
     }
 
-    public static Join right(Table table, String column, ComparisonOperatorType name, Column fromColumn) {
-        return Join.of(JoinType.RIGHT_JOIN, table, column, name, fromColumn);
+    public static Join right(Table table, String column, String operator, Column fromColumn) {
+        return Join.of(RIGHT_JOIN, table, column, operator, fromColumn);
     }
 
-    public static Join full(Table table, String column, ComparisonOperatorType name, Column fromColumn) {
-        return Join.of(JoinType.FULL_JOIN, table, column, name, fromColumn);
+    public static Join full(Table table, String column, String operator, Column fromColumn) {
+        return Join.of(FULL_JOIN, table, column, operator, fromColumn);
     }
 }

@@ -22,9 +22,8 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLObject;
+import org.citydb.sqlbuilder.SQLObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,13 +62,8 @@ public class CommonTableExpression implements SQLObject {
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        queryStatement.getInvolvedTables(tables);
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        queryStatement.getInvolvedPlaceHolders(placeHolders);
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        queryStatement.getPlaceHolders(placeHolders);
     }
 
     @Override

@@ -27,7 +27,7 @@ import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.literal.IntegerLiteral;
 import org.citydb.sqlbuilder.literal.Literal;
-import org.citydb.sqlbuilder.predicate.Predicate;
+import org.citydb.sqlbuilder.operator.Operator;
 import org.citydb.sqlbuilder.schema.Column;
 
 import java.util.ArrayList;
@@ -74,8 +74,8 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
         return having;
     }
 
-    public T having(Predicate... predicates) {
-        having.addAll(Arrays.asList(predicates));
+    public T having(Operator... operators) {
+        having.addAll(Arrays.asList(operators));
         return self();
     }
 

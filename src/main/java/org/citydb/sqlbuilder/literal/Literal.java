@@ -23,13 +23,14 @@ package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
-import org.citydb.sqlbuilder.schema.Table;
+import org.citydb.sqlbuilder.query.Selection;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
-public abstract class Literal<T> implements Expression {
+public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
     protected T value;
+    private String alias;
 
     protected Literal(T value) {
         this.value = value;
@@ -40,11 +41,18 @@ public abstract class Literal<T> implements Expression {
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public Literal<T> as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
     }
 
     @Override

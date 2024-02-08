@@ -22,41 +22,39 @@
 package org.citydb.sqlbuilder.join;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLObject;
+import org.citydb.sqlbuilder.SQLObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.predicate.Predicate;
-import org.citydb.sqlbuilder.predicate.Predicates;
-import org.citydb.sqlbuilder.predicate.comparison.ComparisonOperator;
-import org.citydb.sqlbuilder.predicate.comparison.ComparisonOperatorType;
+import org.citydb.sqlbuilder.operator.ComparisonOperator;
+import org.citydb.sqlbuilder.operator.LogicalOperator;
+import org.citydb.sqlbuilder.operator.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class Join implements SQLObject {
-    private final JoinType type;
+    private final String name;
     private final Column fromColumn;
     private final Column toColumn;
-    private final List<Predicate> conditions = new ArrayList<>();
+    private final List<LogicalOperator> conditions = new ArrayList<>();
 
-    private Join(JoinType type, Column toColumn, ComparisonOperatorType operatorType, Column fromColumn) {
-        this.type = Objects.requireNonNull(type, "The join type must not be null.");
+    private Join(String name, Column toColumn, String operator, Column fromColumn) {
+        this.name = Objects.requireNonNull(name, "The join name must not be null.");
         this.toColumn = Objects.requireNonNull(toColumn, "The target column must not be null.");
         this.fromColumn = Objects.requireNonNull(fromColumn, "The source column must not be null.");
-        Objects.requireNonNull(operatorType, "The comparison operator must not be null.");
-        conditions.add(ComparisonOperator.of(fromColumn, operatorType, toColumn));
+        Objects.requireNonNull(operator, "The operator name must not be null.");
+        conditions.add(ComparisonOperator.of(fromColumn, operator, toColumn));
     }
 
-    public static Join of(JoinType type, Column toColumn, ComparisonOperatorType operatorType, Column fromColumn) {
-        return new Join(type, toColumn, operatorType, fromColumn);
+    public static Join of(String name, Column toColumn, String operator, Column fromColumn) {
+        return new Join(name, toColumn, operator, fromColumn);
     }
 
-    public static Join of(JoinType type, Table toTable, String toColumn, ComparisonOperatorType operatorType, Column fromColumn) {
+    public static Join of(String name, Table toTable, String toColumn, String operator, Column fromColumn) {
         Objects.requireNonNull(toTable, "The target table must not be null.");
-        return new Join(type, toTable.column(toColumn), operatorType, fromColumn);
+        return new Join(name, toTable.column(toColumn), operator, fromColumn);
     }
 
     public Column getFromColumn() {
@@ -67,15 +65,15 @@ public class Join implements SQLObject {
         return toColumn;
     }
 
-    public JoinType getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public List<Predicate> getConditions() {
+    public List<LogicalOperator> getConditions() {
         return conditions;
     }
 
-    public Join condition(Predicate condition) {
+    public Join condition(LogicalOperator condition) {
         if (condition != null) {
             conditions.add(condition);
         }
@@ -84,23 +82,17 @@ public class Join implements SQLObject {
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        toColumn.getInvolvedTables(tables);
-        conditions.forEach(condition -> condition.getInvolvedTables(tables));
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        toColumn.getInvolvedPlaceHolders(placeHolders);
-        conditions.forEach(condition -> condition.getInvolvedPlaceHolders(placeHolders));
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        toColumn.getPlaceHolders(placeHolders);
+        conditions.forEach(condition -> condition.getPlaceHolders(placeHolders));
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(type.toSQL(builder) + " ")
+        builder.append(builder.keyword(name) + " ")
                 .append(toColumn.getTable())
                 .append(builder.keyword(" on "))
-                .append(Predicates.and(conditions));
+                .append(Operators.and(conditions));
     }
 
     @Override

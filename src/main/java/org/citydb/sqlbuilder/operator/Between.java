@@ -19,22 +19,22 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate.logical;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Optional;
 
 public class Between implements LogicalOperator {
     private final Expression operand;
     private final Expression lowerBound;
     private final Expression upperBound;
     private boolean negate;
+    private String alias;
 
     private Between(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
@@ -72,28 +72,32 @@ public class Between implements LogicalOperator {
     }
 
     @Override
-    public LogicalOperatorType getType() {
-        return !negate ? LogicalOperatorType.BETWEEN : LogicalOperatorType.NOT_BETWEEN;
+    public String getName() {
+        return !negate ? Operators.BETWEEN : Operators.NOT_BETWEEN;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        operand.getInvolvedTables(tables);
-        lowerBound.getInvolvedTables(tables);
-        upperBound.getInvolvedTables(tables);
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getInvolvedPlaceHolders(placeHolders);
-        lowerBound.getInvolvedPlaceHolders(placeHolders);
-        upperBound.getInvolvedPlaceHolders(placeHolders);
+    public Between as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        operand.getPlaceHolders(placeHolders);
+        lowerBound.getPlaceHolders(placeHolders);
+        upperBound.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
-                .append(" " + getType().toSQL(builder) + " ")
+                .append(" " + builder.keyword(getName()) + " ")
                 .append(lowerBound)
                 .append(builder.keyword(" and "))
                 .append(upperBound);

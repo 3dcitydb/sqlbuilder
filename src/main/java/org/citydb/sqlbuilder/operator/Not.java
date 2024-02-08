@@ -19,36 +19,34 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.schema;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.query.Select;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
-public class QueryColumn implements ColumnExpression, Projection<QueryColumn> {
-    private final Select select;
+public class Not implements LogicalOperator {
+    private final LogicalOperator operand;
     private String alias;
 
-    private QueryColumn(Select select, String alias) {
-        this.select = Objects.requireNonNull(select, "The select must not be null.");
-        this.alias = alias;
+    private Not(LogicalOperator operand) {
+        this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
     }
 
-    public static QueryColumn of(Select select, String alias) {
-        return new QueryColumn(select, alias);
+    public static Not of(LogicalOperator operand) {
+        return new Not(operand);
     }
 
-    public static QueryColumn of(Select select) {
-        return new QueryColumn(select, null);
+    public LogicalOperator getOperand() {
+        return operand;
     }
 
-    public Select getSelect() {
-        return select;
+    @Override
+    public String getName() {
+        return Operators.NOT;
     }
 
     @Override
@@ -57,32 +55,20 @@ public class QueryColumn implements ColumnExpression, Projection<QueryColumn> {
     }
 
     @Override
-    public QueryColumn as(String alias) {
+    public Not as(String alias) {
         this.alias = alias;
         return this;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        select.getInvolvedTables(tables);
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        select.getInvolvedPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSQL(SQLBuilder builder, boolean withAlias) {
-        builder.append(select);
-        if (withAlias && alias != null) {
-            builder.append(builder.keyword(" as ") + alias);
-        }
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        operand.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        buildSQL(builder, false);
+        builder.append(builder.keyword(getName()) + " ")
+                .append(operand);
     }
 
     @Override

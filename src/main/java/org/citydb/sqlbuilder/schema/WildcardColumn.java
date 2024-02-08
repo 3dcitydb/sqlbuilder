@@ -24,12 +24,12 @@ package org.citydb.sqlbuilder.schema;
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.Selection;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-public class WildcardColumn implements Expression, Projection<WildcardColumn> {
+public class WildcardColumn implements Expression, Selection<WildcardColumn> {
     private final Table table;
 
     private WildcardColumn(Table table) {
@@ -59,22 +59,10 @@ public class WildcardColumn implements Expression, Projection<WildcardColumn> {
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         if (table != null) {
-            table.getInvolvedTables(tables);
+            table.getPlaceHolders(placeHolders);
         }
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        if (table != null) {
-            table.getInvolvedPlaceHolders(placeHolders);
-        }
-    }
-
-    @Override
-    public void buildSQL(SQLBuilder builder, boolean withAlias) {
-        buildSQL(builder);
     }
 
     @Override

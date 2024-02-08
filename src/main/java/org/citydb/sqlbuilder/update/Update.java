@@ -26,18 +26,20 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.predicate.Predicate;
+import org.citydb.sqlbuilder.operator.LogicalOperator;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryStatement;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Update implements Statement {
     private final List<CommonTableExpression> with;
     private final List<UpdateValue> set;
-    private final List<Predicate> where;
+    private final List<LogicalOperator> where;
     private boolean withRecursive;
     private Table table;
 
@@ -108,49 +110,32 @@ public class Update implements Statement {
         return new UpdateValueBuilder(column);
     }
 
-    public List<Predicate> getWhere() {
+    public List<LogicalOperator> getWhere() {
         return where;
     }
 
-    public Update where(Predicate... predicates) {
-        where.addAll(Arrays.asList(predicates));
+    public Update where(LogicalOperator... operators) {
+        where.addAll(Arrays.asList(operators));
         return this;
     }
 
     @Override
-    public Set<Table> getInvolvedTables() {
-        Set<Table> tables = new LinkedHashSet<>();
-        if (table != null) {
-            table.getInvolvedTables(tables);
-        }
-
-        set.forEach(value -> value.getInvolvedTables(tables));
-        return tables;
-    }
-
-    @Override
-    public List<PlaceHolder> getInvolvedPlaceHolders() {
+    public List<PlaceHolder> getPlaceHolders() {
         List<PlaceHolder> placeHolders = new ArrayList<>();
-        getInvolvedPlaceHolders(placeHolders);
+        getPlaceHolders(placeHolders);
         return placeHolders;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        where.forEach(predicate -> predicate.getInvolvedTables(tables));
-        tables.removeAll(getInvolvedTables());
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        with.forEach(cte -> cte.getInvolvedPlaceHolders(placeHolders));
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        with.forEach(cte -> cte.getPlaceHolders(placeHolders));
 
         if (table != null) {
-            table.getInvolvedPlaceHolders(placeHolders);
+            table.getPlaceHolders(placeHolders);
         }
 
-        set.forEach(value -> value.getInvolvedPlaceHolders(placeHolders));
-        where.forEach(predicate -> predicate.getInvolvedPlaceHolders(placeHolders));
+        set.forEach(value -> value.getPlaceHolders(placeHolders));
+        where.forEach(operator -> operator.getPlaceHolders(placeHolders));
     }
 
     @Override
@@ -166,13 +151,9 @@ public class Update implements Statement {
         }
 
         builder.append(builder.keyword("update "));
-
-        Set<Table> tables = getInvolvedTables();
-        if (!tables.isEmpty()) {
-            builder.appendln()
-                    .indent(tables.iterator().next())
-                    .append(" ");
-        }
+        builder.appendln()
+                .indent(table != null ? table : Table.of("null"))
+                .append(" ");
 
         if (!set.isEmpty()) {
             builder.appendln()

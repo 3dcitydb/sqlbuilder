@@ -22,223 +22,328 @@
 package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.function.Function;
+import org.citydb.sqlbuilder.function.Functions;
+import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.StringLiteral;
-import org.citydb.sqlbuilder.predicate.Predicates;
-import org.citydb.sqlbuilder.predicate.comparison.ComparisonOperator;
-import org.citydb.sqlbuilder.predicate.logical.Between;
-import org.citydb.sqlbuilder.predicate.logical.In;
-import org.citydb.sqlbuilder.predicate.logical.Like;
-import org.citydb.sqlbuilder.predicate.logical.UnaryLogicalOperator;
+import org.citydb.sqlbuilder.operator.*;
 import org.citydb.sqlbuilder.query.LiteralList;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public interface ColumnExpression extends Expression {
 
+    default ArithmeticOperator add(Object operand) {
+        return Operators.add(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    default ArithmeticOperator subtract(Object operand) {
+        return Operators.subtract(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    default ArithmeticOperator multiply(Object operand) {
+        return Operators.multiply(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    default ArithmeticOperator divide(Object operand) {
+        return Operators.divide(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    default ArithmeticOperator modulo(Object operand) {
+        return Operators.modulo(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    default ArithmeticOperator concat(Object operand) {
+        return Operators.concat(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
     default ComparisonOperator eq(Object operand) {
-        return Predicates.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
-    default ComparisonOperator eqAll(QueryExpression expression) {
-        return Predicates.eq(this, Predicates.all(expression));
+    default ComparisonOperator eqAll(Expression expression) {
+        return Operators.eq(this, Operators.all(expression));
     }
 
-    default ComparisonOperator eqAny(QueryExpression expression) {
-        return Predicates.eq(this, Predicates.any(expression));
+    default ComparisonOperator eqAny(Expression expression) {
+        return Operators.eq(this, Operators.any(expression));
     }
 
-    default ComparisonOperator eqSome(QueryExpression expression) {
-        return Predicates.eq(this, Predicates.some(expression));
+    default ComparisonOperator eqSome(Expression expression) {
+        return Operators.eq(this, Operators.some(expression));
     }
 
     default ComparisonOperator ne(Object operand) {
-        return Predicates.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
     }
 
-    default ComparisonOperator neAll(QueryExpression expression) {
-        return Predicates.eq(this, Predicates.all(expression), true);
+    default ComparisonOperator neAll(Expression expression) {
+        return Operators.eq(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperator neAny(QueryExpression expression) {
-        return Predicates.eq(this, Predicates.any(expression), true);
+    default ComparisonOperator neAny(Expression expression) {
+        return Operators.eq(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperator neSome(QueryExpression expression) {
-        return Predicates.eq(this, Predicates.some(expression), true);
+    default ComparisonOperator neSome(Expression expression) {
+        return Operators.eq(this, Operators.some(expression), true);
     }
 
     default ComparisonOperator lt(Object operand) {
-        return Predicates.lt(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.lt(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
-    default ComparisonOperator ltAll(QueryExpression expression) {
-        return Predicates.lt(this, Predicates.all(expression));
+    default ComparisonOperator ltAll(Expression expression) {
+        return Operators.lt(this, Operators.all(expression));
     }
 
-    default ComparisonOperator ltAny(QueryExpression expression) {
-        return Predicates.lt(this, Predicates.any(expression));
+    default ComparisonOperator ltAny(Expression expression) {
+        return Operators.lt(this, Operators.any(expression));
     }
 
-    default ComparisonOperator ltSome(QueryExpression expression) {
-        return Predicates.lt(this, Predicates.some(expression));
+    default ComparisonOperator ltSome(Expression expression) {
+        return Operators.lt(this, Operators.some(expression));
     }
 
     default ComparisonOperator nl(Object operand) {
-        return Predicates.lt(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.lt(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
     }
 
-    default ComparisonOperator nlAll(QueryExpression expression) {
-        return Predicates.lt(this, Predicates.all(expression), true);
+    default ComparisonOperator nlAll(Expression expression) {
+        return Operators.lt(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperator nlAny(QueryExpression expression) {
-        return Predicates.lt(this, Predicates.any(expression), true);
+    default ComparisonOperator nlAny(Expression expression) {
+        return Operators.lt(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperator nlSome(QueryExpression expression) {
-        return Predicates.lt(this, Predicates.some(expression), true);
+    default ComparisonOperator nlSome(Expression expression) {
+        return Operators.lt(this, Operators.some(expression), true);
     }
 
     default ComparisonOperator le(Object operand) {
-        return Predicates.le(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.le(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
-    default ComparisonOperator leAll(QueryExpression expression) {
-        return Predicates.le(this, Predicates.all(expression));
+    default ComparisonOperator leAll(Expression expression) {
+        return Operators.le(this, Operators.all(expression));
     }
 
-    default ComparisonOperator leAny(QueryExpression expression) {
-        return Predicates.le(this, Predicates.any(expression));
+    default ComparisonOperator leAny(Expression expression) {
+        return Operators.le(this, Operators.any(expression));
     }
 
-    default ComparisonOperator leSome(QueryExpression expression) {
-        return Predicates.le(this, Predicates.some(expression));
+    default ComparisonOperator leSome(Expression expression) {
+        return Operators.le(this, Operators.some(expression));
     }
 
     default ComparisonOperator nle(Object operand) {
-        return Predicates.le(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.le(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
     }
 
-    default ComparisonOperator nleAll(QueryExpression expression) {
-        return Predicates.le(this, Predicates.all(expression), true);
+    default ComparisonOperator nleAll(Expression expression) {
+        return Operators.le(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperator nleAny(QueryExpression expression) {
-        return Predicates.le(this, Predicates.any(expression), true);
+    default ComparisonOperator nleAny(Expression expression) {
+        return Operators.le(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperator nleSome(QueryExpression expression) {
-        return Predicates.le(this, Predicates.some(expression), true);
+    default ComparisonOperator nleSome(Expression expression) {
+        return Operators.le(this, Operators.some(expression), true);
     }
 
     default ComparisonOperator gt(Object operand) {
-        return Predicates.gt(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.gt(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
-    default ComparisonOperator gtAll(QueryExpression expression) {
-        return Predicates.gt(this, Predicates.all(expression));
+    default ComparisonOperator gtAll(Expression expression) {
+        return Operators.gt(this, Operators.all(expression));
     }
 
-    default ComparisonOperator gtAny(QueryExpression expression) {
-        return Predicates.gt(this, Predicates.any(expression));
+    default ComparisonOperator gtAny(Expression expression) {
+        return Operators.gt(this, Operators.any(expression));
     }
 
-    default ComparisonOperator gtSome(QueryExpression expression) {
-        return Predicates.gt(this, Predicates.some(expression));
+    default ComparisonOperator gtSome(Expression expression) {
+        return Operators.gt(this, Operators.some(expression));
     }
 
     default ComparisonOperator ng(Object operand) {
-        return Predicates.gt(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.gt(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
     }
 
-    default ComparisonOperator ngAll(QueryExpression expression) {
-        return Predicates.gt(this, Predicates.all(expression), true);
+    default ComparisonOperator ngAll(Expression expression) {
+        return Operators.gt(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperator ngAny(QueryExpression expression) {
-        return Predicates.gt(this, Predicates.any(expression), true);
+    default ComparisonOperator ngAny(Expression expression) {
+        return Operators.gt(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperator ngSome(QueryExpression expression) {
-        return Predicates.gt(this, Predicates.some(expression), true);
+    default ComparisonOperator ngSome(Expression expression) {
+        return Operators.gt(this, Operators.some(expression), true);
     }
 
     default ComparisonOperator ge(Object operand) {
-        return Predicates.ge(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.ge(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
-    default ComparisonOperator geAll(QueryExpression expression) {
-        return Predicates.ge(this, Predicates.all(expression));
+    default ComparisonOperator geAll(Expression expression) {
+        return Operators.ge(this, Operators.all(expression));
     }
 
-    default ComparisonOperator geAny(QueryExpression expression) {
-        return Predicates.ge(this, Predicates.any(expression));
+    default ComparisonOperator geAny(Expression expression) {
+        return Operators.ge(this, Operators.any(expression));
     }
 
-    default ComparisonOperator geSome(QueryExpression expression) {
-        return Predicates.ge(this, Predicates.some(expression));
+    default ComparisonOperator geSome(Expression expression) {
+        return Operators.ge(this, Operators.some(expression));
     }
 
     default ComparisonOperator nge(Object operand) {
-        return Predicates.ge(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.ge(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
     }
 
-    default ComparisonOperator ngeAll(QueryExpression expression) {
-        return Predicates.ge(this, Predicates.all(expression), true);
+    default ComparisonOperator ngeAll(Expression expression) {
+        return Operators.ge(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperator ngeAny(QueryExpression expression) {
-        return Predicates.ge(this, Predicates.any(expression), true);
+    default ComparisonOperator ngeAny(Expression expression) {
+        return Operators.ge(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperator ngeSome(QueryExpression expression) {
-        return Predicates.ge(this, Predicates.some(expression), true);
+    default ComparisonOperator ngeSome(Expression expression) {
+        return Operators.ge(this, Operators.some(expression), true);
     }
 
-    default UnaryLogicalOperator isNull() {
-        return Predicates.isNull(this);
+    default IsNull isNull() {
+        return Operators.isNull(this);
     }
 
-    default UnaryLogicalOperator isNotNull() {
-        return Predicates.isNull(this, true);
+    default IsNull isNotNull() {
+        return Operators.isNull(this, true);
     }
 
     default Like like(Object operand) {
-        return Predicates.like(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.like(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
     default Like like(Object operand, String escapeCharacter) {
-        return Predicates.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
+        return Operators.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
                 StringLiteral.of(escapeCharacter));
     }
 
     default Like notLike(Object operand) {
-        return Predicates.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
+        return Operators.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
                 null, true);
     }
 
     default Like notLike(Object operand, String escapeCharacter) {
-        return Predicates.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
+        return Operators.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
                 StringLiteral.of(escapeCharacter), true);
     }
 
     default Between between(Object lowerBound, Object upperBound) {
-        return Predicates.between(this,
+        return Operators.between(this,
                 lowerBound instanceof Expression expression ? expression : Literals.of(lowerBound),
                 upperBound instanceof Expression expression ? expression : Literals.of(upperBound));
     }
 
     default Between notBetween(Object lowerBound, Object upperBound) {
-        return Predicates.between(this,
+        return Operators.between(this,
                 lowerBound instanceof Expression expression ? expression : Literals.of(lowerBound),
                 upperBound instanceof Expression expression ? expression : Literals.of(upperBound), true);
     }
 
     default In in(Object... operands) {
-        return Predicates.in(this, LiteralList.of(operands));
+        return Operators.in(this, LiteralList.of(operands));
     }
 
     default In in(QueryExpression expression) {
-        return Predicates.in(this, expression);
+        return Operators.in(this, expression);
+    }
+
+    default Function avg() {
+        return Functions.avg(this);
+    }
+
+    default Function count() {
+        return Functions.count(this);
+    }
+
+    default Function max() {
+        return Functions.max(this);
+    }
+
+    default Function min() {
+        return Functions.min(this);
+    }
+
+    default Function sum() {
+        return Functions.sum(this);
+    }
+
+    default Function length() {
+        return Functions.length(this);
+    }
+
+    default Function upper() {
+        return Functions.upper(this);
+    }
+
+    default Function lower() {
+        return Functions.lower(this);
+    }
+
+    default Function trim() {
+        return Functions.trim(this);
+    }
+
+    default Function concat(Expression... arguments) {
+        List<Expression> expressions = new ArrayList<>();
+        expressions.add(this);
+        expressions.addAll(Arrays.asList(arguments));
+        return Functions.concat(expressions);
+    }
+
+    default Function firstValue() {
+        return Functions.firstValue(this);
+    }
+
+    default Function lastValue() {
+        return Functions.lastValue(this);
+    }
+
+    default Function lag() {
+        return Functions.lag(this);
+    }
+
+    default Function lag(Literal<?> offset) {
+        return Functions.lag(this, offset);
+    }
+
+    default Function lag(Literal<?> offset, Expression defaultValue) {
+        return Functions.lag(this, offset, defaultValue);
+    }
+
+    default Function lead() {
+        return Functions.lead(this);
+    }
+
+    default Function lead(Literal<?> offset) {
+        return Functions.lead(this, offset);
+    }
+
+    default Function lead(Literal<?> offset, Expression defaultValue) {
+        return Functions.lead(this, offset, defaultValue);
+    }
+
+    default Function nthValue(Literal<?> offset) {
+        return Functions.nthValue(this, offset);
     }
 }

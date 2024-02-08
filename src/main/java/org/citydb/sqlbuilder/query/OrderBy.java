@@ -22,84 +22,83 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.SQLObject;
+import org.citydb.sqlbuilder.SQLObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 public class OrderBy implements SQLObject {
-    private final Column column;
-    private final SortOrder sortOrder;
-    private NullOrder nullOrder;
+    public static final String NULLS_FIRST = "nulls first";
+    public static final String NULLS_LAST = "nulls last";
+    public static final String ASCENDING = "asc";
+    public static final String DESCENDING = "desc";
 
-    private OrderBy(Column column, SortOrder sortOrder, NullOrder nullOrder) {
+    private final Column column;
+    private final String sortOrder;
+    private String nullOrder;
+
+    private OrderBy(Column column, String sortOrder, String nullOrder) {
         this.column = Objects.requireNonNull(column, "The column must not be null.");
-        this.sortOrder = sortOrder != null ? sortOrder : SortOrder.ASCENDING;
+        this.sortOrder = sortOrder != null ? sortOrder : ASCENDING;
         this.nullOrder = nullOrder;
     }
 
-    public static OrderBy of(Column column, SortOrder sortOrder, NullOrder nullOrder) {
+    public static OrderBy of(Column column, String sortOrder, String nullOrder) {
         return new OrderBy(column, sortOrder, nullOrder);
     }
 
-    public static OrderBy of(Column column, SortOrder sortOrder) {
+    public static OrderBy of(Column column, String sortOrder) {
         return new OrderBy(column, sortOrder, null);
     }
 
-    public static OrderBy of(Column column, NullOrder nullOrder) {
-        return new OrderBy(column, SortOrder.ASCENDING, nullOrder);
-    }
-
     public static OrderBy of(Column column) {
-        return new OrderBy(column, SortOrder.ASCENDING, null);
+        return new OrderBy(column, ASCENDING, null);
     }
 
     public Column getColumn() {
         return column;
     }
 
-    public SortOrder getSortOrder() {
+    public String getSortOrder() {
         return sortOrder;
     }
 
-    public Optional<NullOrder> getNullOrder() {
+    public Optional<String> getNullOrder() {
         return Optional.ofNullable(nullOrder);
     }
 
     public OrderBy nullsFirst() {
-        nullOrder = NullOrder.NULLS_FIRST;
+        nullOrder = NULLS_FIRST;
         return this;
     }
 
     public OrderBy nullsLast() {
-        nullOrder = NullOrder.NULLS_LAST;
+        nullOrder = NULLS_LAST;
+        return this;
+    }
+
+    public OrderBy nullOrder(String nullOrder) {
+        this.nullOrder = nullOrder;
         return this;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        column.getInvolvedTables(tables);
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        column.getInvolvedPlaceHolders(placeHolders);
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        column.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(column);
-        if (sortOrder != SortOrder.ASCENDING) {
-            builder.append(" " + sortOrder.toSQL(builder));
+        if (!ASCENDING.equalsIgnoreCase(sortOrder)) {
+            builder.append(" " + builder.keyword(sortOrder));
         }
 
         if (nullOrder != null) {
-            builder.append(" " + nullOrder.toSQL(builder));
+            builder.append(" " + builder.keyword(nullOrder));
         }
     }
 

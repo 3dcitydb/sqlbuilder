@@ -19,52 +19,51 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate.logical;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.predicate.Predicate;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
 
 public class BinaryLogicalOperator implements LogicalOperator {
-    private final List<Predicate> operands;
-    private final LogicalOperatorType type;
+    private final List<LogicalOperator> operands;
+    private final String name;
+    private String alias;
 
-    private BinaryLogicalOperator(LogicalOperatorType type, List<Predicate> operands) {
+    private BinaryLogicalOperator(String name, List<LogicalOperator> operands) {
         this.operands = Objects.requireNonNull(operands, "The operands list must not be null.");
-        this.type = Objects.requireNonNull(type, "The logical operation type list must not be null.");
+        this.name = Objects.requireNonNull(name, "The operator name must not be null.");
 
         if (operands.isEmpty()) {
             throw new IllegalArgumentException("The operands list must not be empty.");
-        } else if (!LogicalOperatorType.BINARY_OPERATORS.contains(type)) {
-            throw new IllegalArgumentException("The comparison type '" + type + "' is not binary.");
+        } else if (!Operators.AND.equalsIgnoreCase(name) && !Operators.OR.equalsIgnoreCase(name)) {
+            throw new IllegalArgumentException("The operator '" + name + "' is not supported.");
         }
     }
 
-    public static BinaryLogicalOperator of(LogicalOperatorType type, List<Predicate> operands) {
-        return new BinaryLogicalOperator(type, operands);
+    public static BinaryLogicalOperator of(String name, List<LogicalOperator> operands) {
+        return new BinaryLogicalOperator(name, operands);
     }
 
-    public static BinaryLogicalOperator of(LogicalOperatorType type, Predicate... operands) {
-        return new BinaryLogicalOperator(type, operands != null ?
+    public static BinaryLogicalOperator of(String name, LogicalOperator... operands) {
+        return new BinaryLogicalOperator(name, operands != null ?
                 new ArrayList<>(Arrays.asList(operands)) :
                 null);
     }
 
-    public static BinaryLogicalOperator of(Predicate leftOperand, LogicalOperatorType type, Predicate rightOperand) {
-        List<Predicate> operands = new ArrayList<>();
+    public static BinaryLogicalOperator of(LogicalOperator leftOperand, String name, LogicalOperator rightOperand) {
+        List<LogicalOperator> operands = new ArrayList<>();
         operands.add(Objects.requireNonNull(leftOperand, "The left operand must not be null."));
         operands.add(Objects.requireNonNull(rightOperand, "The right operand must not be null."));
-        return new BinaryLogicalOperator(type, operands);
+        return new BinaryLogicalOperator(name, operands);
     }
 
-    public List<Predicate> getOperands() {
+    public List<LogicalOperator> getOperands() {
         return operands;
     }
 
-    public BinaryLogicalOperator add(Predicate operand) {
+    public BinaryLogicalOperator add(LogicalOperator operand) {
         if (operand != null) {
             operands.add(operand);
         }
@@ -73,26 +72,33 @@ public class BinaryLogicalOperator implements LogicalOperator {
     }
 
     @Override
-    public LogicalOperatorType getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        operands.forEach(operand -> operand.getInvolvedTables(tables));
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operands.forEach(operand -> operand.getInvolvedPlaceHolders(placeHolders));
+    public BinaryLogicalOperator as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        operands.forEach(operand -> operand.getPlaceHolders(placeHolders));
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
         if (operands.size() > 1) {
-            builder.openParenthesis()
-                    .appendln(operands, " ", type.toSQL(builder) + " ")
-                    .closeParenthesis();
+            builder.appendln("(")
+                    .indentln(operands, " ", builder.keyword(name) + " ")
+                    .appendln()
+                    .append(")");
         } else {
             builder.append(operands.get(0));
         }

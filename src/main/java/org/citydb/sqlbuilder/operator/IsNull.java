@@ -19,43 +19,36 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate.logical;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.query.QueryExpression;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Optional;
 
-public class In implements LogicalOperator {
+public class IsNull implements LogicalOperator {
     private final Expression operand;
-    private final QueryExpression queryExpression;
     private boolean negate;
+    private String alias;
 
-    private In(Expression operand, QueryExpression queryExpression, boolean negate) {
+    private IsNull(Expression operand, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.queryExpression = Objects.requireNonNull(queryExpression, "The query expression must not be null.");
         this.negate = negate;
     }
 
-    public static In of(Expression operand, QueryExpression queryExpression, boolean negate) {
-        return new In(operand, queryExpression, negate);
+    public static IsNull of(Expression operand, boolean negate) {
+        return new IsNull(operand, negate);
     }
 
-    public static In of(Expression operand, QueryExpression queryExpression) {
-        return new In(operand, queryExpression, false);
+    public static IsNull of(Expression operand) {
+        return new IsNull(operand, false);
     }
 
     public Expression getOperand() {
         return operand;
-    }
-
-    public QueryExpression getQueryExpression() {
-        return queryExpression;
     }
 
     public boolean isNegate() {
@@ -67,27 +60,30 @@ public class In implements LogicalOperator {
     }
 
     @Override
-    public LogicalOperatorType getType() {
-        return !negate ? LogicalOperatorType.IN : LogicalOperatorType.NOT_IN;
+    public String getName() {
+        return !negate ? Operators.IS_NULL : Operators.IS_NOT_NULL;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        operand.getInvolvedTables(tables);
-        queryExpression.getInvolvedTables(tables);
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getInvolvedPlaceHolders(placeHolders);
-        queryExpression.getInvolvedPlaceHolders(placeHolders);
+    public IsNull as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        operand.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
-                .append(" " + getType().toSQL(builder) + " ")
-                .append(queryExpression);
+                .append(" " + builder.keyword(getName()));
     }
 
     @Override

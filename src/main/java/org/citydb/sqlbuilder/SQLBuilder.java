@@ -24,6 +24,7 @@ package org.citydb.sqlbuilder;
 import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.query.LiteralList;
 import org.citydb.sqlbuilder.query.QueryExpression;
+import org.citydb.sqlbuilder.util.PlainText;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -67,14 +68,18 @@ public class SQLBuilder {
                     options.getIdentifierDelimiter() + identifier + options.getIdentifierDelimiter() :
                     identifier;
         } else {
-            return null;
+            return "";
         }
     }
 
     public String keyword(String keyword) {
-        return keyword != null && options.getKeywordCase() == SQLBuildOptions.KeywordCase.UPPERCASE ?
-                keyword.toUpperCase(Locale.ROOT) :
-                keyword;
+        if (keyword != null) {
+            return options.getKeywordCase() == SQLBuildOptions.KeywordCase.UPPERCASE ?
+                    keyword.toUpperCase(Locale.ROOT) :
+                    keyword.toLowerCase(Locale.ROOT);
+        } else {
+            return "";
+        }
     }
 
     public SQLBuilder appendln() {
@@ -100,7 +105,9 @@ public class SQLBuilder {
     }
 
     public SQLBuilder append(QueryExpression expression) {
-        if (expression instanceof LiteralList literalList) {
+        if (expression instanceof PlainText plainText) {
+            builder.append(plainText);
+        } else if (expression instanceof LiteralList literalList) {
             builder.append("(");
             literalList.buildSQL(this);
             builder.append(")");
@@ -174,7 +181,10 @@ public class SQLBuilder {
     }
 
     public SQLBuilder indent(Buildable object) {
-        return indent(1).append(object);
+        return indent(1)
+                .increaseIndent()
+                .append(object)
+                .decreaseIndent();
     }
 
     public SQLBuilder indentln(QueryExpression expression) {
@@ -182,7 +192,10 @@ public class SQLBuilder {
     }
 
     public SQLBuilder indent(QueryExpression expression) {
-        return indent(1).append(expression);
+        return indent(1)
+                .increaseIndent()
+                .append(expression)
+                .decreaseIndent();
     }
 
     public SQLBuilder indentln(String sql) {

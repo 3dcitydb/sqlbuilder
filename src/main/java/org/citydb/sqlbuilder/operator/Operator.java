@@ -19,27 +19,10 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.query;
+package org.citydb.sqlbuilder.operator;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.common.Expression;
 
-public enum FrameUnits {
-    GROUPS("groups"),
-    ROWS("rows"),
-    RANGE("range");
-
-    private final String sql;
-
-    FrameUnits(String sql) {
-        this.sql = sql;
-    }
-
-    public String toSQL(SQLBuilder builder) {
-        return builder.keyword(sql);
-    }
-
-    @Override
-    public String toString() {
-        return sql;
-    }
+public interface Operator extends Expression {
+    String getName();
 }

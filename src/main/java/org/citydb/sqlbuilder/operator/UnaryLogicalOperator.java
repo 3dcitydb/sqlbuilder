@@ -19,31 +19,28 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate.logical;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Optional;
 
 public class UnaryLogicalOperator implements LogicalOperator {
     private final Expression operand;
-    private final LogicalOperatorType type;
+    private final String name;
+    private String alias;
 
-    private UnaryLogicalOperator(Expression operand, LogicalOperatorType type) {
+    private UnaryLogicalOperator(Expression operand, String name) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.type = Objects.requireNonNull(type, "The comparison type must not be null.");
-        if (!LogicalOperatorType.UNARY_OPERATORS.contains(type)) {
-            throw new IllegalArgumentException("The comparison type '" + type + "' is not unary.");
-        }
+        this.name = Objects.requireNonNull(name, "The operator name must not be null.");
     }
 
-    public static UnaryLogicalOperator of(Expression operand, LogicalOperatorType type) {
-        return new UnaryLogicalOperator(operand, type);
+    public static UnaryLogicalOperator of(Expression operand, String name) {
+        return new UnaryLogicalOperator(operand, name);
     }
 
     public Expression getOperand() {
@@ -51,34 +48,30 @@ public class UnaryLogicalOperator implements LogicalOperator {
     }
 
     @Override
-    public LogicalOperatorType getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        operand.getInvolvedTables(tables);
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getInvolvedPlaceHolders(placeHolders);
+    public UnaryLogicalOperator as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        operand.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        boolean prefixNotation = switch (type) {
-            case EXISTS, NOT_EXISTS, ALL, ANY, SOME -> true;
-            default -> false;
-        };
-
-        if (prefixNotation) {
-            builder.append(getType().toSQL(builder) + " ")
-                    .append(operand);
-        } else {
-            builder.append(operand)
-                    .append(" " + getType().toSQL(builder));
-        }
+        builder.append(builder.keyword(name) + " ")
+                .append(operand);
     }
 
     @Override

@@ -24,15 +24,14 @@ package org.citydb.sqlbuilder.function;
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.query.Window;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
-import org.citydb.sqlbuilder.schema.Projection;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Function implements ColumnExpression, Projection<Function> {
+public class Function implements ColumnExpression, Selection<Function> {
     private final String name;
     private final List<Expression> arguments;
     private final List<String> qualifiers = new ArrayList<>();
@@ -111,17 +110,12 @@ public class Function implements ColumnExpression, Projection<Function> {
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        arguments.forEach(argument -> argument.getInvolvedTables(tables));
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        arguments.forEach(argument -> argument.getPlaceHolders(placeHolders));
     }
 
     @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        arguments.forEach(argument -> argument.getInvolvedPlaceHolders(placeHolders));
-    }
-
-    @Override
-    public void buildSQL(SQLBuilder builder, boolean withAlias) {
+    public void buildSQL(SQLBuilder builder) {
         builder.append(builder.keyword(name))
                 .append("(");
         if (!qualifiers.isEmpty()) {
@@ -133,14 +127,6 @@ public class Function implements ColumnExpression, Projection<Function> {
 
         builder.append(arguments, ", ")
                 .append(")");
-        if (withAlias && alias != null) {
-            builder.append(builder.keyword(" as ") + alias);
-        }
-    }
-
-    @Override
-    public void buildSQL(SQLBuilder builder) {
-        buildSQL(builder, false);
     }
 
     @Override

@@ -22,24 +22,17 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.common.Expression;
 
-public enum SetOperationType {
-    INTERSECT("intersect"),
-    UNION("union"),
-    UNION_ALL("union all");
+import java.util.Optional;
 
-    private final String sql;
+public interface Selection<T extends Selection<?>> extends Expression {
+    Optional<String> getAlias();
 
-    SetOperationType(String sql) {
-        this.sql = sql;
-    }
+    T as(String alias);
 
-    public String toSQL(SQLBuilder builder) {
-        return builder.keyword(sql);
-    }
-
-    @Override
-    public String toString() {
-        return sql;
+    default void buildSelection(SQLBuilder builder) {
+        builder.append(this);
+        getAlias().ifPresent(alias -> builder.append(builder.keyword(" as ") + alias));
     }
 }

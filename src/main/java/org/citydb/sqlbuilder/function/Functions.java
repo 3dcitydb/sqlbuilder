@@ -25,105 +25,136 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.schema.Column;
 
-public class Functions {
+import java.util.List;
 
-    public static Function avg(Expression expression) {
-        return Function.of("avg", expression);
+public class Functions {
+    public static final String AVG = "avg";
+    public static final String COUNT = "count";
+    public static final String MAX = "max";
+    public static final String MIN = "min";
+    public static final String SUM = "sum";
+    public static final String LENGTH = "length";
+    public static final String UPPER = "upper";
+    public static final String LOWER = "lower";
+    public static final String TRIM = "trim";
+    public static final String CONCAT = "concat";
+    public static final String CUME_DIST = "cume_dist";
+    public static final String DENSE_RANK = "dense_rank";
+    public static final String FIRST_VALUE = "first_value";
+    public static final String LAST_VALUE = "last_value";
+    public static final String LAG = "lag";
+    public static final String LEAD = "lead";
+    public static final String NTH_VALUE = "nth_value";
+    public static final String NTILE = "ntile";
+    public static final String PERCENT_RANK = "percent_rank";
+    public static final String RANK = "rank";
+    public static final String ROW_NUMBER = "row_number";
+
+    public static Function avg(Expression argument) {
+        return Function.of(AVG, argument);
     }
 
     public static Function count() {
         return count(Column.WILDCARD);
     }
 
-    public static Function count(Expression expression) {
-        return Function.of("count", expression);
+    public static Function count(Expression argument) {
+        return Function.of(COUNT, argument);
     }
 
-    public static Function max(Expression expression) {
-        return Function.of("max", expression);
+    public static Function max(Expression argument) {
+        return Function.of(MAX, argument);
     }
 
-    public static Function min(Expression expression) {
-        return Function.of("min", expression);
+    public static Function min(Expression argument) {
+        return Function.of(MIN, argument);
     }
 
-    public static Function sum(Expression expression) {
-        return Function.of("sum", expression);
+    public static Function sum(Expression argument) {
+        return Function.of(SUM, argument);
     }
 
-    public static Function length(Expression expression) {
-        return Function.of("length", expression);
+    public static Function length(Expression argument) {
+        return Function.of(LENGTH, argument);
     }
 
-    public static Function upper(Expression expression) {
-        return Function.of("upper", expression);
+    public static Function upper(Expression argument) {
+        return Function.of(UPPER, argument);
     }
 
-    public static Function lower(Expression expression) {
-        return Function.of("lower", expression);
+    public static Function lower(Expression argument) {
+        return Function.of(LOWER, argument);
     }
 
-    public static Function trim(Expression expression) {
-        return Function.of("trim", expression);
+    public static Function trim(Expression argument) {
+        return Function.of(TRIM, argument);
+    }
+
+    public static Function concat(Expression... arguments) {
+        return Function.of(CONCAT, arguments);
+    }
+
+    public static Function concat(List<Expression> arguments) {
+        return Function.of(CONCAT, arguments);
     }
 
     public static Function cumeDist() {
-        return Function.of("cume_dist");
+        return Function.of(CUME_DIST);
     }
 
     public static Function denseRank() {
-        return Function.of("dense_rank");
+        return Function.of(DENSE_RANK);
     }
 
-    public static Function firstValue(Expression expression) {
-        return Function.of("first_value", expression);
+    public static Function firstValue(Expression argument) {
+        return Function.of(FIRST_VALUE, argument);
     }
 
-    public static Function lastValue(Expression expression) {
-        return Function.of("last_value", expression);
+    public static Function lastValue(Expression argument) {
+        return Function.of(LAST_VALUE, argument);
     }
 
-    public static Function lag(Expression expression) {
-        return Function.of("lag", expression);
+    public static Function lag(Expression argument) {
+        return Function.of(LAG, argument);
     }
 
-    public static Function lag(Expression expression, Literal<?> offset) {
-        return Function.of("lag", expression, offset);
+    public static Function lag(Expression argument, Literal<?> offset) {
+        return Function.of(LAG, argument, offset);
     }
 
-    public static Function lag(Expression expression, Literal<?> offset, Expression defaultValue) {
-        return Function.of("lag", expression, defaultValue);
+    public static Function lag(Expression argument, Literal<?> offset, Expression defaultValue) {
+        return Function.of(LAG, argument, offset, defaultValue);
     }
 
-    public static Function lead(Expression expression) {
-        return Function.of("lead", expression);
+    public static Function lead(Expression argument) {
+        return Function.of(LEAD, argument);
     }
 
-    public static Function lead(Expression expression, Literal<?> offset) {
-        return Function.of("lead", expression, offset);
+    public static Function lead(Expression argument, Literal<?> offset) {
+        return Function.of(LEAD, argument, offset);
     }
 
-    public static Function lead(Expression expression, Literal<?> offset, Expression defaultValue) {
-        return Function.of("lead", expression, defaultValue);
+    public static Function lead(Expression argument, Literal<?> offset, Expression defaultValue) {
+        return Function.of(LEAD, argument, offset, defaultValue);
     }
 
-    public static Function nthValue(Expression expression, Literal<?> offset) {
-        return Function.of("nth_value", expression, offset);
+    public static Function nthValue(Expression argument, Literal<?> offset) {
+        return Function.of(NTH_VALUE, argument, offset);
     }
 
     public static Function ntile(Literal<?> offset) {
-        return Function.of("ntile", offset);
+        return Function.of(NTILE, offset);
     }
 
     public static Function percentRank() {
-        return Function.of("percent_rank");
+        return Function.of(PERCENT_RANK);
     }
 
     public static Function rank() {
-        return Function.of("rank");
+        return Function.of(RANK);
     }
 
     public static Function rowNumber() {
-        return Function.of("row_number");
+        return Function.of(ROW_NUMBER);
     }
 }

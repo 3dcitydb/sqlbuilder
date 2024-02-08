@@ -22,15 +22,13 @@
 package org.citydb.sqlbuilder.update;
 
 import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SQLObject;
 import org.citydb.sqlbuilder.common.Expression;
-import org.citydb.sqlbuilder.common.SQLObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class UpdateValue implements SQLObject {
     private final Column column;
@@ -54,15 +52,9 @@ public class UpdateValue implements SQLObject {
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        column.getInvolvedTables(tables);
-        value.getInvolvedTables(tables);
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        column.getInvolvedPlaceHolders(placeHolders);
-        value.getInvolvedPlaceHolders(placeHolders);
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        column.getPlaceHolders(placeHolders);
+        value.getPlaceHolders(placeHolders);
     }
 
     @Override

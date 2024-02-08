@@ -19,31 +19,28 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate.comparison;
+package org.citydb.sqlbuilder.operator;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.predicate.Predicate;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-public class ComparisonOperator implements Predicate {
+public class ArithmeticOperator implements Operator {
     private final Expression leftOperand;
     private final Expression rightOperand;
-    private final ComparisonOperatorType type;
+    private final String name;
 
-    protected ComparisonOperator(Expression leftOperand, ComparisonOperatorType type, Expression rightOperand) {
+    protected ArithmeticOperator(Expression leftOperand, String name, Expression rightOperand) {
         this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
         this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
-        this.type = Objects.requireNonNull(type, "The comparison type must not be null.");
+        this.name = Objects.requireNonNull(name, "The operator name must not be null.");
     }
 
-    public static ComparisonOperator of(Expression leftOperand, ComparisonOperatorType type, Expression rightOperand) {
-        return new ComparisonOperator(leftOperand, type, rightOperand);
+    public static ArithmeticOperator of(Expression leftOperand, String name, Expression rightOperand) {
+        return new ArithmeticOperator(leftOperand, name, rightOperand);
     }
 
     public Expression getLeftOperand() {
@@ -54,26 +51,21 @@ public class ComparisonOperator implements Predicate {
         return rightOperand;
     }
 
-    public ComparisonOperatorType getType() {
-        return type;
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        leftOperand.getInvolvedTables(tables);
-        rightOperand.getInvolvedTables(tables);
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        leftOperand.getInvolvedPlaceHolders(placeHolders);
-        rightOperand.getInvolvedPlaceHolders(placeHolders);
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        leftOperand.getPlaceHolders(placeHolders);
+        rightOperand.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(leftOperand)
-                .append(" " + type.toSQL(builder) + " ")
+                .append(" " + builder.keyword(name) + " ")
                 .append(rightOperand);
     }
 

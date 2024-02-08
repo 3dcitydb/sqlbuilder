@@ -6,9 +6,7 @@ module org.citydb.sqlbuilder {
     exports org.citydb.sqlbuilder.function;
     exports org.citydb.sqlbuilder.join;
     exports org.citydb.sqlbuilder.literal;
-    exports org.citydb.sqlbuilder.predicate;
-    exports org.citydb.sqlbuilder.predicate.comparison;
-    exports org.citydb.sqlbuilder.predicate.logical;
+    exports org.citydb.sqlbuilder.operator;
     exports org.citydb.sqlbuilder.query;
     exports org.citydb.sqlbuilder.schema;
     exports org.citydb.sqlbuilder.update;

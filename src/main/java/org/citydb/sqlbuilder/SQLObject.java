@@ -19,10 +19,13 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.predicate.logical;
+package org.citydb.sqlbuilder;
 
-import org.citydb.sqlbuilder.predicate.Predicate;
+import org.citydb.sqlbuilder.common.Buildable;
+import org.citydb.sqlbuilder.literal.PlaceHolder;
 
-public interface LogicalOperator extends Predicate {
-    LogicalOperatorType getType();
+import java.util.List;
+
+public interface SQLObject extends Buildable {
+    void getPlaceHolders(List<PlaceHolder> placeHolders);
 }

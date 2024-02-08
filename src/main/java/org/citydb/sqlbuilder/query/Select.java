@@ -24,25 +24,28 @@ package org.citydb.sqlbuilder.query;
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.join.Join;
-import org.citydb.sqlbuilder.join.JoinType;
+import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.predicate.Predicate;
-import org.citydb.sqlbuilder.predicate.comparison.ComparisonOperator;
+import org.citydb.sqlbuilder.operator.ComparisonOperator;
+import org.citydb.sqlbuilder.operator.LogicalOperator;
 import org.citydb.sqlbuilder.schema.Column;
-import org.citydb.sqlbuilder.schema.Projection;
 import org.citydb.sqlbuilder.schema.Table;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-public class Select extends QueryStatement<Select> {
+public class Select extends QueryStatement<Select> implements Selection<Select> {
     private final List<String> hints;
     private final List<CommonTableExpression> with;
-    private final List<Projection<?>> select;
+    private final List<Selection<?>> select;
     private final List<Join> joins;
-    private final List<Predicate> where;
+    private final List<LogicalOperator> where;
     private boolean withRecursive;
     private boolean distinct;
     private Table from;
+    private String alias;
 
     private Select() {
         hints = new ArrayList<>();
@@ -62,6 +65,7 @@ public class Select extends QueryStatement<Select> {
         withRecursive = other.withRecursive;
         distinct = other.distinct;
         from = other.from;
+        alias = null;
     }
 
     public static Select newInstance() {
@@ -117,12 +121,12 @@ public class Select extends QueryStatement<Select> {
         return this;
     }
 
-    public List<Projection<?>> getSelect() {
+    public List<Selection<?>> getSelect() {
         return select;
     }
 
-    public Select select(Projection<?>... projections) {
-        select.addAll(Arrays.asList(projections));
+    public Select select(Selection<?>... selections) {
+        select.addAll(Arrays.asList(selections));
         return this;
     }
 
@@ -148,12 +152,12 @@ public class Select extends QueryStatement<Select> {
         return new JoinBuilder(table);
     }
 
-    public List<Predicate> getWhere() {
+    public List<LogicalOperator> getWhere() {
         return where;
     }
 
-    public Select where(Predicate... predicates) {
-        where.addAll(Arrays.asList(predicates));
+    public Select where(LogicalOperator... operators) {
+        where.addAll(Arrays.asList(operators));
         return this;
     }
 
@@ -170,47 +174,37 @@ public class Select extends QueryStatement<Select> {
     }
 
     @Override
-    public Set<Table> getInvolvedTables() {
-        Set<Table> tables = new LinkedHashSet<>();
-        if (from != null) {
-            from.getInvolvedTables(tables);
-        }
-
-        select.forEach(projection -> projection.getInvolvedTables(tables));
-        joins.forEach(join -> join.getInvolvedTables(tables));
-        return tables;
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
     }
 
     @Override
-    public List<PlaceHolder> getInvolvedPlaceHolders() {
+    public Select as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
+    public List<PlaceHolder> getPlaceHolders() {
         List<PlaceHolder> placeHolders = new ArrayList<>();
-        getInvolvedPlaceHolders(placeHolders);
+        getPlaceHolders(placeHolders);
         return placeHolders;
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        where.forEach(predicate -> predicate.getInvolvedTables(tables));
-        groupBy.forEach(groupBy -> groupBy.getInvolvedTables(tables));
-        having.forEach(having -> having.getInvolvedTables(tables));
-        orderBy.forEach(orderBy -> orderBy.getInvolvedTables(tables));
-        tables.removeAll(getInvolvedTables());
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        with.forEach(cte -> cte.getInvolvedPlaceHolders(placeHolders));
-        select.forEach(projection -> projection.getInvolvedPlaceHolders(placeHolders));
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        with.forEach(cte -> cte.getPlaceHolders(placeHolders));
+        select.forEach(projection -> projection.getPlaceHolders(placeHolders));
 
         if (from != null) {
-            from.getInvolvedPlaceHolders(placeHolders);
+            from.getPlaceHolders(placeHolders);
         }
 
-        joins.forEach(join -> join.getInvolvedPlaceHolders(placeHolders));
-        where.forEach(predicate -> predicate.getInvolvedPlaceHolders(placeHolders));
-        groupBy.forEach(groupBy -> groupBy.getInvolvedPlaceHolders(placeHolders));
-        having.forEach(having -> having.getInvolvedPlaceHolders(placeHolders));
-        orderBy.forEach(orderBy -> orderBy.getInvolvedPlaceHolders(placeHolders));
+        joins.forEach(join -> join.getPlaceHolders(placeHolders));
+        where.forEach(operator -> operator.getPlaceHolders(placeHolders));
+        groupBy.forEach(groupBy -> groupBy.getPlaceHolders(placeHolders));
+        having.forEach(having -> having.getPlaceHolders(placeHolders));
+        orderBy.forEach(orderBy -> orderBy.getPlaceHolders(placeHolders));
     }
 
     @Override
@@ -238,29 +232,18 @@ public class Select extends QueryStatement<Select> {
         if (!select.isEmpty()) {
             builder.appendln()
                     .indentln(select.stream()
-                            .map(projection -> (Buildable) b -> projection.buildSQL(b, true))
+                            .map(projection -> (Buildable) projection::buildSelection)
                             .toList(), ", ");
         }
 
-        Set<Table> from = getInvolvedTables();
-        if (!from.isEmpty()) {
-            if (!joins.isEmpty()) {
-                Set<Table> joinTables = new HashSet<>();
-                joins.forEach(join -> join.getInvolvedTables(joinTables));
-                from.removeAll(joinTables);
-                if (from.isEmpty()) {
-                    from.add(joins.get(0).getFromColumn().getTable());
-                }
-            }
+        builder.appendln()
+                .appendln(builder.keyword("from "))
+                .indent(from != null ? from : Table.of("null"))
+                .append(" ");
 
+        if (!joins.isEmpty()) {
             builder.appendln()
-                    .appendln(builder.keyword("from "))
-                    .indentln(from, ", ");
-
-            if (!joins.isEmpty()) {
-                builder.appendln()
-                        .indentln(joins, " ");
-            }
+                    .indentln(joins, " ");
         }
 
         if (!where.isEmpty()) {
@@ -290,31 +273,31 @@ public class Select extends QueryStatement<Select> {
         }
 
         public Select on(ComparisonOperator operator) {
-            return build(JoinType.INNER_JOIN, operator);
+            return build(Joins.INNER_JOIN, operator);
         }
 
         public Select inner(ComparisonOperator operator) {
-            return build(JoinType.INNER_JOIN, operator);
+            return build(Joins.INNER_JOIN, operator);
         }
 
         public Select left(ComparisonOperator operator) {
-            return build(JoinType.LEFT_JOIN, operator);
+            return build(Joins.LEFT_JOIN, operator);
         }
 
         public Select right(ComparisonOperator operator) {
-            return build(JoinType.RIGHT_JOIN, operator);
+            return build(Joins.RIGHT_JOIN, operator);
         }
 
         public Select full(ComparisonOperator operator) {
-            return build(JoinType.FULL_JOIN, operator);
+            return build(Joins.FULL_JOIN, operator);
         }
 
-        private Select build(JoinType type, ComparisonOperator operator) {
+        private Select build(String name, ComparisonOperator operator) {
             if (operator.getLeftOperand() instanceof Column toColumn
                     && operator.getRightOperand() instanceof Column fromColumn
                     && (toColumn.getTable() == table
                     || fromColumn.getTable() == table)) {
-                joins.add(Join.of(type, toColumn, operator.getType(), fromColumn));
+                joins.add(Join.of(name, toColumn, operator.getName(), fromColumn));
             }
 
             return Select.this;

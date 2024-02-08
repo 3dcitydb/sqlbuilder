@@ -23,16 +23,14 @@ package org.citydb.sqlbuilder.function;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.query.Window;
-import org.citydb.sqlbuilder.schema.Projection;
-import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
-public class WindowFunction implements Projection<WindowFunction> {
+public class WindowFunction implements Selection<WindowFunction> {
     private final Function function;
     private final Window window;
     private String alias;
@@ -79,35 +77,20 @@ public class WindowFunction implements Projection<WindowFunction> {
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        function.getInvolvedTables(tables);
-        window.getInvolvedTables(tables);
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        function.getInvolvedPlaceHolders(placeHolders);
-        window.getInvolvedPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSQL(SQLBuilder builder, boolean withAlias) {
-        buildSQL(builder);
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        function.getPlaceHolders(placeHolders);
+        window.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        function.buildSQL(builder, false);
+        function.buildSQL(builder);
         builder.append(builder.keyword(" over "));
 
         if (window.isReferenceOnly()) {
             builder.append(window.getReference().getName());
         } else {
             builder.append(window);
-        }
-
-        if (alias != null) {
-            builder.append(builder.keyword(" as " + alias));
         }
     }
 

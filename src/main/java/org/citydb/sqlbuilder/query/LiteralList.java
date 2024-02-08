@@ -25,9 +25,11 @@ import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.schema.Table;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class LiteralList implements QueryExpression {
     private final List<Literal<?>> literals;
@@ -65,13 +67,8 @@ public class LiteralList implements QueryExpression {
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-        literals.forEach(literal -> literal.getInvolvedTables(tables));
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
-        literals.forEach(literal -> literal.getInvolvedPlaceHolders(placeHolders));
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
+        literals.forEach(literal -> literal.getPlaceHolders(placeHolders));
     }
 
     @Override

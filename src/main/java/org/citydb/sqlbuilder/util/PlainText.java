@@ -26,13 +26,15 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.QueryExpression;
+import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
-import org.citydb.sqlbuilder.schema.Projection;
-import org.citydb.sqlbuilder.schema.Table;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
-public class PlainText implements Expression, ColumnExpression, Projection<PlainText>, QueryExpression, Statement {
+public class PlainText implements Expression, ColumnExpression, Selection<PlainText>, QueryExpression, Statement {
     private final String sql;
     private String alias;
 
@@ -45,21 +47,12 @@ public class PlainText implements Expression, ColumnExpression, Projection<Plain
     }
 
     @Override
-    public Set<Table> getInvolvedTables() {
-        return Collections.emptySet();
-    }
-
-    @Override
-    public List<PlaceHolder> getInvolvedPlaceHolders() {
+    public List<PlaceHolder> getPlaceHolders() {
         return Collections.emptyList();
     }
 
     @Override
-    public void getInvolvedTables(Set<Table> tables) {
-    }
-
-    @Override
-    public void getInvolvedPlaceHolders(List<PlaceHolder> placeHolders) {
+    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
     }
 
     @Override
@@ -74,16 +67,8 @@ public class PlainText implements Expression, ColumnExpression, Projection<Plain
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder, boolean withAlias) {
-        builder.append(sql);
-        if (withAlias && alias != null) {
-            builder.append(builder.keyword(" as ") + alias);
-        }
-    }
-
-    @Override
     public void buildSQL(SQLBuilder builder) {
-        buildSQL(builder, false);
+        builder.append(sql);
     }
 
     @Override
