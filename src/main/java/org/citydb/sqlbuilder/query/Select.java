@@ -272,7 +272,8 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
                             .map(projection -> (Buildable) projection::buildSelection)
                             .toList(), ", ");
         } else {
-            builder.append(Column.WILDCARD + " ");
+            builder.appendln()
+                    .indent(Column.WILDCARD + " ");
         }
 
         builder.appendln()
@@ -318,11 +319,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         }
 
         public Select on(ComparisonOperator operator) {
-            if (operator.getLeftOperand() instanceof Column toColumn
-                    && operator.getRightOperand() instanceof Column fromColumn
-                    && (toColumn.getTable() == table
-                    || fromColumn.getTable() == table)) {
-                joins.add(Join.of(name, toColumn, operator.getName(), fromColumn));
+            if (operator.getLeftOperand() instanceof Column left
+                    && operator.getRightOperand() instanceof Column right
+                    && (left.getTable() == table
+                    || right.getTable() == table)) {
+                joins.add(Join.of(name, right, operator.getName(), left));
             }
 
             return Select.this;
