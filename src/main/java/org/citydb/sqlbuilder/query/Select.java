@@ -26,6 +26,7 @@ import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.operator.BinaryLogicalOperator;
 import org.citydb.sqlbuilder.operator.ComparisonOperator;
 import org.citydb.sqlbuilder.operator.LogicalOperator;
 import org.citydb.sqlbuilder.schema.Column;
@@ -234,6 +235,8 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
                     .indentln(select.stream()
                             .map(projection -> (Buildable) projection::buildSelection)
                             .toList(), ", ");
+        } else {
+            builder.append(Column.WILDCARD + " ");
         }
 
         builder.appendln()
@@ -249,7 +252,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         if (!where.isEmpty()) {
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(where, " ", builder.keyword("and "));
+                    .indentln(where, " ", (object, id) -> id > 0 ?
+                            builder.keyword(object instanceof BinaryLogicalOperator operator ?
+                                    operator.getName() :
+                                    "and") + " " :
+                            null);
         }
 
         super.buildSQL(builder);
