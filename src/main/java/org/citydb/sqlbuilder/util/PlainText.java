@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class PlainText implements Expression, ColumnExpression, Selection<PlainText>, QueryExpression, Statement {
+public class PlainText implements ColumnExpression, Selection<PlainText>, QueryExpression, Statement {
     private final String sql;
     private String alias;
 
