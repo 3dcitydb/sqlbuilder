@@ -107,8 +107,15 @@ public class Window implements SQLObject {
         return partitionBy;
     }
 
-    public Window partitionBy(Expression... partitionBy) {
-        this.partitionBy.addAll(Arrays.asList(partitionBy));
+    public Window partitionBy(Expression... expressions) {
+        return partitionBy(expressions != null ? Arrays.asList(expressions) : null);
+    }
+
+    public Window partitionBy(List<Expression> expressions) {
+        if (expressions != null && !expressions.isEmpty()) {
+            partitionBy.addAll(expressions);
+        }
+
         return this;
     }
 
@@ -117,12 +124,18 @@ public class Window implements SQLObject {
     }
 
     public Window orderBy(OrderBy... orderBy) {
-        this.orderBy.addAll(Arrays.asList(orderBy));
+        if (orderBy != null) {
+            this.orderBy.addAll(Arrays.asList(orderBy));
+        }
+
         return this;
     }
 
     public Window orderBy(Column column) {
-        orderBy.add(OrderBy.of(column));
+        if (column != null) {
+            orderBy.add(OrderBy.of(column));
+        }
+
         return this;
     }
 

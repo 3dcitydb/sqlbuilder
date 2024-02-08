@@ -29,6 +29,7 @@ import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operator.BinaryLogicalOperator;
 import org.citydb.sqlbuilder.operator.ComparisonOperator;
 import org.citydb.sqlbuilder.operator.LogicalOperator;
+import org.citydb.sqlbuilder.operator.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 
@@ -42,7 +43,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     private final List<CommonTableExpression> with;
     private final List<Selection<?>> select;
     private final List<Join> joins;
-    private final List<LogicalOperator> where;
+    private BinaryLogicalOperator where;
     private boolean withRecursive;
     private boolean distinct;
     private Table from;
@@ -53,7 +54,6 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         with = new ArrayList<>();
         select = new ArrayList<>();
         joins = new ArrayList<>();
-        where = new ArrayList<>();
     }
 
     private Select(Select other) {
@@ -62,7 +62,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         with = new ArrayList<>(other.with);
         select = new ArrayList<>(other.select);
         joins = new ArrayList<>(other.joins);
-        where = new ArrayList<>(other.where);
+        where = other.where;
         withRecursive = other.withRecursive;
         distinct = other.distinct;
         from = other.from;
@@ -95,7 +95,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     }
 
     public Select hint(String... hints) {
-        this.hints.addAll(Arrays.asList(hints));
+        if (hints != null) {
+            this.hints.addAll(Arrays.asList(hints));
+        }
+
         return this;
     }
 
@@ -108,7 +111,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     }
 
     public Select with(CommonTableExpression... ctes) {
-        with.addAll(Arrays.asList(ctes));
+        if (ctes != null) {
+            with.addAll(Arrays.asList(ctes));
+        }
+
         return this;
     }
 
@@ -117,8 +123,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     }
 
     public Select withRecursive(CommonTableExpression... ctes) {
-        with.addAll(Arrays.asList(ctes));
-        withRecursive = true;
+        if (ctes != null) {
+            with.addAll(Arrays.asList(ctes));
+            withRecursive = true;
+        }
+
         return this;
     }
 
@@ -127,7 +136,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     }
 
     public Select select(Selection<?>... selections) {
-        select.addAll(Arrays.asList(selections));
+        if (selections != null) {
+            select.addAll(Arrays.asList(selections));
+        }
+
         return this;
     }
 
@@ -145,20 +157,44 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     }
 
     public Select join(Join... joins) {
-        this.joins.addAll(Arrays.asList(joins));
+        if (joins != null) {
+            this.joins.addAll(Arrays.asList(joins));
+        }
+
         return this;
     }
 
     public JoinBuilder join(Table table) {
-        return new JoinBuilder(table);
+        return join(table, Joins.INNER_JOIN);
     }
 
-    public List<LogicalOperator> getWhere() {
-        return where;
+    public JoinBuilder leftJoin(Table table) {
+        return join(table, Joins.LEFT_JOIN);
+    }
+
+    public JoinBuilder rightJoin(Table table) {
+        return join(table, Joins.RIGHT_JOIN);
+    }
+
+    public JoinBuilder fullJoin(Table table) {
+        return join(table, Joins.FULL_JOIN);
+    }
+
+    public JoinBuilder join(Table table, String name) {
+        return new JoinBuilder(table, name);
+    }
+
+    public Optional<BinaryLogicalOperator> getWhere() {
+        return Optional.ofNullable(where);
     }
 
     public Select where(LogicalOperator... operators) {
-        where.addAll(Arrays.asList(operators));
+        if (where == null) {
+            where = Operators.and(operators);
+        } else {
+            where.add(operators);
+        }
+
         return this;
     }
 
@@ -202,7 +238,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         }
 
         joins.forEach(join -> join.getPlaceHolders(placeHolders));
-        where.forEach(operator -> operator.getPlaceHolders(placeHolders));
+        where.getPlaceHolders(placeHolders);
         groupBy.forEach(groupBy -> groupBy.getPlaceHolders(placeHolders));
         having.forEach(having -> having.getPlaceHolders(placeHolders));
         orderBy.forEach(orderBy -> orderBy.getPlaceHolders(placeHolders));
@@ -249,10 +285,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
                     .indentln(joins, " ");
         }
 
-        if (!where.isEmpty()) {
+        if (where != null) {
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(where, " ", (object, id) -> id > 0 ?
+                    .indentln(where.getOperands(), " ", (object, id) -> id > 0 ?
                             builder.keyword(object instanceof BinaryLogicalOperator operator ?
                                     operator.getName() :
                                     "and") + " " :
@@ -274,32 +310,14 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
 
     public class JoinBuilder {
         private final Table table;
+        private final String name;
 
-        private JoinBuilder(Table table) {
+        private JoinBuilder(Table table, String name) {
             this.table = table;
+            this.name = name;
         }
 
         public Select on(ComparisonOperator operator) {
-            return build(Joins.INNER_JOIN, operator);
-        }
-
-        public Select inner(ComparisonOperator operator) {
-            return build(Joins.INNER_JOIN, operator);
-        }
-
-        public Select left(ComparisonOperator operator) {
-            return build(Joins.LEFT_JOIN, operator);
-        }
-
-        public Select right(ComparisonOperator operator) {
-            return build(Joins.RIGHT_JOIN, operator);
-        }
-
-        public Select full(ComparisonOperator operator) {
-            return build(Joins.FULL_JOIN, operator);
-        }
-
-        private Select build(String name, ComparisonOperator operator) {
             if (operator.getLeftOperand() instanceof Column toColumn
                     && operator.getRightOperand() instanceof Column fromColumn
                     && (toColumn.getTable() == table

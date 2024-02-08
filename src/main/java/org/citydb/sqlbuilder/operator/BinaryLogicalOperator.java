@@ -27,19 +27,21 @@ import org.citydb.sqlbuilder.literal.PlaceHolder;
 import java.util.*;
 
 public class BinaryLogicalOperator implements LogicalOperator {
-    private final List<LogicalOperator> operands;
+    private final List<LogicalOperator> operands = new ArrayList<>();
     private final String name;
     private String alias;
 
     private BinaryLogicalOperator(String name, List<LogicalOperator> operands) {
-        this.operands = Objects.requireNonNull(operands, "The operands list must not be null.");
         this.name = Objects.requireNonNull(name, "The operator name must not be null.");
 
+        Objects.requireNonNull(operands, "The operands list must not be null.");
         if (operands.isEmpty()) {
             throw new IllegalArgumentException("The operands list must not be empty.");
         } else if (!Operators.AND.equalsIgnoreCase(name) && !Operators.OR.equalsIgnoreCase(name)) {
-            throw new IllegalArgumentException("The operator '" + name + "' is not supported.");
+            throw new IllegalArgumentException("The operator '" + name + "' is not a supported binary operator.");
         }
+
+        add(operands);
     }
 
     public static BinaryLogicalOperator of(String name, List<LogicalOperator> operands) {
@@ -65,7 +67,24 @@ public class BinaryLogicalOperator implements LogicalOperator {
 
     public BinaryLogicalOperator add(LogicalOperator operand) {
         if (operand != null) {
-            operands.add(operand);
+            if (operand instanceof BinaryLogicalOperator operator
+                    && name.equalsIgnoreCase(operator.name)) {
+                operator.operands.forEach(this::add);
+            } else {
+                operands.add(operand);
+            }
+        }
+
+        return this;
+    }
+
+    public BinaryLogicalOperator add(LogicalOperator... operands) {
+        return add(operands != null ? Arrays.asList(operands) : null);
+    }
+
+    public BinaryLogicalOperator add(List<LogicalOperator> operands) {
+        if (operands != null && !operands.isEmpty()) {
+            operands.forEach(this::add);
         }
 
         return this;

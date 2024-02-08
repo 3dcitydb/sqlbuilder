@@ -22,7 +22,6 @@
 package org.citydb.sqlbuilder.util;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.QueryExpression;

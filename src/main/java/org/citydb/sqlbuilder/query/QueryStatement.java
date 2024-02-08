@@ -66,7 +66,10 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
     }
 
     public T groupBy(Column... columns) {
-        groupBy.addAll(Arrays.asList(columns));
+        if (columns != null) {
+            groupBy.addAll(Arrays.asList(columns));
+        }
+
         return self();
     }
 
@@ -75,12 +78,18 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
     }
 
     public T having(Operator... operators) {
-        having.addAll(Arrays.asList(operators));
+        if (operators != null) {
+            having.addAll(Arrays.asList(operators));
+        }
+
         return self();
     }
 
     public T having(Function... functions) {
-        having.addAll(Arrays.asList(functions));
+        if (functions != null) {
+            having.addAll(Arrays.asList(functions));
+        }
+
         return self();
     }
 
@@ -88,8 +97,11 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
         return window;
     }
 
-    public T window(Window... window) {
-        this.window.addAll(Arrays.asList(window));
+    public T window(Window... windows) {
+        if (windows != null) {
+            this.window.addAll(Arrays.asList(windows));
+        }
+
         return self();
     }
 
@@ -103,7 +115,10 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
     }
 
     public T orderBy(OrderBy... orderBy) {
-        this.orderBy.addAll(Arrays.asList(orderBy));
+        if (orderBy != null) {
+            this.orderBy.addAll(Arrays.asList(orderBy));
+        }
+
         return self();
     }
 

@@ -64,6 +64,18 @@ public class SetOperator extends QueryStatement<SetOperator> {
         return this;
     }
 
+    public SetOperator add(Select... operands) {
+        return add(operands != null ? Arrays.asList(operands) : null);
+    }
+
+    public SetOperator add(List<Select> operands) {
+        if (operands != null && !operands.isEmpty()) {
+            this.operands.addAll(operands);
+        }
+
+        return this;
+    }
+
     @Override
     public List<PlaceHolder> getPlaceHolders() {
         return operands.stream()

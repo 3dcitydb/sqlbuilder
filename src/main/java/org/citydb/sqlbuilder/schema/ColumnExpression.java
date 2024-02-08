@@ -31,10 +31,6 @@ import org.citydb.sqlbuilder.operator.*;
 import org.citydb.sqlbuilder.query.LiteralList;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public interface ColumnExpression extends Expression {
 
     default ArithmeticOperator add(Object operand) {
@@ -304,11 +300,8 @@ public interface ColumnExpression extends Expression {
         return Functions.trim(this);
     }
 
-    default Function concat(Expression... arguments) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(this);
-        expressions.addAll(Arrays.asList(arguments));
-        return Functions.concat(expressions);
+    default Function concat(Expression argument) {
+        return Functions.concat(this, argument);
     }
 
     default Function firstValue() {

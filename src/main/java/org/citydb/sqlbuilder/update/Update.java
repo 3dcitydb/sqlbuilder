@@ -26,7 +26,9 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.operator.BinaryLogicalOperator;
 import org.citydb.sqlbuilder.operator.LogicalOperator;
+import org.citydb.sqlbuilder.operator.Operators;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryStatement;
 import org.citydb.sqlbuilder.schema.Column;
@@ -39,20 +41,19 @@ import java.util.List;
 public class Update implements Statement {
     private final List<CommonTableExpression> with;
     private final List<UpdateValue> set;
-    private final List<LogicalOperator> where;
+    private BinaryLogicalOperator where;
     private boolean withRecursive;
     private Table table;
 
     private Update() {
         with = new ArrayList<>();
         set = new ArrayList<>();
-        where = new ArrayList<>();
     }
 
     private Update(Update other) {
         with = new ArrayList<>(other.with);
         set = new ArrayList<>(other.set);
-        where = new ArrayList<>(other.where);
+        where = other.where;
         withRecursive = other.withRecursive;
         table = other.table;
     }
@@ -83,7 +84,10 @@ public class Update implements Statement {
     }
 
     public Update with(CommonTableExpression... ctes) {
-        with.addAll(Arrays.asList(ctes));
+        if (ctes != null) {
+            with.addAll(Arrays.asList(ctes));
+        }
+
         return this;
     }
 
@@ -92,8 +96,11 @@ public class Update implements Statement {
     }
 
     public Update withRecursive(CommonTableExpression... ctes) {
-        with.addAll(Arrays.asList(ctes));
-        withRecursive = true;
+        if (ctes != null) {
+            with.addAll(Arrays.asList(ctes));
+            withRecursive = true;
+        }
+
         return this;
     }
 
@@ -102,7 +109,10 @@ public class Update implements Statement {
     }
 
     public Update set(UpdateValue... values) {
-        set.addAll(Arrays.asList(values));
+        if (values != null) {
+            set.addAll(Arrays.asList(values));
+        }
+
         return this;
     }
 
@@ -110,12 +120,17 @@ public class Update implements Statement {
         return new UpdateValueBuilder(column);
     }
 
-    public List<LogicalOperator> getWhere() {
+    public BinaryLogicalOperator getWhere() {
         return where;
     }
 
     public Update where(LogicalOperator... operators) {
-        where.addAll(Arrays.asList(operators));
+        if (where == null) {
+            where = Operators.and(operators);
+        } else {
+            where.add(operators);
+        }
+
         return this;
     }
 
@@ -135,7 +150,7 @@ public class Update implements Statement {
         }
 
         set.forEach(value -> value.getPlaceHolders(placeHolders));
-        where.forEach(operator -> operator.getPlaceHolders(placeHolders));
+        where.getPlaceHolders(placeHolders);
     }
 
     @Override
@@ -161,10 +176,14 @@ public class Update implements Statement {
                     .indentln(set, ", ");
         }
 
-        if (!where.isEmpty()) {
+        if (where != null) {
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(where, " ", builder.keyword("and "));
+                    .indentln(where.getOperands(), " ", (object, id) -> id > 0 ?
+                            builder.keyword(object instanceof BinaryLogicalOperator operator ?
+                                    operator.getName() :
+                                    "and") + " " :
+                            null);
         }
     }
 

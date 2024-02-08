@@ -62,7 +62,22 @@ public class LiteralList implements QueryExpression {
     }
 
     public LiteralList add(Literal<?> literal) {
-        literals.add(literal);
+        if (literal != null) {
+            literals.add(literal);
+        }
+
+        return this;
+    }
+
+    public LiteralList add(Literal<?>... literals) {
+        return add(literals != null ? Arrays.asList(literals) : null);
+    }
+
+    public LiteralList add(List<Literal<?>> literals) {
+        if (literals != null && !literals.isEmpty()) {
+            this.literals.addAll(literals);
+        }
+
         return this;
     }
 

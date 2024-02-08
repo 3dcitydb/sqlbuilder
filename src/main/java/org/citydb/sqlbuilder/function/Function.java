@@ -97,6 +97,18 @@ public class Function implements ColumnExpression, Selection<Function> {
         return this;
     }
 
+    public Function add(Expression... arguments) {
+        return add(arguments != null ? Arrays.asList(arguments) : null);
+    }
+
+    public Function add(List<Expression> arguments) {
+        if (arguments != null && !arguments.isEmpty()) {
+            this.arguments.addAll(arguments);
+        }
+
+        return this;
+    }
+
     public WindowFunction over() {
         return WindowFunction.of(this, Window.empty());
     }
