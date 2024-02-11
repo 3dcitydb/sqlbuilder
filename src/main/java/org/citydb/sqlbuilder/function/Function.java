@@ -65,6 +65,10 @@ public class Function implements ColumnExpression, Selection<Function> {
         return name;
     }
 
+    public boolean hasName(String name) {
+        return this.name.equalsIgnoreCase(name);
+    }
+
     public List<String> getQualifiers() {
         return qualifiers;
     }

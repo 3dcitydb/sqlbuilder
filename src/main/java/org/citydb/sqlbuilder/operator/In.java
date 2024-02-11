@@ -67,7 +67,7 @@ public class In implements LogicalOperator {
     }
 
     @Override
-    public String getName() {
+    public String getType() {
         return !negate ? Operators.IN : Operators.NOT_IN;
     }
 
@@ -91,7 +91,7 @@ public class In implements LogicalOperator {
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
-                .append(" " + builder.keyword(getName()) + " ")
+                .append(" " + builder.keyword(getType()) + " ")
                 .append(queryExpression);
     }
 

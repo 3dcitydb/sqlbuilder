@@ -60,7 +60,7 @@ public class IsNull implements LogicalOperator {
     }
 
     @Override
-    public String getName() {
+    public String getType() {
         return !negate ? Operators.IS_NULL : Operators.IS_NOT_NULL;
     }
 
@@ -83,7 +83,7 @@ public class IsNull implements LogicalOperator {
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
-                .append(" " + builder.keyword(getName()));
+                .append(" " + builder.keyword(getType()));
     }
 
     @Override

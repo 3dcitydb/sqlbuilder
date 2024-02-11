@@ -125,10 +125,16 @@ public class Update implements Statement {
     }
 
     public Update where(LogicalOperator... operators) {
-        if (where == null) {
-            where = Operators.and(operators);
-        } else {
-            where.add(operators);
+        if (operators != null) {
+            if (where == null) {
+                String type = operators.length == 1
+                        && operators[0] instanceof BinaryLogicalOperator operator ?
+                        operator.getType() :
+                        Operators.AND;
+                where = BinaryLogicalOperator.of(type, operators);
+            } else {
+                where.add(operators);
+            }
         }
 
         return this;
@@ -177,13 +183,10 @@ public class Update implements Statement {
         }
 
         if (where != null) {
+            BinaryLogicalOperator reduced = where.reduce();
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(where.getOperands(), " ", (object, id) -> id > 0 ?
-                            builder.keyword(object instanceof BinaryLogicalOperator operator ?
-                                    operator.getName() :
-                                    "and") + " " :
-                            null);
+                    .indentln(reduced.getOperands(), " ", builder.keyword(reduced.getType()) + " ");
         }
     }
 

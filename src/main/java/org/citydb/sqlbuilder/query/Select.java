@@ -180,8 +180,8 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return join(table, Joins.FULL_JOIN);
     }
 
-    public JoinBuilder join(Table table, String name) {
-        return new JoinBuilder(table, name);
+    public JoinBuilder join(Table table, String type) {
+        return new JoinBuilder(table, type);
     }
 
     public Optional<BinaryLogicalOperator> getWhere() {
@@ -189,10 +189,16 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     }
 
     public Select where(LogicalOperator... operators) {
-        if (where == null) {
-            where = Operators.and(operators);
-        } else {
-            where.add(operators);
+        if (operators != null) {
+            if (where == null) {
+                String type = operators.length == 1
+                        && operators[0] instanceof BinaryLogicalOperator operator ?
+                        operator.getType() :
+                        Operators.AND;
+                where = BinaryLogicalOperator.of(type, operators);
+            } else {
+                where.add(operators);
+            }
         }
 
         return this;
@@ -287,13 +293,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         }
 
         if (where != null) {
+            BinaryLogicalOperator reduced = where.reduce();
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(where.getOperands(), " ", (object, id) -> id > 0 ?
-                            builder.keyword(object instanceof BinaryLogicalOperator operator ?
-                                    operator.getName() :
-                                    "and") + " " :
-                            null);
+                    .indentln(reduced.getOperands(), " ", builder.keyword(reduced.getType()) + " ");
         }
 
         super.buildSQL(builder);
@@ -311,11 +314,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
 
     public class JoinBuilder {
         private final Table table;
-        private final String name;
+        private final String type;
 
-        private JoinBuilder(Table table, String name) {
+        private JoinBuilder(Table table, String type) {
             this.table = table;
-            this.name = name;
+            this.type = type;
         }
 
         public Select on(ComparisonOperator operator) {
@@ -323,7 +326,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
                     && operator.getRightOperand() instanceof Column right
                     && (left.getTable() == table
                     || right.getTable() == table)) {
-                joins.add(Join.of(name, right, operator.getName(), left));
+                joins.add(Join.of(type, right, operator.getType(), left));
             }
 
             return Select.this;

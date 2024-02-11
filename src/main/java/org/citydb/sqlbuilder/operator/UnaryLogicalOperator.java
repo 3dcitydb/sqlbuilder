@@ -31,16 +31,16 @@ import java.util.Optional;
 
 public class UnaryLogicalOperator implements LogicalOperator {
     private final Expression operand;
-    private final String name;
+    private final String type;
     private String alias;
 
-    private UnaryLogicalOperator(Expression operand, String name) {
+    private UnaryLogicalOperator(Expression operand, String type) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.name = Objects.requireNonNull(name, "The operator name must not be null.");
+        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
     }
 
-    public static UnaryLogicalOperator of(Expression operand, String name) {
-        return new UnaryLogicalOperator(operand, name);
+    public static UnaryLogicalOperator of(Expression operand, String type) {
+        return new UnaryLogicalOperator(operand, type);
     }
 
     public Expression getOperand() {
@@ -48,8 +48,8 @@ public class UnaryLogicalOperator implements LogicalOperator {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class UnaryLogicalOperator implements LogicalOperator {
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(builder.keyword(name) + " ")
+        builder.append(builder.keyword(type) + " ")
                 .append(operand);
     }
 

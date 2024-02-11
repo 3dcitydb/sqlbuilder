@@ -32,17 +32,17 @@ import java.util.Optional;
 public class ComparisonOperator implements LogicalOperator {
     private final Expression leftOperand;
     private final Expression rightOperand;
-    private final String name;
+    private final String type;
     private String alias;
 
-    protected ComparisonOperator(Expression leftOperand, String name, Expression rightOperand) {
+    protected ComparisonOperator(Expression leftOperand, String type, Expression rightOperand) {
         this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
         this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
-        this.name = Objects.requireNonNull(name, "The operator name must not be null.");
+        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
     }
 
-    public static ComparisonOperator of(Expression leftOperand, String name, Expression rightOperand) {
-        return new ComparisonOperator(leftOperand, name, rightOperand);
+    public static ComparisonOperator of(Expression leftOperand, String type, Expression rightOperand) {
+        return new ComparisonOperator(leftOperand, type, rightOperand);
     }
 
     public Expression getLeftOperand() {
@@ -54,8 +54,8 @@ public class ComparisonOperator implements LogicalOperator {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ComparisonOperator implements LogicalOperator {
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(leftOperand)
-                .append(" " + builder.keyword(name) + " ")
+                .append(" " + builder.keyword(type) + " ")
                 .append(rightOperand);
     }
 

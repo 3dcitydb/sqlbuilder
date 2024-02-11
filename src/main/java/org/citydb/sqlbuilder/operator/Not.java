@@ -45,7 +45,7 @@ public class Not implements LogicalOperator {
     }
 
     @Override
-    public String getName() {
+    public String getType() {
         return Operators.NOT;
     }
 
@@ -67,7 +67,7 @@ public class Not implements LogicalOperator {
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(builder.keyword(getName()) + " ")
+        builder.append(builder.keyword(getType()) + " ")
                 .append(operand);
     }
 

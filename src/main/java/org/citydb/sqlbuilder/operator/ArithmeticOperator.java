@@ -31,16 +31,16 @@ import java.util.Objects;
 public class ArithmeticOperator implements Operator {
     private final Expression leftOperand;
     private final Expression rightOperand;
-    private final String name;
+    private final String type;
 
-    protected ArithmeticOperator(Expression leftOperand, String name, Expression rightOperand) {
+    protected ArithmeticOperator(Expression leftOperand, String type, Expression rightOperand) {
         this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
         this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
-        this.name = Objects.requireNonNull(name, "The operator name must not be null.");
+        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
     }
 
-    public static ArithmeticOperator of(Expression leftOperand, String name, Expression rightOperand) {
-        return new ArithmeticOperator(leftOperand, name, rightOperand);
+    public static ArithmeticOperator of(Expression leftOperand, String type, Expression rightOperand) {
+        return new ArithmeticOperator(leftOperand, type, rightOperand);
     }
 
     public Expression getLeftOperand() {
@@ -52,8 +52,8 @@ public class ArithmeticOperator implements Operator {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ArithmeticOperator implements Operator {
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(leftOperand)
-                .append(" " + builder.keyword(name) + " ")
+                .append(" " + builder.keyword(type) + " ")
                 .append(rightOperand);
     }
 

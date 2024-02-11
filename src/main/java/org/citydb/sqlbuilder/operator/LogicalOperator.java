@@ -27,35 +27,39 @@ import org.citydb.sqlbuilder.query.Selection;
 public interface LogicalOperator extends Operator, Selection<LogicalOperator> {
 
     default BinaryLogicalOperator and(LogicalOperator operand) {
-        return Operators.and(this, operand);
+        return this instanceof BinaryLogicalOperator operator ?
+                operator.fluentAnd(operand) :
+                Operators.and(this, operand);
     }
 
     default BinaryLogicalOperator andExists(Expression operand) {
-        return Operators.and(this, Operators.exists(operand));
+        return and(Operators.exists(operand));
     }
 
     default BinaryLogicalOperator andNot(LogicalOperator operand) {
-        return Operators.and(this, Not.of(operand));
+        return and(Not.of(operand));
     }
 
     default BinaryLogicalOperator andNotExists(Expression operand) {
-        return Operators.and(this, Not.of(Operators.exists(operand)));
+        return and(Not.of(Operators.exists(operand)));
     }
 
     default BinaryLogicalOperator or(LogicalOperator operand) {
-        return Operators.or(this, operand);
+        return this instanceof BinaryLogicalOperator operator ?
+                operator.fluentOr(operand) :
+                Operators.or(this, operand);
     }
 
     default BinaryLogicalOperator orExists(Expression operand) {
-        return Operators.or(this, Operators.exists(operand));
+        return or(Operators.exists(operand));
     }
 
     default BinaryLogicalOperator orNot(LogicalOperator operand) {
-        return Operators.or(this, Not.of(operand));
+        return or(Not.of(operand));
     }
 
     default BinaryLogicalOperator orNotExists(Expression operand) {
-        return Operators.or(this, Not.of(Operators.exists(operand)));
+        return or(Not.of(Operators.exists(operand)));
     }
 
     default Not not() {

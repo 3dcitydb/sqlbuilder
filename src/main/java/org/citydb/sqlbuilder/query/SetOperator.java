@@ -27,29 +27,33 @@ import org.citydb.sqlbuilder.literal.PlaceHolder;
 import java.util.*;
 
 public class SetOperator extends QueryStatement<SetOperator> {
-    private final String name;
+    private final String type;
     private final List<Select> operands;
 
-    private SetOperator(String name, List<Select> operands) {
-        this.name = Objects.requireNonNull(name, "The operation type must not be null.");
+    private SetOperator(String type, List<Select> operands) {
+        this.type = Objects.requireNonNull(type, "The set type must not be null.");
         this.operands = Objects.requireNonNull(operands, "The operands list must not be null.");
         if (operands.size() < 2) {
             throw new IllegalArgumentException("A set operator requires at leas two or more operands.");
         }
     }
 
-    public static SetOperator of(String name, List<Select> operands) {
-        return new SetOperator(name, operands);
+    public static SetOperator of(String type, List<Select> operands) {
+        return new SetOperator(type, operands);
     }
 
-    public static SetOperator of(String name, Select... operands) {
-        return new SetOperator(name, operands != null ?
+    public static SetOperator of(String type, Select... operands) {
+        return new SetOperator(type, operands != null ?
                 new ArrayList<>(Arrays.asList(operands)) :
                 null);
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
+    }
+
+    public boolean hasType(String type) {
+        return this.type.equalsIgnoreCase(type);
     }
 
     public List<Select> getOperands() {
@@ -95,7 +99,7 @@ public class SetOperator extends QueryStatement<SetOperator> {
             builder.append(iterator.next());
             if (iterator.hasNext()) {
                 builder.appendln(" ")
-                        .append(builder.keyword(name))
+                        .append(builder.keyword(type))
                         .appendln(" ");
             }
         }

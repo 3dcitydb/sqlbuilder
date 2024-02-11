@@ -27,52 +27,55 @@ import org.citydb.sqlbuilder.literal.PlaceHolder;
 import java.util.*;
 
 public class BinaryLogicalOperator implements LogicalOperator {
-    private final List<LogicalOperator> operands = new ArrayList<>();
-    private final String name;
+    private final List<LogicalOperator> operands;
+    private String type;
     private String alias;
 
-    private BinaryLogicalOperator(String name, List<LogicalOperator> operands) {
-        this.name = Objects.requireNonNull(name, "The operator name must not be null.");
+    private BinaryLogicalOperator(String type, List<LogicalOperator> operands) {
+        this.operands = Objects.requireNonNull(operands, "The operands list must not be null.");
+        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
 
-        Objects.requireNonNull(operands, "The operands list must not be null.");
         if (operands.isEmpty()) {
             throw new IllegalArgumentException("The operands list must not be empty.");
-        } else if (!Operators.AND.equalsIgnoreCase(name) && !Operators.OR.equalsIgnoreCase(name)) {
-            throw new IllegalArgumentException("The operator '" + name + "' is not a supported binary operator.");
+        } else if (!Operators.AND.equalsIgnoreCase(type) && !Operators.OR.equalsIgnoreCase(type)) {
+            throw new IllegalArgumentException("The operator '" + type + "' is not a supported binary operator.");
         }
-
-        add(operands);
     }
 
-    public static BinaryLogicalOperator of(String name, List<LogicalOperator> operands) {
-        return new BinaryLogicalOperator(name, operands);
+    public static BinaryLogicalOperator of(String type, List<LogicalOperator> operands) {
+        return new BinaryLogicalOperator(type, operands);
     }
 
-    public static BinaryLogicalOperator of(String name, LogicalOperator... operands) {
-        return new BinaryLogicalOperator(name, operands != null ?
+    public static BinaryLogicalOperator of(String type, LogicalOperator... operands) {
+        return new BinaryLogicalOperator(type, operands != null ?
                 new ArrayList<>(Arrays.asList(operands)) :
                 null);
     }
 
-    public static BinaryLogicalOperator of(LogicalOperator leftOperand, String name, LogicalOperator rightOperand) {
+    public static BinaryLogicalOperator of(LogicalOperator leftOperand, String type, LogicalOperator rightOperand) {
         List<LogicalOperator> operands = new ArrayList<>();
         operands.add(Objects.requireNonNull(leftOperand, "The left operand must not be null."));
         operands.add(Objects.requireNonNull(rightOperand, "The right operand must not be null."));
-        return new BinaryLogicalOperator(name, operands);
+        return new BinaryLogicalOperator(type, operands);
     }
 
     public List<LogicalOperator> getOperands() {
         return operands;
     }
 
+    public BinaryLogicalOperator reduce() {
+        BinaryLogicalOperator reduced = this;
+        while (reduced.operands.size() == 1
+                && reduced.getOperands().get(0) instanceof BinaryLogicalOperator operator) {
+            reduced = operator;
+        }
+
+        return reduced;
+    }
+
     public BinaryLogicalOperator add(LogicalOperator operand) {
         if (operand != null) {
-            if (operand instanceof BinaryLogicalOperator operator
-                    && name.equalsIgnoreCase(operator.name)) {
-                operator.operands.forEach(this::add);
-            } else {
-                operands.add(operand);
-            }
+            operands.add(operand);
         }
 
         return this;
@@ -90,9 +93,34 @@ public class BinaryLogicalOperator implements LogicalOperator {
         return this;
     }
 
+    BinaryLogicalOperator fluentAnd(LogicalOperator operand) {
+        if (operand != null) {
+            if (hasType(Operators.OR)) {
+                int index = operands.size() - 1;
+                operands.set(index, Operators.and(operands.get(index), operand));
+            } else {
+                operands.add(operand);
+            }
+        }
+
+        return this;
+    }
+
+    BinaryLogicalOperator fluentOr(LogicalOperator operand) {
+        if (operand != null) {
+            if (hasType(Operators.AND)) {
+                return Operators.or(this, operand);
+            } else {
+                operands.add(operand);
+            }
+        }
+
+        return this;
+    }
+
     @Override
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -115,7 +143,7 @@ public class BinaryLogicalOperator implements LogicalOperator {
     public void buildSQL(SQLBuilder builder) {
         if (operands.size() > 1) {
             builder.appendln("(")
-                    .indentln(operands, " ", builder.keyword(name) + " ")
+                    .indentln(operands, " ", builder.keyword(type) + " ")
                     .appendln()
                     .append(")");
         } else {

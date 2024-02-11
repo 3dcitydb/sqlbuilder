@@ -24,5 +24,9 @@ package org.citydb.sqlbuilder.operator;
 import org.citydb.sqlbuilder.common.Expression;
 
 public interface Operator extends Expression {
-    String getName();
+    String getType();
+
+    default boolean hasType(String type) {
+        return getType().equalsIgnoreCase(type);
+    }
 }

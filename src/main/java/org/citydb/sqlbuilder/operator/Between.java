@@ -72,7 +72,7 @@ public class Between implements LogicalOperator {
     }
 
     @Override
-    public String getName() {
+    public String getType() {
         return !negate ? Operators.BETWEEN : Operators.NOT_BETWEEN;
     }
 
@@ -97,7 +97,7 @@ public class Between implements LogicalOperator {
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
-                .append(" " + builder.keyword(getName()) + " ")
+                .append(" " + builder.keyword(getType()) + " ")
                 .append(lowerBound)
                 .append(builder.keyword(" and "))
                 .append(upperBound);

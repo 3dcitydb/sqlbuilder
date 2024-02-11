@@ -81,7 +81,7 @@ public class Like implements LogicalOperator {
     }
 
     @Override
-    public String getName() {
+    public String getType() {
         return !negate ? Operators.LIKE : Operators.NOT_LIKE;
     }
 
@@ -106,7 +106,7 @@ public class Like implements LogicalOperator {
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
-                .append(" " + builder.keyword(getName()) + " ")
+                .append(" " + builder.keyword(getType()) + " ")
                 .append(pattern);
         if (escapeCharacter != null) {
             if (builder.isUseJdbcEscapeNotation()) {

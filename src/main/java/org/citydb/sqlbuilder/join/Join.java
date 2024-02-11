@@ -35,26 +35,26 @@ import java.util.List;
 import java.util.Objects;
 
 public class Join implements SQLObject {
-    private final String name;
+    private final String type;
     private final Column fromColumn;
     private final Column toColumn;
     private final List<LogicalOperator> conditions = new ArrayList<>();
 
-    private Join(String name, Column toColumn, String operator, Column fromColumn) {
-        this.name = Objects.requireNonNull(name, "The join name must not be null.");
+    private Join(String type, Column toColumn, String operator, Column fromColumn) {
+        this.type = Objects.requireNonNull(type, "The join type must not be null.");
         this.toColumn = Objects.requireNonNull(toColumn, "The target column must not be null.");
         this.fromColumn = Objects.requireNonNull(fromColumn, "The source column must not be null.");
-        Objects.requireNonNull(operator, "The operator name must not be null.");
+        Objects.requireNonNull(operator, "The operator type must not be null.");
         conditions.add(ComparisonOperator.of(fromColumn, operator, toColumn));
     }
 
-    public static Join of(String name, Column toColumn, String operator, Column fromColumn) {
-        return new Join(name, toColumn, operator, fromColumn);
+    public static Join of(String type, Column toColumn, String operator, Column fromColumn) {
+        return new Join(type, toColumn, operator, fromColumn);
     }
 
-    public static Join of(String name, Table toTable, String toColumn, String operator, Column fromColumn) {
+    public static Join of(String type, Table toTable, String toColumn, String operator, Column fromColumn) {
         Objects.requireNonNull(toTable, "The target table must not be null.");
-        return new Join(name, toTable.column(toColumn), operator, fromColumn);
+        return new Join(type, toTable.column(toColumn), operator, fromColumn);
     }
 
     public Column getFromColumn() {
@@ -65,8 +65,12 @@ public class Join implements SQLObject {
         return toColumn;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
+    }
+
+    public boolean hasType(String type) {
+        return this.type.equalsIgnoreCase(type);
     }
 
     public List<LogicalOperator> getConditions() {
@@ -89,7 +93,7 @@ public class Join implements SQLObject {
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(builder.keyword(name) + " ")
+        builder.append(builder.keyword(type) + " ")
                 .append(toColumn.getTable())
                 .append(builder.keyword(" on "))
                 .append(Operators.and(conditions));
