@@ -43,7 +43,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     private final List<CommonTableExpression> with;
     private final List<Selection<?>> select;
     private final List<Join> joins;
-    private BinaryLogicalOperator where;
+    private final List<LogicalOperator> where;
     private boolean withRecursive;
     private boolean distinct;
     private Table from;
@@ -54,6 +54,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         with = new ArrayList<>();
         select = new ArrayList<>();
         joins = new ArrayList<>();
+        where = new ArrayList<>();
     }
 
     private Select(Select other) {
@@ -62,7 +63,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         with = new ArrayList<>(other.with);
         select = new ArrayList<>(other.select);
         joins = new ArrayList<>(other.joins);
-        where = other.where;
+        where = new ArrayList<>(other.where);
         withRecursive = other.withRecursive;
         distinct = other.distinct;
         from = other.from;
@@ -184,21 +185,13 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return new JoinBuilder(table, type);
     }
 
-    public Optional<BinaryLogicalOperator> getWhere() {
-        return Optional.ofNullable(where);
+    public List<LogicalOperator> getWhere() {
+        return where;
     }
 
     public Select where(LogicalOperator... operators) {
         if (operators != null) {
-            if (where == null) {
-                String type = operators.length == 1
-                        && operators[0] instanceof BinaryLogicalOperator operator ?
-                        operator.getType() :
-                        Operators.AND;
-                where = BinaryLogicalOperator.of(type, operators);
-            } else {
-                where.add(operators);
-            }
+            where.addAll(Arrays.asList(operators));
         }
 
         return this;
@@ -244,7 +237,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         }
 
         joins.forEach(join -> join.getPlaceHolders(placeHolders));
-        where.getPlaceHolders(placeHolders);
+        where.forEach(operator -> operator.getPlaceHolders(placeHolders));
         groupBy.forEach(groupBy -> groupBy.getPlaceHolders(placeHolders));
         having.forEach(having -> having.getPlaceHolders(placeHolders));
         orderBy.forEach(orderBy -> orderBy.getPlaceHolders(placeHolders));
@@ -293,10 +286,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         }
 
         if (where != null) {
-            BinaryLogicalOperator reduced = where.reduce();
+            BinaryLogicalOperator where = Operators.and(this.where).reduce();
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(reduced.getOperands(), " ", builder.keyword(reduced.getType()) + " ");
+                    .indentln(where.getOperands(), " ", builder.keyword(where.getType()) + " ");
         }
 
         super.buildSQL(builder);

@@ -41,19 +41,20 @@ import java.util.List;
 public class Update implements Statement {
     private final List<CommonTableExpression> with;
     private final List<UpdateValue> set;
-    private BinaryLogicalOperator where;
+    private List<LogicalOperator> where;
     private boolean withRecursive;
     private Table table;
 
     private Update() {
         with = new ArrayList<>();
         set = new ArrayList<>();
+        where = new ArrayList<>();
     }
 
     private Update(Update other) {
         with = new ArrayList<>(other.with);
         set = new ArrayList<>(other.set);
-        where = other.where;
+        where = new ArrayList<>(other.where);
         withRecursive = other.withRecursive;
         table = other.table;
     }
@@ -120,21 +121,13 @@ public class Update implements Statement {
         return new UpdateValueBuilder(column);
     }
 
-    public BinaryLogicalOperator getWhere() {
+    public List<LogicalOperator> getWhere() {
         return where;
     }
 
     public Update where(LogicalOperator... operators) {
         if (operators != null) {
-            if (where == null) {
-                String type = operators.length == 1
-                        && operators[0] instanceof BinaryLogicalOperator operator ?
-                        operator.getType() :
-                        Operators.AND;
-                where = BinaryLogicalOperator.of(type, operators);
-            } else {
-                where.add(operators);
-            }
+            where.addAll(Arrays.asList(operators));
         }
 
         return this;
@@ -156,7 +149,7 @@ public class Update implements Statement {
         }
 
         set.forEach(value -> value.getPlaceHolders(placeHolders));
-        where.getPlaceHolders(placeHolders);
+        where.forEach(operator -> operator.getPlaceHolders(placeHolders));
     }
 
     @Override
@@ -183,10 +176,10 @@ public class Update implements Statement {
         }
 
         if (where != null) {
-            BinaryLogicalOperator reduced = where.reduce();
+            BinaryLogicalOperator where = Operators.and(this.where).reduce();
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(reduced.getOperands(), " ", builder.keyword(reduced.getType()) + " ");
+                    .indentln(where.getOperands(), " ", builder.keyword(where.getType()) + " ");
         }
     }
 
