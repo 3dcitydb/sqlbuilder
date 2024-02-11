@@ -7,10 +7,16 @@ group 'org.citydb'
 version '3.0.0-SNAPSHOT'
 description 'Dynamic SQL builder for the 3D City Database'
 
+ext {
+    date = new Date()
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks.named('compileJava') {
@@ -19,6 +25,17 @@ tasks.named('compileJava') {
 
 repositories {
     mavenCentral()
+}
+
+javadoc {
+    options {
+        title = "$project.name $project.version"
+        header = title
+        overview "resources/javadoc/overview.html"
+        bottom = file("resources/javadoc/bottom.html").text.replaceAll("@date@", "${date.format('yyyy')}")
+        addStringOption('doctitle', project.name + ' - ' + project.version)
+        addStringOption('Xdoclint:none', '-quiet')
+    }
 }
 
 jar {
