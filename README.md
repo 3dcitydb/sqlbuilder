@@ -1,10 +1,6 @@
 # sqlbuilder
 Dynamic SQL builder for the 3D City Database
 
-<table>
-<tr>
-<td>
-
 ```sql
 select
   *
@@ -16,12 +12,7 @@ where
   and a.first_name = 'Paulo'
 order by
   a.title
-
-
 ```
-
-</td>
-<td>
 
 ```java
 Table author = Table.of("author");
@@ -37,7 +28,3 @@ Select select = Select.newInstance()
 System.out.println(
   select.toSQL(SQLBuildOptions.defaults().setIndent("  ")));
 ```
-
-</td>
-</tr>
-</table>
