@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.query.Selection;
@@ -37,11 +37,11 @@ public interface LogicalOperator extends Operator, Selection<LogicalOperator> {
     }
 
     default BinaryLogicalOperator andNot(LogicalOperator operand) {
-        return and(Not.of(operand));
+        return and(Operators.not(operand));
     }
 
     default BinaryLogicalOperator andNotExists(Expression operand) {
-        return and(Not.of(Operators.exists(operand)));
+        return and(Operators.not(Operators.exists(operand)));
     }
 
     default BinaryLogicalOperator or(LogicalOperator operand) {
@@ -55,14 +55,14 @@ public interface LogicalOperator extends Operator, Selection<LogicalOperator> {
     }
 
     default BinaryLogicalOperator orNot(LogicalOperator operand) {
-        return or(Not.of(operand));
+        return or(Operators.not(operand));
     }
 
     default BinaryLogicalOperator orNotExists(Expression operand) {
-        return or(Not.of(Operators.exists(operand)));
+        return or(Operators.not(Operators.exists(operand)));
     }
 
     default Not not() {
-        return Not.of(this);
+        return Operators.not(this);
     }
 }

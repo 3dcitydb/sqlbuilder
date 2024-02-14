@@ -27,26 +27,26 @@ import org.citydb.sqlbuilder.function.Functions;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.StringLiteral;
-import org.citydb.sqlbuilder.operator.*;
+import org.citydb.sqlbuilder.operation.*;
 import org.citydb.sqlbuilder.query.LiteralList;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
 public interface ColumnExpression extends Expression {
 
-    default ArithmeticOperator add(Object operand) {
-        return Operators.add(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    default ArithmeticOperator plus(Object operand) {
+        return Operators.plus(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
-    default ArithmeticOperator subtract(Object operand) {
-        return Operators.subtract(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    default ArithmeticOperator minus(Object operand) {
+        return Operators.minus(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
-    default ArithmeticOperator multiply(Object operand) {
-        return Operators.multiply(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    default ArithmeticOperator multiplyBy(Object operand) {
+        return Operators.multiplyBy(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
-    default ArithmeticOperator divide(Object operand) {
-        return Operators.divide(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    default ArithmeticOperator divideBy(Object operand) {
+        return Operators.divideBy(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
     default ArithmeticOperator modulo(Object operand) {

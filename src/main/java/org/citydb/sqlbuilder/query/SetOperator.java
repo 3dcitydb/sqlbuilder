@@ -60,21 +60,15 @@ public class SetOperator extends QueryStatement<SetOperator> {
         return operands;
     }
 
-    public SetOperator add(Select operand) {
-        if (operand != null) {
-            operands.add(operand);
-        }
-
-        return this;
-    }
-
     public SetOperator add(Select... operands) {
-        return add(operands != null ? Arrays.asList(operands) : null);
+        return operands != null ? add(Arrays.asList(operands)) : this;
     }
 
     public SetOperator add(List<Select> operands) {
         if (operands != null && !operands.isEmpty()) {
-            this.operands.addAll(operands);
+            operands.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(this.operands::add);
         }
 
         return this;

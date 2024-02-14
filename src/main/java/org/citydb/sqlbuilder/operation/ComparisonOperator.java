@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
@@ -29,39 +29,33 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class IsNull implements LogicalOperator {
-    private final Expression operand;
-    private boolean negate;
+public class ComparisonOperator implements LogicalOperator {
+    private final Expression leftOperand;
+    private final Expression rightOperand;
+    private final String type;
     private String alias;
 
-    private IsNull(Expression operand, boolean negate) {
-        this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.negate = negate;
+    protected ComparisonOperator(Expression leftOperand, String type, Expression rightOperand) {
+        this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
+        this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
+        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
     }
 
-    public static IsNull of(Expression operand, boolean negate) {
-        return new IsNull(operand, negate);
+    public static ComparisonOperator of(Expression leftOperand, String type, Expression rightOperand) {
+        return new ComparisonOperator(leftOperand, type, rightOperand);
     }
 
-    public static IsNull of(Expression operand) {
-        return new IsNull(operand, false);
+    public Expression getLeftOperand() {
+        return leftOperand;
     }
 
-    public Expression getOperand() {
-        return operand;
-    }
-
-    public boolean isNegate() {
-        return negate;
-    }
-
-    public void setNegate(boolean negate) {
-        this.negate = negate;
+    public Expression getRightOperand() {
+        return rightOperand;
     }
 
     @Override
     public String getType() {
-        return !negate ? Operators.IS_NULL : Operators.IS_NOT_NULL;
+        return type;
     }
 
     @Override
@@ -70,20 +64,22 @@ public class IsNull implements LogicalOperator {
     }
 
     @Override
-    public IsNull as(String alias) {
+    public ComparisonOperator as(String alias) {
         this.alias = alias;
         return this;
     }
 
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getPlaceHolders(placeHolders);
+        leftOperand.getPlaceHolders(placeHolders);
+        rightOperand.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(operand)
-                .append(" " + builder.keyword(getType()));
+        builder.append(leftOperand)
+                .append(" " + builder.keyword(type) + " ")
+                .append(rightOperand);
     }
 
     @Override

@@ -19,57 +19,48 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.literal.StringLiteral;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Like implements LogicalOperator {
+public class Between implements LogicalOperator {
     private final Expression operand;
-    private final Expression pattern;
-    private final StringLiteral escapeCharacter;
+    private final Expression lowerBound;
+    private final Expression upperBound;
     private boolean negate;
     private String alias;
 
-    private Like(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
+    private Between(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.pattern = Objects.requireNonNull(pattern, "The like pattern must not be null.");
-        this.escapeCharacter = escapeCharacter;
+        this.lowerBound = Objects.requireNonNull(lowerBound, "The lower bound must not be null.");
+        this.upperBound = Objects.requireNonNull(upperBound, "The upper bound must not be null.");
         this.negate = negate;
     }
 
-    public static Like of(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
-        return new Like(operand, pattern, escapeCharacter, negate);
+    public static Between of(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
+        return new Between(operand, lowerBound, upperBound, negate);
     }
 
-    public static Like of(Expression operand, Expression pattern, StringLiteral escapeCharacter) {
-        return new Like(operand, pattern, escapeCharacter, false);
-    }
-
-    public static Like of(Expression operand, Expression pattern, boolean negate) {
-        return new Like(operand, pattern, null, negate);
-    }
-
-    public static Like of(Expression operand, Expression pattern) {
-        return new Like(operand, pattern, null, false);
+    public static Between of(Expression operand, Expression lowerBound, Expression upperBound) {
+        return new Between(operand, lowerBound, upperBound, false);
     }
 
     public Expression getOperand() {
         return operand;
     }
 
-    public Expression getPattern() {
-        return pattern;
+    public Expression getLowerBound() {
+        return lowerBound;
     }
 
-    public Optional<StringLiteral> getEscapeCharacter() {
-        return Optional.ofNullable(escapeCharacter);
+    public Expression getUpperBound() {
+        return upperBound;
     }
 
     public boolean isNegate() {
@@ -82,7 +73,7 @@ public class Like implements LogicalOperator {
 
     @Override
     public String getType() {
-        return !negate ? Operators.LIKE : Operators.NOT_LIKE;
+        return !negate ? Operators.BETWEEN : Operators.NOT_BETWEEN;
     }
 
     @Override
@@ -91,7 +82,7 @@ public class Like implements LogicalOperator {
     }
 
     @Override
-    public Like as(String alias) {
+    public Between as(String alias) {
         this.alias = alias;
         return this;
     }
@@ -99,25 +90,17 @@ public class Like implements LogicalOperator {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         operand.getPlaceHolders(placeHolders);
-        pattern.getPlaceHolders(placeHolders);
-        escapeCharacter.getPlaceHolders(placeHolders);
+        lowerBound.getPlaceHolders(placeHolders);
+        upperBound.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
                 .append(" " + builder.keyword(getType()) + " ")
-                .append(pattern);
-        if (escapeCharacter != null) {
-            if (builder.isUseJdbcEscapeNotation()) {
-                builder.append(" {escape ")
-                        .append(escapeCharacter)
-                        .append("}");
-            } else {
-                builder.append(builder.keyword(" escape "))
-                        .append(escapeCharacter);
-            }
-        }
+                .append(lowerBound)
+                .append(builder.keyword(" and "))
+                .append(upperBound);
     }
 
     @Override

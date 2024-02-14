@@ -93,21 +93,15 @@ public class Function implements ColumnExpression, Selection<Function> {
         return arguments;
     }
 
-    public Function add(Expression argument) {
-        if (argument != null) {
-            arguments.add(argument);
-        }
-
-        return this;
-    }
-
     public Function add(Expression... arguments) {
-        return add(arguments != null ? Arrays.asList(arguments) : null);
+        return arguments != null ? add(Arrays.asList(arguments)) : this;
     }
 
     public Function add(List<Expression> arguments) {
         if (arguments != null && !arguments.isEmpty()) {
-            this.arguments.addAll(arguments);
+            arguments.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(this.arguments::add);
         }
 
         return this;

@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;

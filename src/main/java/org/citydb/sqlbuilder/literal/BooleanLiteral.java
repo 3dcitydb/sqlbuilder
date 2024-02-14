@@ -24,6 +24,8 @@ package org.citydb.sqlbuilder.literal;
 import org.citydb.sqlbuilder.SQLBuilder;
 
 public class BooleanLiteral extends Literal<Boolean> {
+    public static final BooleanLiteral TRUE = new BooleanLiteral(true);
+    public static final BooleanLiteral FALSE = new BooleanLiteral(false);
 
     private BooleanLiteral(boolean value) {
         super(value);
@@ -34,11 +36,11 @@ public class BooleanLiteral extends Literal<Boolean> {
     }
 
     public static BooleanLiteral of(boolean value) {
-        return new BooleanLiteral(value);
+        return value ? TRUE : FALSE;
     }
 
     public static BooleanLiteral of(Boolean value) {
-        return new BooleanLiteral(value);
+        return value != null ? of (value) : new BooleanLiteral(null);
     }
 
     @Override

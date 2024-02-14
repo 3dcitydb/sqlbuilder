@@ -19,34 +19,49 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Not implements LogicalOperator {
-    private final LogicalOperator operand;
+public class IsNull implements LogicalOperator {
+    private final Expression operand;
+    private boolean negate;
     private String alias;
 
-    private Not(LogicalOperator operand) {
+    private IsNull(Expression operand, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
+        this.negate = negate;
     }
 
-    public static Not of(LogicalOperator operand) {
-        return new Not(operand);
+    public static IsNull of(Expression operand, boolean negate) {
+        return new IsNull(operand, negate);
     }
 
-    public LogicalOperator getOperand() {
+    public static IsNull of(Expression operand) {
+        return new IsNull(operand, false);
+    }
+
+    public Expression getOperand() {
         return operand;
+    }
+
+    public boolean isNegate() {
+        return negate;
+    }
+
+    public void setNegate(boolean negate) {
+        this.negate = negate;
     }
 
     @Override
     public String getType() {
-        return Operators.NOT;
+        return !negate ? Operators.IS_NULL : Operators.IS_NOT_NULL;
     }
 
     @Override
@@ -55,7 +70,7 @@ public class Not implements LogicalOperator {
     }
 
     @Override
-    public Not as(String alias) {
+    public IsNull as(String alias) {
         this.alias = alias;
         return this;
     }
@@ -67,8 +82,8 @@ public class Not implements LogicalOperator {
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(builder.keyword(getType()) + " ")
-                .append(operand);
+        builder.append(operand)
+                .append(" " + builder.keyword(getType()));
     }
 
     @Override

@@ -19,56 +19,37 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class In implements LogicalOperator {
+public class UnaryLogicalOperator implements LogicalOperator {
     private final Expression operand;
-    private final QueryExpression queryExpression;
-    private boolean negate;
+    private final String type;
     private String alias;
 
-    private In(Expression operand, QueryExpression queryExpression, boolean negate) {
+    private UnaryLogicalOperator(Expression operand, String type) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.queryExpression = Objects.requireNonNull(queryExpression, "The query expression must not be null.");
-        this.negate = negate;
+        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
     }
 
-    public static In of(Expression operand, QueryExpression queryExpression, boolean negate) {
-        return new In(operand, queryExpression, negate);
-    }
-
-    public static In of(Expression operand, QueryExpression queryExpression) {
-        return new In(operand, queryExpression, false);
+    public static UnaryLogicalOperator of(Expression operand, String type) {
+        return new UnaryLogicalOperator(operand, type);
     }
 
     public Expression getOperand() {
         return operand;
     }
 
-    public QueryExpression getQueryExpression() {
-        return queryExpression;
-    }
-
-    public boolean isNegate() {
-        return negate;
-    }
-
-    public void setNegate(boolean negate) {
-        this.negate = negate;
-    }
-
     @Override
     public String getType() {
-        return !negate ? Operators.IN : Operators.NOT_IN;
+        return type;
     }
 
     @Override
@@ -77,7 +58,7 @@ public class In implements LogicalOperator {
     }
 
     @Override
-    public In as(String alias) {
+    public UnaryLogicalOperator as(String alias) {
         this.alias = alias;
         return this;
     }
@@ -85,14 +66,12 @@ public class In implements LogicalOperator {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         operand.getPlaceHolders(placeHolders);
-        queryExpression.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(operand)
-                .append(" " + builder.keyword(getType()) + " ")
-                .append(queryExpression);
+        builder.append(builder.keyword(type) + " ")
+                .append(operand);
     }
 
     @Override

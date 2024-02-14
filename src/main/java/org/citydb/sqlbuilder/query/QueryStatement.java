@@ -27,7 +27,7 @@ import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.literal.IntegerLiteral;
 import org.citydb.sqlbuilder.literal.Literal;
-import org.citydb.sqlbuilder.operator.Operator;
+import org.citydb.sqlbuilder.operation.Operator;
 import org.citydb.sqlbuilder.schema.Column;
 
 import java.util.ArrayList;

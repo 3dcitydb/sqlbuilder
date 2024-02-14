@@ -24,9 +24,9 @@ package org.citydb.sqlbuilder.join;
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.SQLObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.operator.ComparisonOperator;
-import org.citydb.sqlbuilder.operator.LogicalOperator;
-import org.citydb.sqlbuilder.operator.Operators;
+import org.citydb.sqlbuilder.operation.ComparisonOperator;
+import org.citydb.sqlbuilder.operation.LogicalOperator;
+import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 

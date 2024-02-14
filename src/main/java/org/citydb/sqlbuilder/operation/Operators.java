@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.StringLiteral;
@@ -28,8 +28,8 @@ import org.citydb.sqlbuilder.query.QueryExpression;
 import java.util.List;
 
 public class Operators {
-    public static final String ADD = "+";
-    public static final String SUBTRACT = "-";
+    public static final String PLUS = "+";
+    public static final String MINUS = "-";
     public static final String MULTIPLY = "*";
     public static final String DIVIDE = "/";
     public static final String MODULO = "%";
@@ -57,19 +57,19 @@ public class Operators {
     public static final String ANY = "any";
     public static final String SOME = "some";
 
-    public static ArithmeticOperator add(Expression leftOperand, Expression rightOperand) {
-        return ArithmeticOperator.of(leftOperand, ADD, rightOperand);
+    public static ArithmeticOperator plus(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperator.of(leftOperand, PLUS, rightOperand);
     }
 
-    public static ArithmeticOperator subtract(Expression leftOperand, Expression rightOperand) {
-        return ArithmeticOperator.of(leftOperand, SUBTRACT, rightOperand);
+    public static ArithmeticOperator minus(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperator.of(leftOperand, MINUS, rightOperand);
     }
 
-    public static ArithmeticOperator multiply(Expression leftOperand, Expression rightOperand) {
+    public static ArithmeticOperator multiplyBy(Expression leftOperand, Expression rightOperand) {
         return ArithmeticOperator.of(leftOperand, MULTIPLY, rightOperand);
     }
 
-    public static ArithmeticOperator divide(Expression leftOperand, Expression rightOperand) {
+    public static ArithmeticOperator divideBy(Expression leftOperand, Expression rightOperand) {
         return ArithmeticOperator.of(leftOperand, DIVIDE, rightOperand);
     }
 

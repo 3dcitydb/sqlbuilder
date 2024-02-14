@@ -26,10 +26,10 @@ import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.operator.BinaryLogicalOperator;
-import org.citydb.sqlbuilder.operator.ComparisonOperator;
-import org.citydb.sqlbuilder.operator.LogicalOperator;
-import org.citydb.sqlbuilder.operator.Operators;
+import org.citydb.sqlbuilder.operation.BinaryLogicalOperator;
+import org.citydb.sqlbuilder.operation.ComparisonOperator;
+import org.citydb.sqlbuilder.operation.LogicalOperator;
+import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 

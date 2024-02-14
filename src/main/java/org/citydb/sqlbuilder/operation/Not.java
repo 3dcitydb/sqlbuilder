@@ -19,37 +19,34 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class UnaryLogicalOperator implements LogicalOperator {
-    private final Expression operand;
-    private final String type;
+public class Not implements LogicalOperator {
+    private final LogicalOperator operand;
     private String alias;
 
-    private UnaryLogicalOperator(Expression operand, String type) {
+    private Not(LogicalOperator operand) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
     }
 
-    public static UnaryLogicalOperator of(Expression operand, String type) {
-        return new UnaryLogicalOperator(operand, type);
+    public static Not of(LogicalOperator operand) {
+        return new Not(operand);
     }
 
-    public Expression getOperand() {
+    public LogicalOperator getOperand() {
         return operand;
     }
 
     @Override
     public String getType() {
-        return type;
+        return Operators.NOT;
     }
 
     @Override
@@ -58,7 +55,7 @@ public class UnaryLogicalOperator implements LogicalOperator {
     }
 
     @Override
-    public UnaryLogicalOperator as(String alias) {
+    public Not as(String alias) {
         this.alias = alias;
         return this;
     }
@@ -70,7 +67,7 @@ public class UnaryLogicalOperator implements LogicalOperator {
 
     @Override
     public void buildSQL(SQLBuilder builder) {
-        builder.append(builder.keyword(type) + " ")
+        builder.append(builder.keyword(getType()) + " ")
                 .append(operand);
     }
 

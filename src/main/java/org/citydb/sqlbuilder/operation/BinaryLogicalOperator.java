@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -28,7 +28,7 @@ import java.util.*;
 
 public class BinaryLogicalOperator implements LogicalOperator {
     private final List<LogicalOperator> operands;
-    private String type;
+    private final String type;
     private String alias;
 
     private BinaryLogicalOperator(String type, List<LogicalOperator> operands) {
@@ -73,21 +73,15 @@ public class BinaryLogicalOperator implements LogicalOperator {
         return reduced;
     }
 
-    public BinaryLogicalOperator add(LogicalOperator operand) {
-        if (operand != null) {
-            operands.add(operand);
-        }
-
-        return this;
-    }
-
     public BinaryLogicalOperator add(LogicalOperator... operands) {
-        return add(operands != null ? Arrays.asList(operands) : null);
+        return operands != null ? add(Arrays.asList(operands)) : this;
     }
 
     public BinaryLogicalOperator add(List<LogicalOperator> operands) {
         if (operands != null && !operands.isEmpty()) {
-            operands.forEach(this::add);
+            operands.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(this.operands::add);
         }
 
         return this;

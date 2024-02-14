@@ -19,48 +19,43 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.operator;
+package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Between implements LogicalOperator {
+public class In implements LogicalOperator {
     private final Expression operand;
-    private final Expression lowerBound;
-    private final Expression upperBound;
+    private final QueryExpression queryExpression;
     private boolean negate;
     private String alias;
 
-    private Between(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
+    private In(Expression operand, QueryExpression queryExpression, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.lowerBound = Objects.requireNonNull(lowerBound, "The lower bound must not be null.");
-        this.upperBound = Objects.requireNonNull(upperBound, "The upper bound must not be null.");
+        this.queryExpression = Objects.requireNonNull(queryExpression, "The query expression must not be null.");
         this.negate = negate;
     }
 
-    public static Between of(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
-        return new Between(operand, lowerBound, upperBound, negate);
+    public static In of(Expression operand, QueryExpression queryExpression, boolean negate) {
+        return new In(operand, queryExpression, negate);
     }
 
-    public static Between of(Expression operand, Expression lowerBound, Expression upperBound) {
-        return new Between(operand, lowerBound, upperBound, false);
+    public static In of(Expression operand, QueryExpression queryExpression) {
+        return new In(operand, queryExpression, false);
     }
 
     public Expression getOperand() {
         return operand;
     }
 
-    public Expression getLowerBound() {
-        return lowerBound;
-    }
-
-    public Expression getUpperBound() {
-        return upperBound;
+    public QueryExpression getQueryExpression() {
+        return queryExpression;
     }
 
     public boolean isNegate() {
@@ -73,7 +68,7 @@ public class Between implements LogicalOperator {
 
     @Override
     public String getType() {
-        return !negate ? Operators.BETWEEN : Operators.NOT_BETWEEN;
+        return !negate ? Operators.IN : Operators.NOT_IN;
     }
 
     @Override
@@ -82,7 +77,7 @@ public class Between implements LogicalOperator {
     }
 
     @Override
-    public Between as(String alias) {
+    public In as(String alias) {
         this.alias = alias;
         return this;
     }
@@ -90,17 +85,14 @@ public class Between implements LogicalOperator {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         operand.getPlaceHolders(placeHolders);
-        lowerBound.getPlaceHolders(placeHolders);
-        upperBound.getPlaceHolders(placeHolders);
+        queryExpression.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSQL(SQLBuilder builder) {
         builder.append(operand)
                 .append(" " + builder.keyword(getType()) + " ")
-                .append(lowerBound)
-                .append(builder.keyword(" and "))
-                .append(upperBound);
+                .append(queryExpression);
     }
 
     @Override
