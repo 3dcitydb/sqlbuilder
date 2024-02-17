@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 
 import java.util.Optional;
@@ -31,7 +31,7 @@ public interface Selection<T extends Selection<?>> extends Expression {
 
     T as(String alias);
 
-    default void buildSelection(SQLBuilder builder) {
+    default void buildSelection(SqlBuilder builder) {
         builder.append(this);
         getAlias().ifPresent(alias -> builder.append(builder.keyword(" as ") + alias));
     }

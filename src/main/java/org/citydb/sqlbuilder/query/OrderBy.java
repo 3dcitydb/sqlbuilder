@@ -21,8 +21,8 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.SQLObject;
+import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
 
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class OrderBy implements SQLObject {
+public class OrderBy implements SqlObject {
     public static final String NULLS_FIRST = "nulls first";
     public static final String NULLS_LAST = "nulls last";
     public static final String ASCENDING = "asc";
@@ -91,7 +91,7 @@ public class OrderBy implements SQLObject {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(column);
         if (!ASCENDING.equalsIgnoreCase(sortOrder)) {
             builder.append(" " + builder.keyword(sortOrder));
@@ -104,6 +104,6 @@ public class OrderBy implements SQLObject {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

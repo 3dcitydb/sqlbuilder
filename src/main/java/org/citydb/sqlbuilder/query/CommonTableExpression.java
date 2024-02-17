@@ -21,14 +21,14 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.SQLObject;
+import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CommonTableExpression implements SQLObject {
+public class CommonTableExpression implements SqlObject {
     private final String name;
     private final QueryStatement<?> queryStatement;
     private final List<String> columns;
@@ -67,7 +67,7 @@ public class CommonTableExpression implements SQLObject {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(name);
         if (columns != null && !columns.isEmpty()) {
             builder.append(" (")
@@ -83,6 +83,6 @@ public class CommonTableExpression implements SQLObject {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.util;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.QueryExpression;
@@ -66,12 +66,12 @@ public class PlainText implements ColumnExpression, Selection<PlainText>, QueryE
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(sql);
     }
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 
 public class BooleanLiteral extends Literal<Boolean> {
     public static final BooleanLiteral TRUE = new BooleanLiteral(true);
@@ -44,11 +44,11 @@ public class BooleanLiteral extends Literal<Boolean> {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (value != null) {
             builder.append(value ? "1" : "0");
         } else {
-            super.buildSQL(builder);
+            super.buildSql(builder);
         }
     }
 }

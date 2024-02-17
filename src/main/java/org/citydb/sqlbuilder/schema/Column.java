@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.schema;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.OrderBy;
 import org.citydb.sqlbuilder.query.Selection;
@@ -92,12 +92,12 @@ public class Column implements ColumnExpression, Selection<Column> {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(table.getAlias() + "." + builder.identifier(name));
     }
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

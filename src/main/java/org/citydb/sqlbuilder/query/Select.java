@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
@@ -244,7 +244,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (!with.isEmpty()) {
             builder.append(builder.keyword("with "));
             if (withRecursive) {
@@ -292,12 +292,12 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
                     .indentln(where.getOperands(), " ", builder.keyword(where.getType()) + " ");
         }
 
-        super.buildSQL(builder);
+        super.buildSql(builder);
     }
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 
     @Override

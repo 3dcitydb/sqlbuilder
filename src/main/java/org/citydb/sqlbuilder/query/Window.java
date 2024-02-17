@@ -21,8 +21,8 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.SQLObject;
+import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class Window implements SQLObject {
+public class Window implements SqlObject {
     private final List<Expression> partitionBy;
     private final List<OrderBy> orderBy;
     private String name;
@@ -201,7 +201,7 @@ public class Window implements SQLObject {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append("(");
 
         if (isReferenceOnly()) {
@@ -236,7 +236,7 @@ public class Window implements SQLObject {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 
     public class FrameBuilder {

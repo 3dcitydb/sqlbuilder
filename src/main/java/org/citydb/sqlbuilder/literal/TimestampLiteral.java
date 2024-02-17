@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -61,13 +61,13 @@ public class TimestampLiteral extends Literal<Timestamp> {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (value != null) {
             builder.append(builder.isUseJdbcEscapeNotation() ?
                     "{ts '" + value + "'}" :
                     "'" + value + "'");
         } else {
-            super.buildSQL(builder);
+            super.buildSql(builder);
         }
     }
 }

@@ -21,8 +21,8 @@
 
 package org.citydb.sqlbuilder.update;
 
-import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.SQLObject;
+import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
@@ -30,7 +30,7 @@ import org.citydb.sqlbuilder.schema.Column;
 import java.util.List;
 import java.util.Objects;
 
-public class UpdateValue implements SQLObject {
+public class UpdateValue implements SqlObject {
     private final Column column;
     private final Expression value;
 
@@ -58,7 +58,7 @@ public class UpdateValue implements SQLObject {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(builder.identifier(column.getName()))
                 .append(" = ")
                 .append(value);
@@ -66,6 +66,6 @@ public class UpdateValue implements SQLObject {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

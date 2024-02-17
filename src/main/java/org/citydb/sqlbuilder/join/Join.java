@@ -21,8 +21,8 @@
 
 package org.citydb.sqlbuilder.join;
 
-import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.SQLObject;
+import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.ComparisonOperator;
 import org.citydb.sqlbuilder.operation.LogicalOperator;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Join implements SQLObject {
+public class Join implements SqlObject {
     private final String type;
     private final Column fromColumn;
     private final Column toColumn;
@@ -92,15 +92,15 @@ public class Join implements SQLObject {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(builder.keyword(type) + " ")
                 .append(toColumn.getTable())
                 .append(builder.keyword(" on "))
-                .append(Operators.and(conditions));
+                .append(Operators.and(conditions).reduce());
     }
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

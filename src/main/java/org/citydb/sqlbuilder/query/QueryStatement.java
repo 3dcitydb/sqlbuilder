@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.function.Function;
@@ -167,7 +167,7 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (!groupBy.isEmpty()) {
             builder.appendln()
                     .appendln(builder.keyword("group by "))

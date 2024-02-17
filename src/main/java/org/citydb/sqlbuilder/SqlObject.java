@@ -26,6 +26,16 @@ import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
 
-public interface SQLObject extends Buildable {
+public interface SqlObject extends Buildable {
     void getPlaceHolders(List<PlaceHolder> placeHolders);
+
+    default String toSql(SqlBuildOptions options) {
+        SqlBuilder builder = SqlBuilder.of(options);
+        buildSql(builder);
+        return builder.build();
+    }
+
+    default String toSql() {
+        return toSql(SqlBuildOptions.defaults());
+    }
 }

@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.*;
@@ -134,7 +134,7 @@ public class BinaryLogicalOperator implements LogicalOperator {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (operands.size() > 1) {
             builder.appendln("(")
                     .indentln(operands, " ", builder.keyword(type) + " ")
@@ -147,6 +147,6 @@ public class BinaryLogicalOperator implements LogicalOperator {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

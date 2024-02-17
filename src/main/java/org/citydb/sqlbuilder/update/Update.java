@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.update;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.Literals;
@@ -153,7 +153,7 @@ public class Update implements Statement {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (!with.isEmpty()) {
             builder.append(builder.keyword("with "));
             if (withRecursive) {
@@ -185,7 +185,7 @@ public class Update implements Statement {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 
     public class UpdateValueBuilder {

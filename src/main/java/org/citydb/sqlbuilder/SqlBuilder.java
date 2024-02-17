@@ -31,24 +31,24 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.function.BiFunction;
 
-public class SQLBuilder {
+public class SqlBuilder {
     private final StringBuilder builder = new StringBuilder();
-    private final SQLBuildOptions options;
+    private final SqlBuildOptions options;
     private int level;
 
-    private SQLBuilder(SQLBuildOptions options) {
+    private SqlBuilder(SqlBuildOptions options) {
         this.options = options;
     }
 
-    public static SQLBuilder newInstance() {
-        return new SQLBuilder(SQLBuildOptions.defaults());
+    public static SqlBuilder newInstance() {
+        return new SqlBuilder(SqlBuildOptions.defaults());
     }
 
-    public static SQLBuilder of(SQLBuildOptions options) {
-        return new SQLBuilder(options);
+    public static SqlBuilder of(SqlBuildOptions options) {
+        return new SqlBuilder(options);
     }
 
-    public SQLBuildOptions getOptions() {
+    public SqlBuildOptions getOptions() {
         return options;
     }
 
@@ -74,7 +74,7 @@ public class SQLBuilder {
 
     public String keyword(String keyword) {
         if (keyword != null) {
-            return options.getKeywordCase() == SQLBuildOptions.KeywordCase.UPPERCASE ?
+            return options.getKeywordCase() == SqlBuildOptions.KeywordCase.UPPERCASE ?
                     keyword.toUpperCase(Locale.ROOT) :
                     keyword.toLowerCase(Locale.ROOT);
         } else {
@@ -82,78 +82,78 @@ public class SQLBuilder {
         }
     }
 
-    public SQLBuilder appendln() {
+    public SqlBuilder appendln() {
         return newline();
     }
 
-    public SQLBuilder appendln(Buildable object) {
+    public SqlBuilder appendln(Buildable object) {
         return append(object).newline();
     }
 
-    public SQLBuilder append(Buildable object) {
+    public SqlBuilder append(Buildable object) {
         if (object instanceof QueryExpression expression) {
             append(expression);
         } else {
-            object.buildSQL(this);
+            object.buildSql(this);
         }
 
         return this;
     }
 
-    public SQLBuilder appendln(QueryExpression expression) {
+    public SqlBuilder appendln(QueryExpression expression) {
         return append(expression).newline();
     }
 
-    public SQLBuilder append(QueryExpression expression) {
+    public SqlBuilder append(QueryExpression expression) {
         if (expression instanceof PlainText plainText) {
             builder.append(plainText);
         } else if (expression instanceof LiteralList literalList) {
             builder.append("(");
-            literalList.buildSQL(this);
+            literalList.buildSql(this);
             builder.append(")");
         } else {
-            openParenthesis();
-            expression.buildSQL(this);
-            closeParenthesis();
+            leftParenthesis();
+            expression.buildSql(this);
+            rightParenthesis();
         }
 
         return this;
     }
 
-    public SQLBuilder appendln(String sql) {
+    public SqlBuilder appendln(String sql) {
         return append(sql).newline();
     }
 
-    public SQLBuilder append(String sql) {
+    public SqlBuilder append(String sql) {
         builder.append(sql);
         return this;
     }
 
-    public SQLBuilder append(Collection<? extends Buildable> objects, String delimiter) {
+    public SqlBuilder append(Collection<? extends Buildable> objects, String delimiter) {
         return append(objects, delimiter, false, (object, i) -> null);
     }
 
-    public SQLBuilder appendln(Collection<? extends Buildable> objects, String delimiter) {
+    public SqlBuilder appendln(Collection<? extends Buildable> objects, String delimiter) {
         return append(objects, delimiter, true, (object, i) -> null);
     }
 
-    public SQLBuilder append(Collection<? extends Buildable> objects, String delimiter, String prefix) {
+    public SqlBuilder append(Collection<? extends Buildable> objects, String delimiter, String prefix) {
         return append(objects, delimiter, false, (object, i) -> i > 0 ? prefix : null);
     }
 
-    public SQLBuilder appendln(Collection<? extends Buildable> objects, String delimiter, String prefix) {
+    public SqlBuilder appendln(Collection<? extends Buildable> objects, String delimiter, String prefix) {
         return append(objects, delimiter, true, (object, i) -> i > 0 ? prefix : null);
     }
 
-    public <T extends Buildable> SQLBuilder append(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
+    public <T extends Buildable> SqlBuilder append(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
         return append(objects, delimiter, false, prefixBuilder);
     }
 
-    public <T extends Buildable> SQLBuilder appendln(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
+    public <T extends Buildable> SqlBuilder appendln(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
         return append(objects, delimiter, true, prefixBuilder);
     }
 
-    private <T extends Buildable> SQLBuilder append(Collection<T> objects, String delimiter, boolean newline, BiFunction<T, Integer, String> prefixBuilder) {
+    private <T extends Buildable> SqlBuilder append(Collection<T> objects, String delimiter, boolean newline, BiFunction<T, Integer, String> prefixBuilder) {
         Iterator<T> iterator = objects.iterator();
         int counter = 0;
 
@@ -176,61 +176,61 @@ public class SQLBuilder {
         return this;
     }
 
-    public SQLBuilder indentln(Buildable object) {
+    public SqlBuilder indentln(Buildable object) {
         return indent(object).newline();
     }
 
-    public SQLBuilder indent(Buildable object) {
+    public SqlBuilder indent(Buildable object) {
         return indent(1)
                 .increaseIndent()
                 .append(object)
                 .decreaseIndent();
     }
 
-    public SQLBuilder indentln(QueryExpression expression) {
+    public SqlBuilder indentln(QueryExpression expression) {
         return indent(expression).newline();
     }
 
-    public SQLBuilder indent(QueryExpression expression) {
+    public SqlBuilder indent(QueryExpression expression) {
         return indent(1)
                 .increaseIndent()
                 .append(expression)
                 .decreaseIndent();
     }
 
-    public SQLBuilder indentln(String sql) {
+    public SqlBuilder indentln(String sql) {
         return indent(sql).newline();
     }
 
-    public SQLBuilder indent(String sql) {
+    public SqlBuilder indent(String sql) {
         return indent(1).append(sql);
     }
 
-    public SQLBuilder indent(Collection<? extends Buildable> objects, String delimiter) {
+    public SqlBuilder indent(Collection<? extends Buildable> objects, String delimiter) {
         return indent(objects, delimiter, false, (object, i) -> null);
     }
 
-    public SQLBuilder indentln(Collection<? extends Buildable> objects, String delimiter) {
+    public SqlBuilder indentln(Collection<? extends Buildable> objects, String delimiter) {
         return indent(objects, delimiter, true, (object, i) -> null);
     }
 
-    public SQLBuilder indent(Collection<? extends Buildable> objects, String delimiter, String prefix) {
+    public SqlBuilder indent(Collection<? extends Buildable> objects, String delimiter, String prefix) {
         return indent(objects, delimiter, false, (object, i) -> i > 0 ? prefix : null);
     }
 
-    public SQLBuilder indentln(Collection<? extends Buildable> objects, String delimiter, String prefix) {
+    public SqlBuilder indentln(Collection<? extends Buildable> objects, String delimiter, String prefix) {
         return indent(objects, delimiter, true, (object, i) -> i > 0 ? prefix : null);
     }
 
-    public <T extends Buildable> SQLBuilder indent(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
+    public <T extends Buildable> SqlBuilder indent(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
         return indent(objects, delimiter, false, prefixBuilder);
     }
 
-    public <T extends Buildable> SQLBuilder indentln(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
+    public <T extends Buildable> SqlBuilder indentln(Collection<T> objects, String delimiter, BiFunction<T, Integer, String> prefixBuilder) {
         return indent(objects, delimiter, true, prefixBuilder);
     }
 
-    private <T extends Buildable> SQLBuilder indent(Collection<T> objects, String delimiter, boolean newline, BiFunction<T, Integer, String> prefixBuilder) {
+    private <T extends Buildable> SqlBuilder indent(Collection<T> objects, String delimiter, boolean newline, BiFunction<T, Integer, String> prefixBuilder) {
         return indent(1)
                 .increaseIndent()
                 .append(objects, delimiter, newline, prefixBuilder)
@@ -238,18 +238,18 @@ public class SQLBuilder {
                 .decreaseIndent();
     }
 
-    public SQLBuilder openParenthesis() {
+    public SqlBuilder leftParenthesis() {
         builder.append("(");
         return increaseIndent().newline();
     }
 
-    public SQLBuilder closeParenthesis() {
+    public SqlBuilder rightParenthesis() {
         decreaseIndent().newline();
         builder.append(")");
         return this;
     }
 
-    private SQLBuilder newline() {
+    private SqlBuilder newline() {
         if (options.isSetIndent()) {
             builder.append(options.getNewline());
             return indent();
@@ -258,11 +258,11 @@ public class SQLBuilder {
         }
     }
 
-    private SQLBuilder indent() {
+    private SqlBuilder indent() {
         return indent(level);
     }
 
-    private SQLBuilder indent(int repeat) {
+    private SqlBuilder indent(int repeat) {
         if (options.isSetIndent()) {
             builder.append(options.getIndent().repeat(repeat));
         }
@@ -270,12 +270,12 @@ public class SQLBuilder {
         return this;
     }
 
-    private SQLBuilder increaseIndent() {
+    private SqlBuilder increaseIndent() {
         level++;
         return this;
     }
 
-    private SQLBuilder decreaseIndent() {
+    private SqlBuilder decreaseIndent() {
         level = Math.max(--level, 0);
         return this;
     }

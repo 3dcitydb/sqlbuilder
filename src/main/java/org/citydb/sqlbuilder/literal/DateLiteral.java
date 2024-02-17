@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 
 import java.sql.Date;
 import java.time.Instant;
@@ -60,13 +60,13 @@ public class DateLiteral extends Literal<Date> {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (value != null) {
             builder.append(builder.isUseJdbcEscapeNotation() ?
                     "{d '" + value + "'}" :
                     "'" + value + "'");
         } else {
-            super.buildSQL(builder);
+            super.buildSql(builder);
         }
     }
 }

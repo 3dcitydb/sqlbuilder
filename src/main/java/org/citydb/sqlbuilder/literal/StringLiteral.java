@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 
 public class StringLiteral extends Literal<String> {
 
@@ -34,11 +34,11 @@ public class StringLiteral extends Literal<String> {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (value != null) {
             builder.append("'" + value.replace("'", "''") + "'");
         } else {
-            super.buildSQL(builder);
+            super.buildSql(builder);
         }
     }
 }

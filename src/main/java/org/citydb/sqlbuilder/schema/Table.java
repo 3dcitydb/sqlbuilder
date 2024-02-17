@@ -21,8 +21,8 @@
 
 package org.citydb.sqlbuilder.schema;
 
-import org.citydb.sqlbuilder.SQLBuilder;
-import org.citydb.sqlbuilder.SQLObject;
+import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
@@ -34,7 +34,7 @@ import org.citydb.sqlbuilder.util.GlobalAliasGenerator;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class Table implements SQLObject {
+public final class Table implements SqlObject {
     private final String name;
     private final String alias;
     private final String schema;
@@ -147,7 +147,7 @@ public final class Table implements SQLObject {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         if (queryExpression == null) {
             if (schema != null && !schema.isEmpty()) {
                 builder.append(schema + ".");
@@ -163,6 +163,6 @@ public final class Table implements SQLObject {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -81,12 +81,12 @@ public class LiteralList implements QueryExpression {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(literals, ", ");
     }
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

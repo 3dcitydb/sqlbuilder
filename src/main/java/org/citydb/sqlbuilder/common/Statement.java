@@ -21,11 +21,11 @@
 
 package org.citydb.sqlbuilder.common;
 
-import org.citydb.sqlbuilder.SQLObject;
+import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
 
-public interface Statement extends SQLObject {
+public interface Statement extends SqlObject {
     List<PlaceHolder> getPlaceHolders();
 }

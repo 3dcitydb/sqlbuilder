@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder;
 
-public class SQLBuildOptions {
+public class SqlBuildOptions {
     private String newline = "\n";
     private String indent;
     private String identifierDelimiter;
@@ -40,18 +40,18 @@ public class SQLBuildOptions {
         LOWERCASE
     }
 
-    private SQLBuildOptions() {
+    private SqlBuildOptions() {
     }
 
-    public static SQLBuildOptions defaults() {
-        return new SQLBuildOptions();
+    public static SqlBuildOptions defaults() {
+        return new SqlBuildOptions();
     }
 
     public String getNewline() {
         return newline;
     }
 
-    public SQLBuildOptions setNewline(String newline) {
+    public SqlBuildOptions setNewline(String newline) {
         this.newline = newline;
         return this;
     }
@@ -64,7 +64,7 @@ public class SQLBuildOptions {
         return indent != null && !indent.isEmpty();
     }
 
-    public SQLBuildOptions setIndent(String indent) {
+    public SqlBuildOptions setIndent(String indent) {
         this.indent = indent;
         return this;
     }
@@ -77,7 +77,7 @@ public class SQLBuildOptions {
         return identifierDelimiter != null && !identifierDelimiter.isEmpty();
     }
 
-    public SQLBuildOptions setIdentifierDelimiter(String identifierDelimiter) {
+    public SqlBuildOptions setIdentifierDelimiter(String identifierDelimiter) {
         this.identifierDelimiter = identifierDelimiter;
         return this;
     }
@@ -86,7 +86,7 @@ public class SQLBuildOptions {
         return identifierCase;
     }
 
-    public SQLBuildOptions setIdentifierCase(IdentifierCase identifierCase) {
+    public SqlBuildOptions setIdentifierCase(IdentifierCase identifierCase) {
         if (identifierCase != null) {
             this.identifierCase = identifierCase;
         }
@@ -98,7 +98,7 @@ public class SQLBuildOptions {
         return keywordCase;
     }
 
-    public SQLBuildOptions setKeywordCase(KeywordCase keywordCase) {
+    public SqlBuildOptions setKeywordCase(KeywordCase keywordCase) {
         if (keywordCase != null) {
             this.keywordCase = keywordCase;
         }
@@ -110,7 +110,7 @@ public class SQLBuildOptions {
         return useJDBCEscapeNotation;
     }
 
-    public SQLBuildOptions setUseJDBCEscapeNotation(boolean useJdbcEscapeNotation) {
+    public SqlBuildOptions setUseJDBCEscapeNotation(boolean useJdbcEscapeNotation) {
         this.useJDBCEscapeNotation = useJdbcEscapeNotation;
         return this;
     }

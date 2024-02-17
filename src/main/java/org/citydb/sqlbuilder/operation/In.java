@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.QueryExpression;
@@ -89,7 +89,7 @@ public class In implements LogicalOperator {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(operand)
                 .append(" " + builder.keyword(getType()) + " ")
                 .append(queryExpression);
@@ -97,6 +97,6 @@ public class In implements LogicalOperator {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

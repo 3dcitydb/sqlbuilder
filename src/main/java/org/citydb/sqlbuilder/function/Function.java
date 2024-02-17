@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.function;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.Selection;
@@ -125,7 +125,7 @@ public class Function implements ColumnExpression, Selection<Function> {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append(builder.keyword(name))
                 .append("(");
         if (!qualifiers.isEmpty()) {
@@ -141,6 +141,6 @@ public class Function implements ColumnExpression, Selection<Function> {
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 }

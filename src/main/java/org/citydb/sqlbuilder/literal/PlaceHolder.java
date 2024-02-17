@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.util.UserProperties;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class PlaceHolder extends Literal<Object> {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         builder.append("?");
     }
 }

@@ -21,20 +21,9 @@
 
 package org.citydb.sqlbuilder.common;
 
-import org.citydb.sqlbuilder.SQLBuildOptions;
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 
 @FunctionalInterface
 public interface Buildable {
-    void buildSQL(SQLBuilder builder);
-
-    default String toSQL(SQLBuildOptions options) {
-        SQLBuilder builder = SQLBuilder.of(options);
-        buildSQL(builder);
-        return builder.build();
-    }
-
-    default String toSQL() {
-        return toSQL(SQLBuildOptions.defaults());
-    }
+    void buildSql(SqlBuilder builder);
 }

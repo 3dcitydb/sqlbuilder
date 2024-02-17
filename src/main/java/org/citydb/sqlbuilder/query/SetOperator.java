@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SQLBuilder;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.*;
@@ -88,7 +88,7 @@ public class SetOperator extends QueryStatement<SetOperator> {
     }
 
     @Override
-    public void buildSQL(SQLBuilder builder) {
+    public void buildSql(SqlBuilder builder) {
         for (Iterator<Select> iterator = operands.iterator(); iterator.hasNext(); ) {
             builder.append(iterator.next());
             if (iterator.hasNext()) {
@@ -98,12 +98,12 @@ public class SetOperator extends QueryStatement<SetOperator> {
             }
         }
 
-        super.buildSQL(builder);
+        super.buildSql(builder);
     }
 
     @Override
     public String toString() {
-        return toSQL();
+        return toSql();
     }
 
     @Override
