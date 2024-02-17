@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SQLBuilder;
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
@@ -49,6 +50,30 @@ public class ArithmeticOperator implements Operator {
 
     public Expression getRightOperand() {
         return rightOperand;
+    }
+
+    public ArithmeticOperator plus(Object operand) {
+        return Operators.plus(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    public ArithmeticOperator minus(Object operand) {
+        return Operators.minus(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    public ArithmeticOperator multiplyBy(Object operand) {
+        return Operators.multiplyBy(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    public ArithmeticOperator divideBy(Object operand) {
+        return Operators.divideBy(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    public ArithmeticOperator modulo(Object operand) {
+        return Operators.modulo(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
+    public ArithmeticOperator concat(Object operand) {
+        return Operators.concat(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }
 
     @Override
