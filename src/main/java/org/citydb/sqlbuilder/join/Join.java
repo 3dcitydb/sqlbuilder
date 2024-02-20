@@ -25,7 +25,7 @@ import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.ComparisonOperator;
-import org.citydb.sqlbuilder.operation.LogicalOperator;
+import org.citydb.sqlbuilder.operation.LogicalExpression;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
@@ -38,7 +38,7 @@ public class Join implements SqlObject {
     private final String type;
     private final Column fromColumn;
     private final Column toColumn;
-    private final List<LogicalOperator> conditions = new ArrayList<>();
+    private final List<LogicalExpression> conditions = new ArrayList<>();
 
     private Join(String type, Column toColumn, String operator, Column fromColumn) {
         this.type = Objects.requireNonNull(type, "The join type must not be null.");
@@ -73,11 +73,11 @@ public class Join implements SqlObject {
         return this.type.equalsIgnoreCase(type);
     }
 
-    public List<LogicalOperator> getConditions() {
+    public List<LogicalExpression> getConditions() {
         return conditions;
     }
 
-    public Join condition(LogicalOperator condition) {
+    public Join condition(LogicalExpression condition) {
         if (condition != null) {
             conditions.add(condition);
         }
