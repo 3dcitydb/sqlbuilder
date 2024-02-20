@@ -21,7 +21,9 @@
 
 package org.citydb.sqlbuilder.literal;
 
-public class IntegerLiteral extends Literal<Long> {
+import org.citydb.sqlbuilder.operation.ArithmeticExpression;
+
+public class IntegerLiteral extends Literal<Long> implements ArithmeticExpression, ScalarExpression {
 
     private IntegerLiteral(long value) {
         super(value);

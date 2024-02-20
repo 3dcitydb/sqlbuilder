@@ -22,8 +22,9 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.operation.ArithmeticExpression;
 
-public class StringLiteral extends Literal<String> {
+public class StringLiteral extends Literal<String> implements ArithmeticExpression, ScalarExpression {
 
     private StringLiteral(String value) {
         super(value);

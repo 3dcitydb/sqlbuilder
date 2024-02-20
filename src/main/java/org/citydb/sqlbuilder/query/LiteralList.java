@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -49,9 +50,14 @@ public class LiteralList implements QueryExpression {
     public static LiteralList of(List<Object> values) {
         List<Literal<?>> literals = new ArrayList<>();
         if (values != null) {
-            values.stream()
-                    .map(Literals::of)
-                    .forEach(literals::add);
+            for (Object value : values) {
+                Expression expression = value instanceof Literal<?> literal ?
+                        literal :
+                        Literals.of(value);
+                if (expression instanceof Literal<?> literal) {
+                    literals.add(literal);
+                }
+            }
         }
 
         return new LiteralList(literals);

@@ -30,7 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class TimestampLiteral extends Literal<Timestamp> {
+public class TimestampLiteral extends Literal<Timestamp> implements ScalarExpression {
 
     private TimestampLiteral(Timestamp value) {
         super(value);

@@ -29,7 +29,7 @@ import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class DateLiteral extends Literal<Date> {
+public class DateLiteral extends Literal<Date> implements ScalarExpression {
 
     private DateLiteral(Date value) {
         super(value);

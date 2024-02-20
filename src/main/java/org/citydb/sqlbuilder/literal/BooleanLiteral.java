@@ -23,7 +23,7 @@ package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
 
-public class BooleanLiteral extends Literal<Boolean> {
+public class BooleanLiteral extends Literal<Boolean> implements ScalarExpression {
     public static final BooleanLiteral TRUE = new BooleanLiteral(true);
     public static final BooleanLiteral FALSE = new BooleanLiteral(false);
 

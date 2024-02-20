@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.literal;
 
-public class NullLiteral extends Literal<Void> {
+public class NullLiteral extends Literal<Void> implements ScalarExpression {
 
     private NullLiteral() {
         super(null);

@@ -33,10 +33,8 @@ import java.util.List;
 
 public class Literals {
 
-    public static Literal<?> of(Object value) {
-        if (value instanceof Literal<?> literal) {
-            return literal;
-        } else if (value instanceof String literal) {
+    public static ScalarExpression of(Object value) {
+        if (value instanceof String literal) {
             return StringLiteral.of(literal);
         } else if (value instanceof Double literal) {
             return DoubleLiteral.of(literal);
