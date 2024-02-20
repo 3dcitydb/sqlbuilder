@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class In implements LogicalExpression {
+public class In implements LogicalOperation {
     private final Expression operand;
     private final QueryExpression queryExpression;
     private boolean negate;
@@ -67,7 +67,7 @@ public class In implements LogicalExpression {
     }
 
     @Override
-    public String getType() {
+    public String getOperator() {
         return !negate ? Operators.IN : Operators.NOT_IN;
     }
 
@@ -91,7 +91,7 @@ public class In implements LogicalExpression {
     @Override
     public void buildSql(SqlBuilder builder) {
         builder.append(operand)
-                .append(" " + builder.keyword(getType()) + " ")
+                .append(" " + builder.keyword(getOperator()) + " ")
                 .append(queryExpression);
     }
 

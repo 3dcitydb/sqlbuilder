@@ -29,33 +29,27 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ComparisonOperator implements LogicalExpression {
-    private final Expression leftOperand;
-    private final Expression rightOperand;
-    private final String type;
+public class UnaryLogicalOperation implements LogicalOperation {
+    private final Expression operand;
+    private final String operator;
     private String alias;
 
-    protected ComparisonOperator(Expression leftOperand, String type, Expression rightOperand) {
-        this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
-        this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
-        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
+    private UnaryLogicalOperation(Expression operand, String operator) {
+        this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
+        this.operator = Objects.requireNonNull(operator, "The operator must not be null.");
     }
 
-    public static ComparisonOperator of(Expression leftOperand, String type, Expression rightOperand) {
-        return new ComparisonOperator(leftOperand, type, rightOperand);
+    public static UnaryLogicalOperation of(Expression operand, String operator) {
+        return new UnaryLogicalOperation(operand, operator);
     }
 
-    public Expression getLeftOperand() {
-        return leftOperand;
-    }
-
-    public Expression getRightOperand() {
-        return rightOperand;
+    public Expression getOperand() {
+        return operand;
     }
 
     @Override
-    public String getType() {
-        return type;
+    public String getOperator() {
+        return operator;
     }
 
     @Override
@@ -64,22 +58,20 @@ public class ComparisonOperator implements LogicalExpression {
     }
 
     @Override
-    public ComparisonOperator as(String alias) {
+    public UnaryLogicalOperation as(String alias) {
         this.alias = alias;
         return this;
     }
 
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        leftOperand.getPlaceHolders(placeHolders);
-        rightOperand.getPlaceHolders(placeHolders);
+        operand.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSql(SqlBuilder builder) {
-        builder.append(leftOperand)
-                .append(" " + builder.keyword(type) + " ")
-                .append(rightOperand);
+        builder.append(builder.keyword(operator) + " ")
+                .append(operand);
     }
 
     @Override

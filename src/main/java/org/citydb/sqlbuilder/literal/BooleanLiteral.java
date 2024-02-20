@@ -22,8 +22,9 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.operation.LogicalExpression;
 
-public class BooleanLiteral extends Literal<Boolean> implements ScalarExpression {
+public class BooleanLiteral extends Literal<Boolean> implements LogicalExpression, ScalarExpression {
     public static final BooleanLiteral TRUE = new BooleanLiteral(true);
     public static final BooleanLiteral FALSE = new BooleanLiteral(false);
 
@@ -46,7 +47,7 @@ public class BooleanLiteral extends Literal<Boolean> implements ScalarExpression
     @Override
     public void buildSql(SqlBuilder builder) {
         if (value != null) {
-            builder.append(value ? "1" : "0");
+            builder.append(value ? "TRUE" : "FALSE");
         } else {
             super.buildSql(builder);
         }

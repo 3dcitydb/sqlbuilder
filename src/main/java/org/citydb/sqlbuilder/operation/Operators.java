@@ -57,77 +57,73 @@ public class Operators {
     public static final String ANY = "any";
     public static final String SOME = "some";
 
-    public static ArithmeticOperator plus(Expression leftOperand, Expression rightOperand) {
-        return ArithmeticOperator.of(leftOperand, PLUS, rightOperand);
+    public static ArithmeticOperation plus(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperation.of(leftOperand, PLUS, rightOperand);
     }
 
-    public static ArithmeticOperator minus(Expression leftOperand, Expression rightOperand) {
-        return ArithmeticOperator.of(leftOperand, MINUS, rightOperand);
+    public static ArithmeticOperation minus(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperation.of(leftOperand, MINUS, rightOperand);
     }
 
-    public static ArithmeticOperator multiplyBy(Expression leftOperand, Expression rightOperand) {
-        return ArithmeticOperator.of(leftOperand, MULTIPLY, rightOperand);
+    public static ArithmeticOperation multiplyBy(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperation.of(leftOperand, MULTIPLY, rightOperand);
     }
 
-    public static ArithmeticOperator divideBy(Expression leftOperand, Expression rightOperand) {
-        return ArithmeticOperator.of(leftOperand, DIVIDE, rightOperand);
+    public static ArithmeticOperation divideBy(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperation.of(leftOperand, DIVIDE, rightOperand);
     }
 
-    public static ArithmeticOperator modulo(Expression leftOperand, Expression rightOperand) {
-        return ArithmeticOperator.of(leftOperand, MODULO, rightOperand);
+    public static ArithmeticOperation modulo(Expression leftOperand, Expression rightOperand) {
+        return ArithmeticOperation.of(leftOperand, MODULO, rightOperand);
     }
 
-    public static ArithmeticOperator concat(Expression leftOperand, Expression rightOperand) {
-        return ArithmeticOperator.of(leftOperand, CONCAT, rightOperand);
-    }
-
-    public static ComparisonOperator eq(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperator.of(leftOperand,
+    public static ComparisonOperation eq(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return ComparisonOperation.of(leftOperand,
                 !negate ? EQUAL_TO : NOT_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperator eq(Expression leftOperand, Expression rightOperand) {
+    public static ComparisonOperation eq(Expression leftOperand, Expression rightOperand) {
         return eq(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperator lt(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperator.of(leftOperand,
+    public static ComparisonOperation lt(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return ComparisonOperation.of(leftOperand,
                 !negate ? LESS_THAN : GREATER_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperator lt(Expression leftOperand, Expression rightOperand) {
+    public static ComparisonOperation lt(Expression leftOperand, Expression rightOperand) {
         return lt(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperator le(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperator.of(leftOperand,
+    public static ComparisonOperation le(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return ComparisonOperation.of(leftOperand,
                 !negate ? LESS_THAN_OR_EQUAL_TO : GREATER_THAN,
                 rightOperand);
     }
 
-    public static ComparisonOperator le(Expression leftOperand, Expression rightOperand) {
+    public static ComparisonOperation le(Expression leftOperand, Expression rightOperand) {
         return le(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperator gt(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperator.of(leftOperand,
+    public static ComparisonOperation gt(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return ComparisonOperation.of(leftOperand,
                 !negate ? GREATER_THAN : LESS_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperator gt(Expression leftOperand, Expression rightOperand) {
+    public static ComparisonOperation gt(Expression leftOperand, Expression rightOperand) {
         return gt(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperator ge(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperator.of(leftOperand,
+    public static ComparisonOperation ge(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return ComparisonOperation.of(leftOperand,
                 !negate ? GREATER_THAN_OR_EQUAL_TO : LESS_THAN,
                 rightOperand);
     }
 
-    public static ComparisonOperator ge(Expression leftOperand, Expression rightOperand) {
+    public static ComparisonOperation ge(Expression leftOperand, Expression rightOperand) {
         return ge(leftOperand, rightOperand, false);
     }
 
@@ -139,25 +135,25 @@ public class Operators {
         return isNull(operand, false);
     }
 
-    public static UnaryLogicalOperator exists(Expression operand, boolean negate) {
-        return UnaryLogicalOperator.of(operand,
+    public static UnaryLogicalOperation exists(Expression operand, boolean negate) {
+        return UnaryLogicalOperation.of(operand,
                 !negate ? EXISTS : NOT_EXISTS);
     }
 
-    public static UnaryLogicalOperator exists(Expression operand) {
+    public static UnaryLogicalOperation exists(Expression operand) {
         return exists(operand, false);
     }
 
-    public static UnaryLogicalOperator all(Expression operand) {
-        return UnaryLogicalOperator.of(operand, ALL);
+    public static UnaryLogicalOperation all(Expression operand) {
+        return UnaryLogicalOperation.of(operand, ALL);
     }
 
-    public static UnaryLogicalOperator any(Expression operand) {
-        return UnaryLogicalOperator.of(operand, ANY);
+    public static UnaryLogicalOperation any(Expression operand) {
+        return UnaryLogicalOperation.of(operand, ANY);
     }
 
-    public static UnaryLogicalOperator some(Expression operand) {
-        return UnaryLogicalOperator.of(operand, SOME);
+    public static UnaryLogicalOperation some(Expression operand) {
+        return UnaryLogicalOperation.of(operand, SOME);
     }
 
     public static Like like(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
@@ -188,20 +184,20 @@ public class Operators {
         return In.of(operand, queryExpression);
     }
 
-    public static BinaryLogicalOperator and(List<LogicalExpression> operands) {
-        return BinaryLogicalOperator.of(AND, operands);
+    public static BinaryLogicalOperation and(List<LogicalExpression> operands) {
+        return BinaryLogicalOperation.of(AND, operands);
     }
 
-    public static BinaryLogicalOperator and(LogicalExpression... operands) {
-        return BinaryLogicalOperator.of(AND, operands);
+    public static BinaryLogicalOperation and(LogicalExpression... operands) {
+        return BinaryLogicalOperation.of(AND, operands);
     }
 
-    public static BinaryLogicalOperator or(List<LogicalExpression> operands) {
-        return BinaryLogicalOperator.of(OR, operands);
+    public static BinaryLogicalOperation or(List<LogicalExpression> operands) {
+        return BinaryLogicalOperation.of(OR, operands);
     }
 
-    public static BinaryLogicalOperator or(LogicalExpression... operands) {
-        return BinaryLogicalOperator.of(OR, operands);
+    public static BinaryLogicalOperation or(LogicalExpression... operands) {
+        return BinaryLogicalOperation.of(OR, operands);
     }
 
     public static Not not(LogicalExpression operand) {

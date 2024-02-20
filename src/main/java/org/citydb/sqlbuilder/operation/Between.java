@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Between implements LogicalExpression {
+public class Between implements LogicalOperation {
     private final Expression operand;
     private final Expression lowerBound;
     private final Expression upperBound;
@@ -72,7 +72,7 @@ public class Between implements LogicalExpression {
     }
 
     @Override
-    public String getType() {
+    public String getOperator() {
         return !negate ? Operators.BETWEEN : Operators.NOT_BETWEEN;
     }
 
@@ -97,7 +97,7 @@ public class Between implements LogicalExpression {
     @Override
     public void buildSql(SqlBuilder builder) {
         builder.append(operand)
-                .append(" " + builder.keyword(getType()) + " ")
+                .append(" " + builder.keyword(getOperator()) + " ")
                 .append(lowerBound)
                 .append(builder.keyword(" and "))
                 .append(upperBound);

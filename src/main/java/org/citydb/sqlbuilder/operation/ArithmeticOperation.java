@@ -24,15 +24,18 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.Selection;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
-public class ArithmeticOperator implements ArithmeticExpression, Operation {
+public class ArithmeticOperation implements NumericExpression, Operation, Selection<ArithmeticOperation> {
     private final Expression leftOperand;
     private Expression rightOperand;
-    private final String type;
+    private final String operator;
+    private String alias;
 
     private final Map<String, Integer> precedence = Map.of(
             Operators.MULTIPLY, 1,
@@ -41,14 +44,14 @@ public class ArithmeticOperator implements ArithmeticExpression, Operation {
             Operators.PLUS, 2,
             Operators.MINUS, 2);
 
-    protected ArithmeticOperator(Expression leftOperand, String type, Expression rightOperand) {
+    protected ArithmeticOperation(Expression leftOperand, String operator, Expression rightOperand) {
         this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
         this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
-        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
+        this.operator = Objects.requireNonNull(operator, "The operator must not be null.");
     }
 
-    public static ArithmeticOperator of(Expression leftOperand, String type, Expression rightOperand) {
-        return new ArithmeticOperator(leftOperand, type, rightOperand);
+    public static ArithmeticOperation of(Expression leftOperand, String operator, Expression rightOperand) {
+        return new ArithmeticOperation(leftOperand, operator, rightOperand);
     }
 
     public Expression getLeftOperand() {
@@ -59,18 +62,29 @@ public class ArithmeticOperator implements ArithmeticExpression, Operation {
         return rightOperand;
     }
 
-    ArithmeticOperator fluentAppend(String operator, Expression operand) {
-        if (precedence.getOrDefault(operator, Integer.MAX_VALUE) < precedence.getOrDefault(type, Integer.MAX_VALUE)) {
-            rightOperand = new ArithmeticOperator(rightOperand, operator, operand);
+    ArithmeticOperation fluentAppend(String operator, Expression operand) {
+        if (precedence.getOrDefault(operator, Integer.MAX_VALUE) < precedence.getOrDefault(this.operator, Integer.MAX_VALUE)) {
+            rightOperand = new ArithmeticOperation(rightOperand, operator, operand);
             return this;
         } else {
-            return new ArithmeticOperator(this, operator, operand);
+            return new ArithmeticOperation(this, operator, operand);
         }
     }
 
     @Override
-    public String getType() {
-        return type;
+    public String getOperator() {
+        return operator;
+    }
+
+    @Override
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
+    }
+
+    @Override
+    public ArithmeticOperation as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override
@@ -83,7 +97,7 @@ public class ArithmeticOperator implements ArithmeticExpression, Operation {
     public void buildSql(SqlBuilder builder) {
         builder.append("(")
                 .append(leftOperand)
-                .append(" " + builder.keyword(type) + " ")
+                .append(" " + builder.keyword(operator) + " ")
                 .append(rightOperand)
                 .append(")");
     }

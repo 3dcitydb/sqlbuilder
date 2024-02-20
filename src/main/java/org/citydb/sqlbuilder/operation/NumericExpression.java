@@ -24,36 +24,32 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.Literals;
 
-public interface ArithmeticExpression extends Expression {
+public interface NumericExpression extends Expression {
 
-    default ArithmeticOperator plus(Object operand) {
+    default ArithmeticOperation plus(Object operand) {
         return append(Operators.PLUS, operand);
     }
 
-    default ArithmeticOperator minus(Object operand) {
+    default ArithmeticOperation minus(Object operand) {
         return append(Operators.MINUS, operand);
     }
 
-    default ArithmeticOperator multiplyBy(Object operand) {
+    default ArithmeticOperation multiplyBy(Object operand) {
         return append(Operators.MULTIPLY, operand);
     }
 
-    default ArithmeticOperator divideBy(Object operand) {
+    default ArithmeticOperation divideBy(Object operand) {
         return append(Operators.DIVIDE, operand);
     }
 
-    default ArithmeticOperator modulo(Object operand) {
+    default ArithmeticOperation modulo(Object operand) {
         return append(Operators.MODULO, operand);
     }
 
-    default ArithmeticOperator concat(Object operand) {
-        return Operators.concat(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    default ArithmeticOperator append(String operator, Object operand) {
+    default ArithmeticOperation append(String operator, Object operand) {
         Expression rightOperand = operand instanceof Expression expression ? expression : Literals.of(operand);
-        return this instanceof ArithmeticOperator arithmeticOperator ?
-                arithmeticOperator.fluentAppend(operator, rightOperand) :
-                ArithmeticOperator.of(this, operator, rightOperand);
+        return this instanceof ArithmeticOperation arithmeticOperation ?
+                arithmeticOperation.fluentAppend(operator, rightOperand) :
+                ArithmeticOperation.of(this, operator, rightOperand);
     }
 }

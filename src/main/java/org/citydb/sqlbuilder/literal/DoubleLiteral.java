@@ -21,9 +21,9 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.operation.ArithmeticExpression;
+import org.citydb.sqlbuilder.operation.NumericExpression;
 
-public class DoubleLiteral extends Literal<Double> implements ArithmeticExpression, ScalarExpression {
+public class DoubleLiteral extends Literal<Double> implements NumericExpression, ScalarExpression {
 
     private DoubleLiteral(double value) {
         super(value);

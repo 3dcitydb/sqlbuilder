@@ -26,6 +26,7 @@ import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.schema.Column;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Functions {
@@ -95,8 +96,10 @@ public class Functions {
         return Function.of(CONCAT, argument instanceof Expression expression ? expression : Literals.of(argument));
     }
 
-    public static Function concat(Expression... arguments) {
-        return Function.of(CONCAT, arguments);
+    public static Function concat(Object... arguments) {
+        return Function.of(CONCAT, Arrays.stream(arguments)
+                .map(argument -> argument instanceof Expression expression ? expression : Literals.of(argument))
+                .toList());
     }
 
     public static Function concat(List<Expression> arguments) {

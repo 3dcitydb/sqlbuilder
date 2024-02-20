@@ -24,7 +24,7 @@ package org.citydb.sqlbuilder.join;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.operation.ComparisonOperator;
+import org.citydb.sqlbuilder.operation.ComparisonOperation;
 import org.citydb.sqlbuilder.operation.LogicalExpression;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
@@ -45,7 +45,7 @@ public class Join implements SqlObject {
         this.toColumn = Objects.requireNonNull(toColumn, "The target column must not be null.");
         this.fromColumn = Objects.requireNonNull(fromColumn, "The source column must not be null.");
         Objects.requireNonNull(operator, "The operator type must not be null.");
-        conditions.add(ComparisonOperator.of(fromColumn, operator, toColumn));
+        conditions.add(ComparisonOperation.of(fromColumn, operator, toColumn));
     }
 
     public static Join of(String type, Column toColumn, String operator, Column fromColumn) {

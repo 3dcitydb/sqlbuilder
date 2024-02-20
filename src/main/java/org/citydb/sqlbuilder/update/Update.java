@@ -26,7 +26,7 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.operation.BinaryLogicalOperator;
+import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
 import org.citydb.sqlbuilder.operation.LogicalExpression;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
@@ -176,10 +176,10 @@ public class Update implements Statement {
         }
 
         if (where != null) {
-            BinaryLogicalOperator where = Operators.and(this.where).reduce();
+            BinaryLogicalOperation where = Operators.and(this.where).reduce();
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(where.getOperands(), " ", builder.keyword(where.getType()) + " ");
+                    .indentln(where.getOperands(), " ", builder.keyword(where.getOperator()) + " ");
         }
     }
 

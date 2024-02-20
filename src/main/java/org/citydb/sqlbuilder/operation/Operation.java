@@ -24,9 +24,9 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.common.Expression;
 
 public interface Operation extends Expression {
-    String getType();
+    String getOperator();
 
-    default boolean hasType(String type) {
-        return getType().equalsIgnoreCase(type);
+    default boolean hasOperator(String operator) {
+        return getOperator().equalsIgnoreCase(operator);
     }
 }

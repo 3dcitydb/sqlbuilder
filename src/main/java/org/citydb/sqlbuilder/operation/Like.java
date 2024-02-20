@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Like implements LogicalExpression {
+public class Like implements LogicalOperation {
     private final Expression operand;
     private final Expression pattern;
     private final StringLiteral escapeCharacter;
@@ -81,7 +81,7 @@ public class Like implements LogicalExpression {
     }
 
     @Override
-    public String getType() {
+    public String getOperator() {
         return !negate ? Operators.LIKE : Operators.NOT_LIKE;
     }
 
@@ -106,7 +106,7 @@ public class Like implements LogicalExpression {
     @Override
     public void buildSql(SqlBuilder builder) {
         builder.append(operand)
-                .append(" " + builder.keyword(getType()) + " ")
+                .append(" " + builder.keyword(getOperator()) + " ")
                 .append(pattern);
         if (escapeCharacter != null) {
             if (builder.isUseJdbcEscapeNotation()) {

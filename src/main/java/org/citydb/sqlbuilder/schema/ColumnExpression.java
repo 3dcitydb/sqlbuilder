@@ -26,9 +26,9 @@ import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.Functions;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
-import org.citydb.sqlbuilder.operation.ArithmeticExpression;
+import org.citydb.sqlbuilder.operation.NumericExpression;
 
-public interface ColumnExpression extends ArithmeticExpression, ScalarExpression {
+public interface ColumnExpression extends NumericExpression, ScalarExpression {
 
     default Function avg() {
         return Functions.avg(this);

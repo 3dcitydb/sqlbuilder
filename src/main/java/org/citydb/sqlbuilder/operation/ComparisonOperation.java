@@ -24,32 +24,39 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.Selection;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class UnaryLogicalOperator implements LogicalExpression {
-    private final Expression operand;
-    private final String type;
+public class ComparisonOperation implements LogicalExpression, Operation, Selection<ComparisonOperation> {
+    private final Expression leftOperand;
+    private final Expression rightOperand;
+    private final String operator;
     private String alias;
 
-    private UnaryLogicalOperator(Expression operand, String type) {
-        this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.type = Objects.requireNonNull(type, "The operator type must not be null.");
+    protected ComparisonOperation(Expression leftOperand, String operator, Expression rightOperand) {
+        this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
+        this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
+        this.operator = Objects.requireNonNull(operator, "The operator must not be null.");
     }
 
-    public static UnaryLogicalOperator of(Expression operand, String type) {
-        return new UnaryLogicalOperator(operand, type);
+    public static ComparisonOperation of(Expression leftOperand, String operator, Expression rightOperand) {
+        return new ComparisonOperation(leftOperand, operator, rightOperand);
     }
 
-    public Expression getOperand() {
-        return operand;
+    public Expression getLeftOperand() {
+        return leftOperand;
+    }
+
+    public Expression getRightOperand() {
+        return rightOperand;
     }
 
     @Override
-    public String getType() {
-        return type;
+    public String getOperator() {
+        return operator;
     }
 
     @Override
@@ -58,20 +65,22 @@ public class UnaryLogicalOperator implements LogicalExpression {
     }
 
     @Override
-    public UnaryLogicalOperator as(String alias) {
+    public ComparisonOperation as(String alias) {
         this.alias = alias;
         return this;
     }
 
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getPlaceHolders(placeHolders);
+        leftOperand.getPlaceHolders(placeHolders);
+        rightOperand.getPlaceHolders(placeHolders);
     }
 
     @Override
     public void buildSql(SqlBuilder builder) {
-        builder.append(builder.keyword(type) + " ")
-                .append(operand);
+        builder.append(leftOperand)
+                .append(" " + builder.keyword(operator) + " ")
+                .append(rightOperand);
     }
 
     @Override

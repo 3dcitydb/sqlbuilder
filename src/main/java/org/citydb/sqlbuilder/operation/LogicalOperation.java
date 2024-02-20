@@ -19,26 +19,9 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.literal;
+package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.query.Selection;
 
-public class StringLiteral extends Literal<String> implements ScalarExpression {
-
-    private StringLiteral(String value) {
-        super(value);
-    }
-
-    public static StringLiteral of(String value) {
-        return new StringLiteral(value);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (value != null) {
-            builder.append("'" + value.replace("'", "''") + "'");
-        } else {
-            super.buildSql(builder);
-        }
-    }
+public interface LogicalOperation extends LogicalExpression, Operation, Selection<LogicalOperation> {
 }

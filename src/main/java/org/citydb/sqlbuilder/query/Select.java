@@ -26,8 +26,8 @@ import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.operation.BinaryLogicalOperator;
-import org.citydb.sqlbuilder.operation.ComparisonOperator;
+import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
+import org.citydb.sqlbuilder.operation.ComparisonOperation;
 import org.citydb.sqlbuilder.operation.LogicalExpression;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
@@ -286,10 +286,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         }
 
         if (where != null) {
-            BinaryLogicalOperator where = Operators.and(this.where).reduce();
+            BinaryLogicalOperation where = Operators.and(this.where).reduce();
             builder.appendln()
                     .appendln(builder.keyword("where "))
-                    .indentln(where.getOperands(), " ", builder.keyword(where.getType()) + " ");
+                    .indentln(where.getOperands(), " ", builder.keyword(where.getOperator()) + " ");
         }
 
         super.buildSql(builder);
@@ -314,12 +314,12 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
             this.type = type;
         }
 
-        public Select on(ComparisonOperator operator) {
+        public Select on(ComparisonOperation operator) {
             if (operator.getLeftOperand() instanceof Column left
                     && operator.getRightOperand() instanceof Column right
                     && (left.getTable() == table
                     || right.getTable() == table)) {
-                joins.add(Join.of(type, right, operator.getType(), left));
+                joins.add(Join.of(type, right, operator.getOperator(), left));
             }
 
             return Select.this;

@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Not implements LogicalExpression {
+public class Not implements LogicalOperation {
     private final LogicalExpression operand;
     private String alias;
 
@@ -45,7 +45,7 @@ public class Not implements LogicalExpression {
     }
 
     @Override
-    public String getType() {
+    public String getOperator() {
         return Operators.NOT;
     }
 
@@ -67,7 +67,7 @@ public class Not implements LogicalExpression {
 
     @Override
     public void buildSql(SqlBuilder builder) {
-        builder.append(builder.keyword(getType()) + " ")
+        builder.append(builder.keyword(getOperator()) + " ")
                 .append(operand);
     }
 

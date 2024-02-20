@@ -22,43 +22,42 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
-import org.citydb.sqlbuilder.query.Selection;
 
-public interface LogicalExpression extends Operation, Selection<LogicalExpression> {
+public interface LogicalExpression extends Expression {
 
-    default BinaryLogicalOperator and(LogicalExpression operand) {
-        return this instanceof BinaryLogicalOperator operator ?
+    default BinaryLogicalOperation and(LogicalExpression operand) {
+        return this instanceof BinaryLogicalOperation operator ?
                 operator.fluentAnd(operand) :
                 Operators.and(this, operand);
     }
 
-    default BinaryLogicalOperator andExists(Expression operand) {
+    default BinaryLogicalOperation andExists(Expression operand) {
         return and(Operators.exists(operand));
     }
 
-    default BinaryLogicalOperator andNot(LogicalExpression operand) {
+    default BinaryLogicalOperation andNot(LogicalExpression operand) {
         return and(Operators.not(operand));
     }
 
-    default BinaryLogicalOperator andNotExists(Expression operand) {
+    default BinaryLogicalOperation andNotExists(Expression operand) {
         return and(Operators.not(Operators.exists(operand)));
     }
 
-    default BinaryLogicalOperator or(LogicalExpression operand) {
-        return this instanceof BinaryLogicalOperator operator ?
+    default BinaryLogicalOperation or(LogicalExpression operand) {
+        return this instanceof BinaryLogicalOperation operator ?
                 operator.fluentOr(operand) :
                 Operators.or(this, operand);
     }
 
-    default BinaryLogicalOperator orExists(Expression operand) {
+    default BinaryLogicalOperation orExists(Expression operand) {
         return or(Operators.exists(operand));
     }
 
-    default BinaryLogicalOperator orNot(LogicalExpression operand) {
+    default BinaryLogicalOperation orNot(LogicalExpression operand) {
         return or(Operators.not(operand));
     }
 
-    default BinaryLogicalOperator orNotExists(Expression operand) {
+    default BinaryLogicalOperation orNotExists(Expression operand) {
         return or(Operators.not(Operators.exists(operand)));
     }
 
