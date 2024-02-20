@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ComparisonOperator implements LogicalOperator {
+public class ComparisonOperator implements LogicalExpression {
     private final Expression leftOperand;
     private final Expression rightOperand;
     private final String type;

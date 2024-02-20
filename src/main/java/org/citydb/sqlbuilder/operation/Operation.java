@@ -23,7 +23,7 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 
-public interface Operator extends Expression {
+public interface Operation extends Expression {
     String getType();
 
     default boolean hasType(String type) {

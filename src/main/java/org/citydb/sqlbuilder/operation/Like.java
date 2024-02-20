@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Like implements LogicalOperator {
+public class Like implements LogicalExpression {
     private final Expression operand;
     private final Expression pattern;
     private final StringLiteral escapeCharacter;

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class UnaryLogicalOperator implements LogicalOperator {
+public class UnaryLogicalOperator implements LogicalExpression {
     private final Expression operand;
     private final String type;
     private String alias;

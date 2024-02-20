@@ -31,31 +31,7 @@ import org.citydb.sqlbuilder.operation.*;
 import org.citydb.sqlbuilder.query.LiteralList;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
-public interface ColumnExpression extends Expression {
-
-    default ArithmeticOperator plus(Object operand) {
-        return Operators.plus(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    default ArithmeticOperator minus(Object operand) {
-        return Operators.minus(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    default ArithmeticOperator multiplyBy(Object operand) {
-        return Operators.multiplyBy(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    default ArithmeticOperator divideBy(Object operand) {
-        return Operators.divideBy(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    default ArithmeticOperator modulo(Object operand) {
-        return Operators.modulo(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    default ArithmeticOperator concat(Object operand) {
-        return Operators.concat(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
+public interface ColumnExpression extends ArithmeticExpression {
 
     default ComparisonOperator eq(Object operand) {
         return Operators.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand));

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class In implements LogicalOperator {
+public class In implements LogicalExpression {
     private final Expression operand;
     private final QueryExpression queryExpression;
     private boolean negate;

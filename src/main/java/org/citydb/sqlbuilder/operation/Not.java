@@ -28,19 +28,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Not implements LogicalOperator {
-    private final LogicalOperator operand;
+public class Not implements LogicalExpression {
+    private final LogicalExpression operand;
     private String alias;
 
-    private Not(LogicalOperator operand) {
+    private Not(LogicalExpression operand) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
     }
 
-    public static Not of(LogicalOperator operand) {
+    public static Not of(LogicalExpression operand) {
         return new Not(operand);
     }
 
-    public LogicalOperator getOperand() {
+    public LogicalExpression getOperand() {
         return operand;
     }
 

@@ -188,23 +188,23 @@ public class Operators {
         return In.of(operand, queryExpression);
     }
 
-    public static BinaryLogicalOperator and(List<LogicalOperator> operands) {
+    public static BinaryLogicalOperator and(List<LogicalExpression> operands) {
         return BinaryLogicalOperator.of(AND, operands);
     }
 
-    public static BinaryLogicalOperator and(LogicalOperator... operands) {
+    public static BinaryLogicalOperator and(LogicalExpression... operands) {
         return BinaryLogicalOperator.of(AND, operands);
     }
 
-    public static BinaryLogicalOperator or(List<LogicalOperator> operands) {
+    public static BinaryLogicalOperator or(List<LogicalExpression> operands) {
         return BinaryLogicalOperator.of(OR, operands);
     }
 
-    public static BinaryLogicalOperator or(LogicalOperator... operands) {
+    public static BinaryLogicalOperator or(LogicalExpression... operands) {
         return BinaryLogicalOperator.of(OR, operands);
     }
 
-    public static Not not(LogicalOperator operand) {
+    public static Not not(LogicalExpression operand) {
         return Not.of(operand);
     }
 }

@@ -28,7 +28,7 @@ import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BinaryLogicalOperator;
 import org.citydb.sqlbuilder.operation.ComparisonOperator;
-import org.citydb.sqlbuilder.operation.LogicalOperator;
+import org.citydb.sqlbuilder.operation.LogicalExpression;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
@@ -43,7 +43,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     private final List<CommonTableExpression> with;
     private final List<Selection<?>> select;
     private final List<Join> joins;
-    private final List<LogicalOperator> where;
+    private final List<LogicalExpression> where;
     private boolean withRecursive;
     private boolean distinct;
     private Table from;
@@ -185,11 +185,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return new JoinBuilder(table, type);
     }
 
-    public List<LogicalOperator> getWhere() {
+    public List<LogicalExpression> getWhere() {
         return where;
     }
 
-    public Select where(LogicalOperator... operators) {
+    public Select where(LogicalExpression... operators) {
         if (operators != null) {
             where.addAll(Arrays.asList(operators));
         }

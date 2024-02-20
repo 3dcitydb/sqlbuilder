@@ -24,9 +24,9 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.query.Selection;
 
-public interface LogicalOperator extends Operator, Selection<LogicalOperator> {
+public interface LogicalExpression extends Operation, Selection<LogicalExpression> {
 
-    default BinaryLogicalOperator and(LogicalOperator operand) {
+    default BinaryLogicalOperator and(LogicalExpression operand) {
         return this instanceof BinaryLogicalOperator operator ?
                 operator.fluentAnd(operand) :
                 Operators.and(this, operand);
@@ -36,7 +36,7 @@ public interface LogicalOperator extends Operator, Selection<LogicalOperator> {
         return and(Operators.exists(operand));
     }
 
-    default BinaryLogicalOperator andNot(LogicalOperator operand) {
+    default BinaryLogicalOperator andNot(LogicalExpression operand) {
         return and(Operators.not(operand));
     }
 
@@ -44,7 +44,7 @@ public interface LogicalOperator extends Operator, Selection<LogicalOperator> {
         return and(Operators.not(Operators.exists(operand)));
     }
 
-    default BinaryLogicalOperator or(LogicalOperator operand) {
+    default BinaryLogicalOperator or(LogicalExpression operand) {
         return this instanceof BinaryLogicalOperator operator ?
                 operator.fluentOr(operand) :
                 Operators.or(this, operand);
@@ -54,7 +54,7 @@ public interface LogicalOperator extends Operator, Selection<LogicalOperator> {
         return or(Operators.exists(operand));
     }
 
-    default BinaryLogicalOperator orNot(LogicalOperator operand) {
+    default BinaryLogicalOperator orNot(LogicalExpression operand) {
         return or(Operators.not(operand));
     }
 

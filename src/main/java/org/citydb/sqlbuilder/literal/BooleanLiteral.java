@@ -40,7 +40,7 @@ public class BooleanLiteral extends Literal<Boolean> {
     }
 
     public static BooleanLiteral of(Boolean value) {
-        return value != null ? of (value) : new BooleanLiteral(null);
+        return value != null ? of(value) : new BooleanLiteral(null);
     }
 
     @Override

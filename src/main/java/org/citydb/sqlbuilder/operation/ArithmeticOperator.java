@@ -23,16 +23,23 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
-import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class ArithmeticOperator implements Operator {
+public class ArithmeticOperator implements ArithmeticExpression, Operation {
     private final Expression leftOperand;
-    private final Expression rightOperand;
+    private Expression rightOperand;
     private final String type;
+
+    private final Map<String, Integer> precedence = Map.of(
+            Operators.MULTIPLY, 1,
+            Operators.DIVIDE, 1,
+            Operators.MODULO, 1,
+            Operators.PLUS, 2,
+            Operators.MINUS, 2);
 
     protected ArithmeticOperator(Expression leftOperand, String type, Expression rightOperand) {
         this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
@@ -52,28 +59,13 @@ public class ArithmeticOperator implements Operator {
         return rightOperand;
     }
 
-    public ArithmeticOperator plus(Object operand) {
-        return Operators.plus(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    public ArithmeticOperator minus(Object operand) {
-        return Operators.minus(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    public ArithmeticOperator multiplyBy(Object operand) {
-        return Operators.multiplyBy(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    public ArithmeticOperator divideBy(Object operand) {
-        return Operators.divideBy(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    public ArithmeticOperator modulo(Object operand) {
-        return Operators.modulo(this, operand instanceof Expression expression ? expression : Literals.of(operand));
-    }
-
-    public ArithmeticOperator concat(Object operand) {
-        return Operators.concat(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    ArithmeticOperator fluentAppend(String operator, Expression operand) {
+        if (precedence.getOrDefault(operator, Integer.MAX_VALUE) < precedence.getOrDefault(type, Integer.MAX_VALUE)) {
+            rightOperand = new ArithmeticOperator(rightOperand, operator, operand);
+            return this;
+        } else {
+            return new ArithmeticOperator(this, operator, operand);
+        }
     }
 
     @Override
@@ -89,9 +81,11 @@ public class ArithmeticOperator implements Operator {
 
     @Override
     public void buildSql(SqlBuilder builder) {
-        builder.append(leftOperand)
+        builder.append("(")
+                .append(leftOperand)
                 .append(" " + builder.keyword(type) + " ")
-                .append(rightOperand);
+                .append(rightOperand)
+                .append(")");
     }
 
     @Override
