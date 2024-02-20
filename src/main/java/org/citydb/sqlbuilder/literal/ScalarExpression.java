@@ -28,6 +28,10 @@ import org.citydb.sqlbuilder.query.QueryExpression;
 
 public interface ScalarExpression extends Expression {
 
+    default ScalarExpression concat(Object operand) {
+        return Operators.concat(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+    }
+
     default ComparisonOperation eq(Object operand) {
         return Operators.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand));
     }

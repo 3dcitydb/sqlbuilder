@@ -24,6 +24,7 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.query.Selection;
 
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ArithmeticOperation implements NumericExpression, Operation, Selection<ArithmeticOperation> {
+public class ArithmeticOperation implements NumericExpression, Operation, ScalarExpression, Selection<ArithmeticOperation> {
     private final Expression leftOperand;
     private Expression rightOperand;
     private final String operator;

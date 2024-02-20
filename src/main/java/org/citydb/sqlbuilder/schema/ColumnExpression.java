@@ -66,7 +66,7 @@ public interface ColumnExpression extends NumericExpression, ScalarExpression {
         return Functions.trim(this);
     }
 
-    default Function concat(Expression argument) {
+    default Function concatFunc(Object argument) {
         return Functions.concat(this, argument);
     }
 
