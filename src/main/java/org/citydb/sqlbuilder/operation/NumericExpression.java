@@ -48,8 +48,8 @@ public interface NumericExpression extends Expression {
 
     default ArithmeticOperation append(String operator, Object operand) {
         Expression rightOperand = operand instanceof Expression expression ? expression : Literals.of(operand);
-        return this instanceof ArithmeticOperation arithmeticOperation ?
-                arithmeticOperation.fluentAppend(operator, rightOperand) :
+        return this instanceof ArithmeticOperation operation ?
+                operation.fluentAppend(operator, rightOperand) :
                 ArithmeticOperation.of(this, operator, rightOperand);
     }
 }
