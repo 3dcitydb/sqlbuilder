@@ -78,9 +78,11 @@ public class ComparisonOperation implements LogicalExpression, Operation, Select
 
     @Override
     public void buildSql(SqlBuilder builder) {
-        builder.append(leftOperand)
+        builder.append("(")
+                .append(leftOperand)
                 .append(" " + builder.keyword(operator) + " ")
-                .append(rightOperand);
+                .append(rightOperand)
+                .append(")");
     }
 
     @Override

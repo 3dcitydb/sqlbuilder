@@ -28,6 +28,7 @@ public class SqlBuildOptions {
     private IdentifierCase identifierCase = IdentifierCase.UNCHANGED;
     private KeywordCase keywordCase = KeywordCase.LOWERCASE;
     private boolean useJDBCEscapeNotation = true;
+    private boolean stripParentheses = true;
 
     public enum IdentifierCase {
         UPPERCASE,
@@ -112,6 +113,15 @@ public class SqlBuildOptions {
 
     public SqlBuildOptions setUseJDBCEscapeNotation(boolean useJdbcEscapeNotation) {
         this.useJDBCEscapeNotation = useJdbcEscapeNotation;
+        return this;
+    }
+
+    public boolean isStripParentheses() {
+        return stripParentheses;
+    }
+
+    public SqlBuildOptions setStripParentheses(boolean stripParentheses) {
+        this.stripParentheses = stripParentheses;
         return this;
     }
 }

@@ -55,6 +55,17 @@ public class SqlBuilder {
         return options.isUseJDBCEscapeNotation();
     }
 
+    public String build() {
+        try {
+            return options.isStripParentheses() ?
+                    stripParentheses(builder.toString()) :
+                    builder.toString();
+        } finally {
+            builder.setLength(0);
+            level = 0;
+        }
+    }
+
     public String identifier(String identifier) {
         if (identifier != null) {
             identifier = switch (options.getIdentifierCase()) {
@@ -275,12 +286,23 @@ public class SqlBuilder {
         return this;
     }
 
-    public String build() {
-        try {
-            return builder.toString();
-        } finally {
-            builder.setLength(0);
-            level = 0;
+    private String stripParentheses(String sql) {
+        while (sql.startsWith("(") && sql.endsWith(")")) {
+            char[] chars = sql.toCharArray();
+            int count = 0;
+            for (int i = 0; i < chars.length; i++) {
+                if (chars[i] == '(') {
+                    count++;
+                } else if (chars[i] == ')'
+                        && --count == 0
+                        && i < chars.length - 1) {
+                    return sql;
+                }
+            }
+
+            sql = sql.substring(1, sql.length() - 1);
         }
+
+        return sql;
     }
 }

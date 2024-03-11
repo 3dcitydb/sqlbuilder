@@ -65,10 +65,6 @@ public class Function implements ColumnExpression, Selection<Function> {
         return name;
     }
 
-    public boolean hasName(String name) {
-        return this.name.equalsIgnoreCase(name);
-    }
-
     public List<String> getQualifiers() {
         return qualifiers;
     }
@@ -135,7 +131,7 @@ public class Function implements ColumnExpression, Selection<Function> {
                     .append(" ");
         }
 
-        builder.append(arguments, ", ")
+        builder.append(SqlBuilder.of(builder.getOptions()).append(arguments, ", ").build())
                 .append(")");
     }
 

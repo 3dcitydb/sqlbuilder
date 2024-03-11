@@ -109,7 +109,7 @@ public class In implements LogicalOperation {
         builder.append(operand)
                 .append(" " + builder.keyword(getOperator()) + " ")
                 .append("(")
-                .append(values, ", ")
+                .append(SqlBuilder.of(builder.getOptions()).append(values, ", ").build())
                 .append(")");
     }
 
