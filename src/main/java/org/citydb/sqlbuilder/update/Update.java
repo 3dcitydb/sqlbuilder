@@ -24,7 +24,7 @@ package org.citydb.sqlbuilder.update;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
-import org.citydb.sqlbuilder.literal.Literals;
+import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
 import org.citydb.sqlbuilder.operation.LogicalExpression;
@@ -198,7 +198,7 @@ public class Update implements Statement {
         public Update value(Object value) {
             set.add(UpdateValue.of(column, value instanceof Expression expression ?
                     expression :
-                    Literals.of(value)));
+                    Literal.ofScalar(value)));
             return Update.this;
         }
     }

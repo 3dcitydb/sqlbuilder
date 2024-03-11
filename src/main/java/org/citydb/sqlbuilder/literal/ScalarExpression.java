@@ -23,17 +23,17 @@ package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.operation.*;
-import org.citydb.sqlbuilder.query.LiteralList;
-import org.citydb.sqlbuilder.query.QueryExpression;
+
+import java.util.List;
 
 public interface ScalarExpression extends Expression {
 
     default ScalarExpression concat(Object operand) {
-        return Operators.concat(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.concat(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
     default ComparisonOperation eq(Object operand) {
-        return Operators.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.eq(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
     default ComparisonOperation eqAll(Expression expression) {
@@ -49,7 +49,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation ne(Object operand) {
-        return Operators.eq(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.eq(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
     default ComparisonOperation neAll(Expression expression) {
@@ -65,7 +65,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation lt(Object operand) {
-        return Operators.lt(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.lt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
     default ComparisonOperation ltAll(Expression expression) {
@@ -81,7 +81,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation nl(Object operand) {
-        return Operators.lt(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.lt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
     default ComparisonOperation nlAll(Expression expression) {
@@ -97,7 +97,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation le(Object operand) {
-        return Operators.le(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.le(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
     default ComparisonOperation leAll(Expression expression) {
@@ -113,7 +113,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation nle(Object operand) {
-        return Operators.le(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.le(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
     default ComparisonOperation nleAll(Expression expression) {
@@ -129,7 +129,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation gt(Object operand) {
-        return Operators.gt(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.gt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
     default ComparisonOperation gtAll(Expression expression) {
@@ -145,7 +145,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation ng(Object operand) {
-        return Operators.gt(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.gt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
     default ComparisonOperation ngAll(Expression expression) {
@@ -161,7 +161,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation ge(Object operand) {
-        return Operators.ge(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.ge(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
     default ComparisonOperation geAll(Expression expression) {
@@ -177,7 +177,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default ComparisonOperation nge(Object operand) {
-        return Operators.ge(this, operand instanceof Expression expression ? expression : Literals.of(operand), true);
+        return Operators.ge(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
     default ComparisonOperation ngeAll(Expression expression) {
@@ -201,41 +201,41 @@ public interface ScalarExpression extends Expression {
     }
 
     default Like like(Object operand) {
-        return Operators.like(this, operand instanceof Expression expression ? expression : Literals.of(operand));
+        return Operators.like(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
     default Like like(Object operand, String escapeCharacter) {
-        return Operators.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
+        return Operators.like(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand),
                 StringLiteral.of(escapeCharacter));
     }
 
     default Like notLike(Object operand) {
-        return Operators.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
+        return Operators.like(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand),
                 null, true);
     }
 
     default Like notLike(Object operand, String escapeCharacter) {
-        return Operators.like(this, operand instanceof Expression expression ? expression : Literals.of(operand),
+        return Operators.like(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand),
                 StringLiteral.of(escapeCharacter), true);
     }
 
     default Between between(Object lowerBound, Object upperBound) {
         return Operators.between(this,
-                lowerBound instanceof Expression expression ? expression : Literals.of(lowerBound),
-                upperBound instanceof Expression expression ? expression : Literals.of(upperBound));
+                lowerBound instanceof Expression expression ? expression : Literal.ofScalar(lowerBound),
+                upperBound instanceof Expression expression ? expression : Literal.ofScalar(upperBound));
     }
 
     default Between notBetween(Object lowerBound, Object upperBound) {
         return Operators.between(this,
-                lowerBound instanceof Expression expression ? expression : Literals.of(lowerBound),
-                upperBound instanceof Expression expression ? expression : Literals.of(upperBound), true);
+                lowerBound instanceof Expression expression ? expression : Literal.ofScalar(lowerBound),
+                upperBound instanceof Expression expression ? expression : Literal.ofScalar(upperBound), true);
     }
 
-    default In in(Object... operands) {
-        return Operators.in(this, LiteralList.of(operands));
+    default In in(Object... values) {
+        return Operators.in(this, Literal.ofScalarList(values));
     }
 
-    default In in(QueryExpression expression) {
-        return Operators.in(this, expression);
+    default In in(List<ScalarExpression> values) {
+        return Operators.in(this, values);
     }
 }

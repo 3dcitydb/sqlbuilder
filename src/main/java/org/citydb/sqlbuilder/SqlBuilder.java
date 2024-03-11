@@ -22,7 +22,6 @@
 package org.citydb.sqlbuilder;
 
 import org.citydb.sqlbuilder.common.Buildable;
-import org.citydb.sqlbuilder.query.LiteralList;
 import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.util.PlainText;
 
@@ -107,10 +106,6 @@ public class SqlBuilder {
     public SqlBuilder append(QueryExpression expression) {
         if (expression instanceof PlainText plainText) {
             builder.append(plainText);
-        } else if (expression instanceof LiteralList literalList) {
-            builder.append("(");
-            literalList.buildSql(this);
-            builder.append(")");
         } else {
             leftParenthesis();
             expression.buildSql(this);

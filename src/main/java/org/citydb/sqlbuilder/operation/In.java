@@ -24,38 +24,54 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.query.QueryExpression;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class In implements LogicalOperation {
     private final Expression operand;
-    private final QueryExpression queryExpression;
+    private final List<ScalarExpression> values;
     private boolean negate;
     private String alias;
 
-    private In(Expression operand, QueryExpression queryExpression, boolean negate) {
+    private In(Expression operand, List<ScalarExpression> values, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.queryExpression = Objects.requireNonNull(queryExpression, "The query expression must not be null.");
+        this.values = Objects.requireNonNull(values, "The values list must not be null.");
         this.negate = negate;
     }
 
-    public static In of(Expression operand, QueryExpression queryExpression, boolean negate) {
-        return new In(operand, queryExpression, negate);
+    public static In of(Expression operand, List<ScalarExpression> values, boolean negate) {
+        return new In(operand, values, negate);
     }
 
-    public static In of(Expression operand, QueryExpression queryExpression) {
-        return new In(operand, queryExpression, false);
+    public static In of(Expression operand, List<ScalarExpression> values) {
+        return new In(operand, values, false);
+    }
+
+    public static In of(Expression operand, ScalarExpression... values) {
+        return new In(operand, values != null ? new ArrayList<>(Arrays.asList(values)) : null, false);
     }
 
     public Expression getOperand() {
         return operand;
     }
 
-    public QueryExpression getQueryExpression() {
-        return queryExpression;
+    public List<ScalarExpression> getValues() {
+        return values;
+    }
+
+    public In add(List<ScalarExpression> values) {
+        if (values != null && !values.isEmpty()) {
+            values.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(this.values::add);
+        }
+
+        return this;
+    }
+
+    public In add(ScalarExpression... values) {
+        return values != null ? add(Arrays.asList(values)) : this;
     }
 
     public boolean isNegate() {
@@ -85,14 +101,16 @@ public class In implements LogicalOperation {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         operand.getPlaceHolders(placeHolders);
-        queryExpression.getPlaceHolders(placeHolders);
+        values.forEach(value -> value.getPlaceHolders(placeHolders));
     }
 
     @Override
     public void buildSql(SqlBuilder builder) {
         builder.append(operand)
                 .append(" " + builder.keyword(getOperator()) + " ")
-                .append(queryExpression);
+                .append("(")
+                .append(values, ", ")
+                .append(")");
     }
 
     @Override

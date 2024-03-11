@@ -24,7 +24,6 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.literal.StringLiteral;
-import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.List;
 
@@ -181,12 +180,16 @@ public class Operators {
         return Between.of(operand, lowerBound, upperBound);
     }
 
-    public static In in(Expression operand, QueryExpression queryExpression, boolean negate) {
-        return In.of(operand, queryExpression, negate);
+    public static In in(Expression operand, List<ScalarExpression> values, boolean negate) {
+        return In.of(operand, values, negate);
     }
 
-    public static In in(Expression operand, QueryExpression queryExpression) {
-        return In.of(operand, queryExpression);
+    public static In in(Expression operand, List<ScalarExpression> values) {
+        return In.of(operand, values);
+    }
+
+    public static In in(Expression operand, ScalarExpression... values) {
+        return In.of(operand, values);
     }
 
     public static BinaryLogicalOperation and(List<LogicalExpression> operands) {

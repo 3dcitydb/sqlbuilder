@@ -23,7 +23,6 @@ package org.citydb.sqlbuilder.function;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.Literal;
-import org.citydb.sqlbuilder.literal.Literals;
 import org.citydb.sqlbuilder.schema.Column;
 
 import java.util.Arrays;
@@ -81,24 +80,24 @@ public class Functions {
     }
 
     public static Function upper(Object argument) {
-        return Function.of(UPPER, argument instanceof Expression expression ? expression : Literals.of(argument));
+        return Function.of(UPPER, argument instanceof Expression expression ? expression : Literal.ofScalar(argument));
     }
 
     public static Function lower(Object argument) {
-        return Function.of(LOWER, argument instanceof Expression expression ? expression : Literals.of(argument));
+        return Function.of(LOWER, argument instanceof Expression expression ? expression : Literal.ofScalar(argument));
     }
 
     public static Function trim(Object argument) {
-        return Function.of(TRIM, argument instanceof Expression expression ? expression : Literals.of(argument));
+        return Function.of(TRIM, argument instanceof Expression expression ? expression : Literal.ofScalar(argument));
     }
 
     public static Function concat(Object argument) {
-        return Function.of(CONCAT, argument instanceof Expression expression ? expression : Literals.of(argument));
+        return Function.of(CONCAT, argument instanceof Expression expression ? expression : Literal.ofScalar(argument));
     }
 
     public static Function concat(Object... arguments) {
         return Function.of(CONCAT, Arrays.stream(arguments)
-                .map(argument -> argument instanceof Expression expression ? expression : Literals.of(argument))
+                .map(argument -> argument instanceof Expression expression ? expression : Literal.ofScalar(argument))
                 .toList());
     }
 

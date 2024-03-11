@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 
-public interface QueryExpression extends Expression {
+public interface QueryExpression extends ScalarExpression {
 }
