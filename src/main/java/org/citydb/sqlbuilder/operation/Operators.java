@@ -82,53 +82,53 @@ public class Operators {
         return ArithmeticOperation.of(leftOperand, CONCAT, rightOperand);
     }
 
-    public static BinaryComparisonOperation eq(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static BinaryComparisonOperation eq(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
         return BinaryComparisonOperation.of(leftOperand,
                 !negate ? EQUAL_TO : NOT_EQUAL_TO,
                 rightOperand);
     }
 
-    public static BinaryComparisonOperation eq(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation eq(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return eq(leftOperand, rightOperand, false);
     }
 
-    public static BinaryComparisonOperation lt(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static BinaryComparisonOperation lt(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
         return BinaryComparisonOperation.of(leftOperand,
                 !negate ? LESS_THAN : GREATER_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
-    public static BinaryComparisonOperation lt(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation lt(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return lt(leftOperand, rightOperand, false);
     }
 
-    public static BinaryComparisonOperation le(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static BinaryComparisonOperation le(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
         return BinaryComparisonOperation.of(leftOperand,
                 !negate ? LESS_THAN_OR_EQUAL_TO : GREATER_THAN,
                 rightOperand);
     }
 
-    public static BinaryComparisonOperation le(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation le(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return le(leftOperand, rightOperand, false);
     }
 
-    public static BinaryComparisonOperation gt(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static BinaryComparisonOperation gt(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
         return BinaryComparisonOperation.of(leftOperand,
                 !negate ? GREATER_THAN : LESS_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
-    public static BinaryComparisonOperation gt(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation gt(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return gt(leftOperand, rightOperand, false);
     }
 
-    public static BinaryComparisonOperation ge(Expression leftOperand, Expression rightOperand, boolean negate) {
+    public static BinaryComparisonOperation ge(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
         return BinaryComparisonOperation.of(leftOperand,
                 !negate ? GREATER_THAN_OR_EQUAL_TO : LESS_THAN,
                 rightOperand);
     }
 
-    public static BinaryComparisonOperation ge(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation ge(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ge(leftOperand, rightOperand, false);
     }
 
@@ -160,23 +160,23 @@ public class Operators {
         return SubQueryOperator.some(operand);
     }
 
-    public static Like like(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
+    public static Like like(Expression operand, ScalarExpression pattern, StringLiteral escapeCharacter, boolean negate) {
         return Like.of(operand, pattern, escapeCharacter, negate);
     }
 
-    public static Like like(Expression operand, Expression pattern, StringLiteral escapeCharacter) {
+    public static Like like(Expression operand, ScalarExpression pattern, StringLiteral escapeCharacter) {
         return Like.of(operand, pattern, escapeCharacter);
     }
 
-    public static Like like(Expression operand, Expression pattern) {
+    public static Like like(Expression operand, ScalarExpression pattern) {
         return Like.of(operand, pattern);
     }
 
-    public static Between between(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
+    public static Between between(ScalarExpression operand, ScalarExpression lowerBound, ScalarExpression upperBound, boolean negate) {
         return Between.of(operand, lowerBound, upperBound, negate);
     }
 
-    public static Between between(Expression operand, Expression lowerBound, Expression upperBound) {
+    public static Between between(ScalarExpression operand, ScalarExpression lowerBound, ScalarExpression upperBound) {
         return Between.of(operand, lowerBound, upperBound);
     }
 

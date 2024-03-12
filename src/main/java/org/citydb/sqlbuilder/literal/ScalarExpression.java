@@ -34,7 +34,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation eq(Object operand) {
-        return Operators.eq(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
+        return Operators.eq(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand));
     }
 
     default BinaryComparisonOperation eqAll(QueryExpression expression) {
@@ -50,7 +52,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation ne(Object operand) {
-        return Operators.eq(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
+        return Operators.eq(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand), true);
     }
 
     default BinaryComparisonOperation neAll(QueryExpression expression) {
@@ -66,7 +70,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation lt(Object operand) {
-        return Operators.lt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
+        return Operators.lt(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand));
     }
 
     default BinaryComparisonOperation ltAll(QueryExpression expression) {
@@ -82,7 +88,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation nl(Object operand) {
-        return Operators.lt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
+        return Operators.lt(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand), true);
     }
 
     default BinaryComparisonOperation nlAll(QueryExpression expression) {
@@ -98,7 +106,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation le(Object operand) {
-        return Operators.le(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
+        return Operators.le(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand));
     }
 
     default BinaryComparisonOperation leAll(QueryExpression expression) {
@@ -114,7 +124,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation nle(Object operand) {
-        return Operators.le(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
+        return Operators.le(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand), true);
     }
 
     default BinaryComparisonOperation nleAll(QueryExpression expression) {
@@ -130,7 +142,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation gt(Object operand) {
-        return Operators.gt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
+        return Operators.gt(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand));
     }
 
     default BinaryComparisonOperation gtAll(QueryExpression expression) {
@@ -146,7 +160,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation ng(Object operand) {
-        return Operators.gt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
+        return Operators.gt(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand), true);
     }
 
     default BinaryComparisonOperation ngAll(QueryExpression expression) {
@@ -162,7 +178,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation ge(Object operand) {
-        return Operators.ge(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
+        return Operators.ge(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand));
     }
 
     default BinaryComparisonOperation geAll(QueryExpression expression) {
@@ -178,7 +196,9 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation nge(Object operand) {
-        return Operators.ge(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
+        return Operators.ge(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand), true);
     }
 
     default BinaryComparisonOperation ngeAll(QueryExpression expression) {
@@ -201,35 +221,43 @@ public interface ScalarExpression extends Expression {
         return Operators.isNull(this, true);
     }
 
-    default Like like(Object operand) {
-        return Operators.like(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
+    default Like like(Object pattern) {
+        return Operators.like(this, pattern instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(pattern));
     }
 
-    default Like like(Object operand, String escapeCharacter) {
-        return Operators.like(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand),
+    default Like like(Object pattern, String escapeCharacter) {
+        return Operators.like(this, pattern instanceof ScalarExpression expression ?
+                        expression :
+                        Literal.ofScalar(pattern),
                 StringLiteral.of(escapeCharacter));
     }
 
-    default Like notLike(Object operand) {
-        return Operators.like(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand),
+    default Like notLike(Object pattern) {
+        return Operators.like(this, pattern instanceof ScalarExpression expression ?
+                        expression :
+                        Literal.ofScalar(pattern),
                 null, true);
     }
 
-    default Like notLike(Object operand, String escapeCharacter) {
-        return Operators.like(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand),
+    default Like notLike(Object pattern, String escapeCharacter) {
+        return Operators.like(this, pattern instanceof ScalarExpression expression ?
+                        expression :
+                        Literal.ofScalar(pattern),
                 StringLiteral.of(escapeCharacter), true);
     }
 
     default Between between(Object lowerBound, Object upperBound) {
         return Operators.between(this,
-                lowerBound instanceof Expression expression ? expression : Literal.ofScalar(lowerBound),
-                upperBound instanceof Expression expression ? expression : Literal.ofScalar(upperBound));
+                lowerBound instanceof ScalarExpression expression ? expression : Literal.ofScalar(lowerBound),
+                upperBound instanceof ScalarExpression expression ? expression : Literal.ofScalar(upperBound));
     }
 
     default Between notBetween(Object lowerBound, Object upperBound) {
         return Operators.between(this,
-                lowerBound instanceof Expression expression ? expression : Literal.ofScalar(lowerBound),
-                upperBound instanceof Expression expression ? expression : Literal.ofScalar(upperBound), true);
+                lowerBound instanceof ScalarExpression expression ? expression : Literal.ofScalar(lowerBound),
+                upperBound instanceof ScalarExpression expression ? expression : Literal.ofScalar(upperBound), true);
     }
 
     default In in(Object... values) {

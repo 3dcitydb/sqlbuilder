@@ -24,6 +24,7 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.literal.StringLiteral;
 
 import java.util.List;
@@ -32,31 +33,31 @@ import java.util.Optional;
 
 public class Like implements ComparisonOperation {
     private final Expression operand;
-    private final Expression pattern;
+    private final ScalarExpression pattern;
     private final StringLiteral escapeCharacter;
     private boolean negate;
     private String alias;
 
-    private Like(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
+    private Like(Expression operand, ScalarExpression pattern, StringLiteral escapeCharacter, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
         this.pattern = Objects.requireNonNull(pattern, "The like pattern must not be null.");
         this.escapeCharacter = escapeCharacter;
         this.negate = negate;
     }
 
-    public static Like of(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {
+    public static Like of(Expression operand, ScalarExpression pattern, StringLiteral escapeCharacter, boolean negate) {
         return new Like(operand, pattern, escapeCharacter, negate);
     }
 
-    public static Like of(Expression operand, Expression pattern, StringLiteral escapeCharacter) {
+    public static Like of(Expression operand, ScalarExpression pattern, StringLiteral escapeCharacter) {
         return new Like(operand, pattern, escapeCharacter, false);
     }
 
-    public static Like of(Expression operand, Expression pattern, boolean negate) {
+    public static Like of(Expression operand, ScalarExpression pattern, boolean negate) {
         return new Like(operand, pattern, null, negate);
     }
 
-    public static Like of(Expression operand, Expression pattern) {
+    public static Like of(Expression operand, ScalarExpression pattern) {
         return new Like(operand, pattern, null, false);
     }
 
@@ -64,7 +65,7 @@ public class Like implements ComparisonOperation {
         return operand;
     }
 
-    public Expression getPattern() {
+    public ScalarExpression getPattern() {
         return pattern;
     }
 

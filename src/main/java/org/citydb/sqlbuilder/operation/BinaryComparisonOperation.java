@@ -22,34 +22,34 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 public class BinaryComparisonOperation implements ComparisonOperation {
-    private final Expression leftOperand;
-    private final Expression rightOperand;
+    private final ScalarExpression leftOperand;
+    private final ScalarExpression rightOperand;
     private final String operator;
     private String alias;
 
-    protected BinaryComparisonOperation(Expression leftOperand, String operator, Expression rightOperand) {
+    protected BinaryComparisonOperation(ScalarExpression leftOperand, String operator, ScalarExpression rightOperand) {
         this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
         this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
         this.operator = Objects.requireNonNull(operator, "The operator must not be null.");
     }
 
-    public static BinaryComparisonOperation of(Expression leftOperand, String operator, Expression rightOperand) {
+    public static BinaryComparisonOperation of(ScalarExpression leftOperand, String operator, ScalarExpression rightOperand) {
         return new BinaryComparisonOperation(leftOperand, operator, rightOperand);
     }
 
-    public Expression getLeftOperand() {
+    public ScalarExpression getLeftOperand() {
         return leftOperand;
     }
 
-    public Expression getRightOperand() {
+    public ScalarExpression getRightOperand() {
         return rightOperand;
     }
 
@@ -77,11 +77,9 @@ public class BinaryComparisonOperation implements ComparisonOperation {
 
     @Override
     public void buildSql(SqlBuilder builder) {
-        builder.append("(")
-                .append(leftOperand)
+        builder.append(leftOperand)
                 .append(" " + builder.keyword(operator) + " ")
-                .append(rightOperand)
-                .append(")");
+                .append(rightOperand);
     }
 
     @Override

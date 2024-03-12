@@ -24,30 +24,31 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 public class Between implements ComparisonOperation {
-    private final Expression operand;
-    private final Expression lowerBound;
-    private final Expression upperBound;
+    private final ScalarExpression operand;
+    private final ScalarExpression lowerBound;
+    private final ScalarExpression upperBound;
     private boolean negate;
     private String alias;
 
-    private Between(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
+    private Between(ScalarExpression operand, ScalarExpression lowerBound, ScalarExpression upperBound, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
         this.lowerBound = Objects.requireNonNull(lowerBound, "The lower bound must not be null.");
         this.upperBound = Objects.requireNonNull(upperBound, "The upper bound must not be null.");
         this.negate = negate;
     }
 
-    public static Between of(Expression operand, Expression lowerBound, Expression upperBound, boolean negate) {
+    public static Between of(ScalarExpression operand, ScalarExpression lowerBound, ScalarExpression upperBound, boolean negate) {
         return new Between(operand, lowerBound, upperBound, negate);
     }
 
-    public static Between of(Expression operand, Expression lowerBound, Expression upperBound) {
+    public static Between of(ScalarExpression operand, ScalarExpression lowerBound, ScalarExpression upperBound) {
         return new Between(operand, lowerBound, upperBound, false);
     }
 
