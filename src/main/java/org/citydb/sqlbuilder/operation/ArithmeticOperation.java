@@ -22,7 +22,6 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.query.Selection;
@@ -32,9 +31,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ArithmeticOperation implements NumericExpression, Operation, ScalarExpression, Selection<ArithmeticOperation> {
-    private final Expression leftOperand;
-    private Expression rightOperand;
+public class ArithmeticOperation implements NumericExpression, Operation, Selection<ArithmeticOperation> {
+    private final ScalarExpression leftOperand;
+    private ScalarExpression rightOperand;
     private final String operator;
     private String alias;
 
@@ -45,25 +44,25 @@ public class ArithmeticOperation implements NumericExpression, Operation, Scalar
             Operators.PLUS, 2,
             Operators.MINUS, 2);
 
-    protected ArithmeticOperation(Expression leftOperand, String operator, Expression rightOperand) {
+    protected ArithmeticOperation(ScalarExpression leftOperand, String operator, ScalarExpression rightOperand) {
         this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
         this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
         this.operator = Objects.requireNonNull(operator, "The operator must not be null.");
     }
 
-    public static ArithmeticOperation of(Expression leftOperand, String operator, Expression rightOperand) {
+    public static ArithmeticOperation of(ScalarExpression leftOperand, String operator, ScalarExpression rightOperand) {
         return new ArithmeticOperation(leftOperand, operator, rightOperand);
     }
 
-    public Expression getLeftOperand() {
+    public ScalarExpression getLeftOperand() {
         return leftOperand;
     }
 
-    public Expression getRightOperand() {
+    public ScalarExpression getRightOperand() {
         return rightOperand;
     }
 
-    ArithmeticOperation fluentAppend(String operator, Expression operand) {
+    ArithmeticOperation fluentAppend(String operator, ScalarExpression operand) {
         if (precedence.getOrDefault(operator, Integer.MAX_VALUE) < precedence.getOrDefault(this.operator, Integer.MAX_VALUE)) {
             rightOperand = new ArithmeticOperation(rightOperand, operator, operand);
             return this;

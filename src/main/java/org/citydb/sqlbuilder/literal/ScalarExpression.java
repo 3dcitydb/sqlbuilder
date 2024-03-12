@@ -30,7 +30,9 @@ import java.util.List;
 public interface ScalarExpression extends Expression {
 
     default ScalarExpression concat(Object operand) {
-        return Operators.concat(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
+        return Operators.concat(this, operand instanceof ScalarExpression expression ?
+                expression :
+                Literal.ofScalar(operand));
     }
 
     default BinaryComparisonOperation eq(Object operand) {

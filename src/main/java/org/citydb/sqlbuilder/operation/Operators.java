@@ -58,27 +58,27 @@ public class Operators {
     public static final String ANY = "any";
     public static final String SOME = "some";
 
-    public static ArithmeticOperation plus(Expression leftOperand, Expression rightOperand) {
+    public static ArithmeticOperation plus(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, PLUS, rightOperand);
     }
 
-    public static ArithmeticOperation minus(Expression leftOperand, Expression rightOperand) {
+    public static ArithmeticOperation minus(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, MINUS, rightOperand);
     }
 
-    public static ArithmeticOperation multiplyBy(Expression leftOperand, Expression rightOperand) {
+    public static ArithmeticOperation multiplyBy(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, MULTIPLY, rightOperand);
     }
 
-    public static ArithmeticOperation divideBy(Expression leftOperand, Expression rightOperand) {
+    public static ArithmeticOperation divideBy(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, DIVIDE, rightOperand);
     }
 
-    public static ArithmeticOperation modulo(Expression leftOperand, Expression rightOperand) {
+    public static ArithmeticOperation modulo(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, MODULO, rightOperand);
     }
 
-    public static ScalarExpression concat(Expression leftOperand, Expression rightOperand) {
+    public static ScalarExpression concat(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, CONCAT, rightOperand);
     }
 
