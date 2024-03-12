@@ -23,8 +23,9 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.Literal;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 
-public interface NumericExpression extends Expression {
+public interface NumericExpression extends ScalarExpression {
 
     default ArithmeticOperation plus(Object operand) {
         return append(Operators.PLUS, operand);

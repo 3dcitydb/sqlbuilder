@@ -23,7 +23,7 @@ package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.operation.NumericExpression;
 
-public class DoubleLiteral extends Literal<Double> implements NumericExpression, ScalarExpression {
+public class DoubleLiteral extends Literal<Double> implements NumericExpression {
 
     private DoubleLiteral(double value) {
         super(value);

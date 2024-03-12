@@ -24,9 +24,7 @@ package org.citydb.sqlbuilder.function;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
-import org.citydb.sqlbuilder.operation.NumericExpression;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.query.Window;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
@@ -34,7 +32,7 @@ import org.citydb.sqlbuilder.schema.ColumnExpression;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Function implements BooleanExpression, ColumnExpression, NumericExpression, ScalarExpression, Selection<Function> {
+public class Function implements BooleanExpression, ColumnExpression, Selection<Function> {
     private final String name;
     private final List<Expression> arguments;
     private final List<String> qualifiers = new ArrayList<>();
