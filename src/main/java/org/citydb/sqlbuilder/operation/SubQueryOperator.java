@@ -22,29 +22,36 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
+import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-public class UnaryLogicalOperation implements LogicalOperation {
-    private final Expression operand;
+public class SubQueryOperator implements Operation, ScalarExpression {
     private final String operator;
-    private String alias;
+    private final QueryExpression operand;
 
-    private UnaryLogicalOperation(Expression operand, String operator) {
-        this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
+    private SubQueryOperator(String operator, QueryExpression operand) {
         this.operator = Objects.requireNonNull(operator, "The operator must not be null.");
+        this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
     }
 
-    public static UnaryLogicalOperation of(Expression operand, String operator) {
-        return new UnaryLogicalOperation(operand, operator);
+    public static SubQueryOperator of(String operator, QueryExpression operand) {
+        return new SubQueryOperator(operator, operand);
     }
 
-    public Expression getOperand() {
-        return operand;
+    public static SubQueryOperator all(QueryExpression operand) {
+        return new SubQueryOperator(Operators.ALL, operand);
+    }
+
+    public static SubQueryOperator any(QueryExpression operand) {
+        return new SubQueryOperator(Operators.ANY, operand);
+    }
+
+    public static SubQueryOperator some(QueryExpression operand) {
+        return new SubQueryOperator(Operators.SOME, operand);
     }
 
     @Override
@@ -52,15 +59,8 @@ public class UnaryLogicalOperation implements LogicalOperation {
         return operator;
     }
 
-    @Override
-    public Optional<String> getAlias() {
-        return Optional.ofNullable(alias);
-    }
-
-    @Override
-    public UnaryLogicalOperation as(String alias) {
-        this.alias = alias;
-        return this;
+    public QueryExpression getOperand() {
+        return operand;
     }
 
     @Override

@@ -148,16 +148,16 @@ public class Operators {
         return exists(operand, false);
     }
 
-    public static UnaryLogicalOperation all(Expression operand) {
-        return UnaryLogicalOperation.of(operand, ALL);
+    public static SubQueryOperator all(QueryExpression operand) {
+        return SubQueryOperator.all(operand);
     }
 
-    public static UnaryLogicalOperation any(Expression operand) {
-        return UnaryLogicalOperation.of(operand, ANY);
+    public static SubQueryOperator any(QueryExpression operand) {
+        return SubQueryOperator.any(operand);
     }
 
-    public static UnaryLogicalOperation some(Expression operand) {
-        return UnaryLogicalOperation.of(operand, SOME);
+    public static SubQueryOperator some(QueryExpression operand) {
+        return SubQueryOperator.some(operand);
     }
 
     public static Like like(Expression operand, Expression pattern, StringLiteral escapeCharacter, boolean negate) {

@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.operation.*;
+import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.List;
 
@@ -36,15 +37,15 @@ public interface ScalarExpression extends Expression {
         return Operators.eq(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default BinaryComparisonOperation eqAll(Expression expression) {
+    default BinaryComparisonOperation eqAll(QueryExpression expression) {
         return Operators.eq(this, Operators.all(expression));
     }
 
-    default BinaryComparisonOperation eqAny(Expression expression) {
+    default BinaryComparisonOperation eqAny(QueryExpression expression) {
         return Operators.eq(this, Operators.any(expression));
     }
 
-    default BinaryComparisonOperation eqSome(Expression expression) {
+    default BinaryComparisonOperation eqSome(QueryExpression expression) {
         return Operators.eq(this, Operators.some(expression));
     }
 
@@ -52,15 +53,15 @@ public interface ScalarExpression extends Expression {
         return Operators.eq(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default BinaryComparisonOperation neAll(Expression expression) {
+    default BinaryComparisonOperation neAll(QueryExpression expression) {
         return Operators.eq(this, Operators.all(expression), true);
     }
 
-    default BinaryComparisonOperation neAny(Expression expression) {
+    default BinaryComparisonOperation neAny(QueryExpression expression) {
         return Operators.eq(this, Operators.any(expression), true);
     }
 
-    default BinaryComparisonOperation neSome(Expression expression) {
+    default BinaryComparisonOperation neSome(QueryExpression expression) {
         return Operators.eq(this, Operators.some(expression), true);
     }
 
@@ -68,15 +69,15 @@ public interface ScalarExpression extends Expression {
         return Operators.lt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default BinaryComparisonOperation ltAll(Expression expression) {
+    default BinaryComparisonOperation ltAll(QueryExpression expression) {
         return Operators.lt(this, Operators.all(expression));
     }
 
-    default BinaryComparisonOperation ltAny(Expression expression) {
+    default BinaryComparisonOperation ltAny(QueryExpression expression) {
         return Operators.lt(this, Operators.any(expression));
     }
 
-    default BinaryComparisonOperation ltSome(Expression expression) {
+    default BinaryComparisonOperation ltSome(QueryExpression expression) {
         return Operators.lt(this, Operators.some(expression));
     }
 
@@ -84,15 +85,15 @@ public interface ScalarExpression extends Expression {
         return Operators.lt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default BinaryComparisonOperation nlAll(Expression expression) {
+    default BinaryComparisonOperation nlAll(QueryExpression expression) {
         return Operators.lt(this, Operators.all(expression), true);
     }
 
-    default BinaryComparisonOperation nlAny(Expression expression) {
+    default BinaryComparisonOperation nlAny(QueryExpression expression) {
         return Operators.lt(this, Operators.any(expression), true);
     }
 
-    default BinaryComparisonOperation nlSome(Expression expression) {
+    default BinaryComparisonOperation nlSome(QueryExpression expression) {
         return Operators.lt(this, Operators.some(expression), true);
     }
 
@@ -100,15 +101,15 @@ public interface ScalarExpression extends Expression {
         return Operators.le(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default BinaryComparisonOperation leAll(Expression expression) {
+    default BinaryComparisonOperation leAll(QueryExpression expression) {
         return Operators.le(this, Operators.all(expression));
     }
 
-    default BinaryComparisonOperation leAny(Expression expression) {
+    default BinaryComparisonOperation leAny(QueryExpression expression) {
         return Operators.le(this, Operators.any(expression));
     }
 
-    default BinaryComparisonOperation leSome(Expression expression) {
+    default BinaryComparisonOperation leSome(QueryExpression expression) {
         return Operators.le(this, Operators.some(expression));
     }
 
@@ -116,15 +117,15 @@ public interface ScalarExpression extends Expression {
         return Operators.le(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default BinaryComparisonOperation nleAll(Expression expression) {
+    default BinaryComparisonOperation nleAll(QueryExpression expression) {
         return Operators.le(this, Operators.all(expression), true);
     }
 
-    default BinaryComparisonOperation nleAny(Expression expression) {
+    default BinaryComparisonOperation nleAny(QueryExpression expression) {
         return Operators.le(this, Operators.any(expression), true);
     }
 
-    default BinaryComparisonOperation nleSome(Expression expression) {
+    default BinaryComparisonOperation nleSome(QueryExpression expression) {
         return Operators.le(this, Operators.some(expression), true);
     }
 
@@ -132,15 +133,15 @@ public interface ScalarExpression extends Expression {
         return Operators.gt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default BinaryComparisonOperation gtAll(Expression expression) {
+    default BinaryComparisonOperation gtAll(QueryExpression expression) {
         return Operators.gt(this, Operators.all(expression));
     }
 
-    default BinaryComparisonOperation gtAny(Expression expression) {
+    default BinaryComparisonOperation gtAny(QueryExpression expression) {
         return Operators.gt(this, Operators.any(expression));
     }
 
-    default BinaryComparisonOperation gtSome(Expression expression) {
+    default BinaryComparisonOperation gtSome(QueryExpression expression) {
         return Operators.gt(this, Operators.some(expression));
     }
 
@@ -148,15 +149,15 @@ public interface ScalarExpression extends Expression {
         return Operators.gt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default BinaryComparisonOperation ngAll(Expression expression) {
+    default BinaryComparisonOperation ngAll(QueryExpression expression) {
         return Operators.gt(this, Operators.all(expression), true);
     }
 
-    default BinaryComparisonOperation ngAny(Expression expression) {
+    default BinaryComparisonOperation ngAny(QueryExpression expression) {
         return Operators.gt(this, Operators.any(expression), true);
     }
 
-    default BinaryComparisonOperation ngSome(Expression expression) {
+    default BinaryComparisonOperation ngSome(QueryExpression expression) {
         return Operators.gt(this, Operators.some(expression), true);
     }
 
@@ -164,15 +165,15 @@ public interface ScalarExpression extends Expression {
         return Operators.ge(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default BinaryComparisonOperation geAll(Expression expression) {
+    default BinaryComparisonOperation geAll(QueryExpression expression) {
         return Operators.ge(this, Operators.all(expression));
     }
 
-    default BinaryComparisonOperation geAny(Expression expression) {
+    default BinaryComparisonOperation geAny(QueryExpression expression) {
         return Operators.ge(this, Operators.any(expression));
     }
 
-    default BinaryComparisonOperation geSome(Expression expression) {
+    default BinaryComparisonOperation geSome(QueryExpression expression) {
         return Operators.ge(this, Operators.some(expression));
     }
 
@@ -180,15 +181,15 @@ public interface ScalarExpression extends Expression {
         return Operators.ge(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default BinaryComparisonOperation ngeAll(Expression expression) {
+    default BinaryComparisonOperation ngeAll(QueryExpression expression) {
         return Operators.ge(this, Operators.all(expression), true);
     }
 
-    default BinaryComparisonOperation ngeAny(Expression expression) {
+    default BinaryComparisonOperation ngeAny(QueryExpression expression) {
         return Operators.ge(this, Operators.any(expression), true);
     }
 
-    default BinaryComparisonOperation ngeSome(Expression expression) {
+    default BinaryComparisonOperation ngeSome(QueryExpression expression) {
         return Operators.ge(this, Operators.some(expression), true);
     }
 
