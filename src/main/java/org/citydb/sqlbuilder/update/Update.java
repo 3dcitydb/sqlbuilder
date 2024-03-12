@@ -27,7 +27,7 @@ import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
-import org.citydb.sqlbuilder.operation.LogicalExpression;
+import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryStatement;
@@ -41,7 +41,7 @@ import java.util.List;
 public class Update implements Statement {
     private final List<CommonTableExpression> with;
     private final List<UpdateValue> set;
-    private List<LogicalExpression> where;
+    private List<BooleanExpression> where;
     private boolean withRecursive;
     private Table table;
 
@@ -121,11 +121,11 @@ public class Update implements Statement {
         return new UpdateValueBuilder(column);
     }
 
-    public List<LogicalExpression> getWhere() {
+    public List<BooleanExpression> getWhere() {
         return where;
     }
 
-    public Update where(LogicalExpression... operators) {
+    public Update where(BooleanExpression... operators) {
         if (operators != null) {
             where.addAll(Arrays.asList(operators));
         }

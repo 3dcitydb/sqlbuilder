@@ -24,13 +24,12 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.query.Selection;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class BinaryComparisonOperation implements LogicalExpression, Operation, Selection<BinaryComparisonOperation> {
+public class BinaryComparisonOperation implements ComparisonOperation {
     private final Expression leftOperand;
     private final Expression rightOperand;
     private final String operator;

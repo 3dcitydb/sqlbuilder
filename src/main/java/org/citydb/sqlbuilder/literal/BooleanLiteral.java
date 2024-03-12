@@ -22,9 +22,9 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.operation.LogicalExpression;
+import org.citydb.sqlbuilder.operation.BooleanExpression;
 
-public class BooleanLiteral extends Literal<Boolean> implements LogicalExpression, ScalarExpression {
+public class BooleanLiteral extends Literal<Boolean> implements BooleanExpression, ScalarExpression {
     public static final BooleanLiteral TRUE = new BooleanLiteral(true);
     public static final BooleanLiteral FALSE = new BooleanLiteral(false);
 

@@ -22,42 +22,43 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.query.QueryExpression;
 
-public interface LogicalExpression extends Expression {
+public interface BooleanExpression extends Expression {
 
-    default BinaryLogicalOperation and(LogicalExpression operand) {
+    default BinaryLogicalOperation and(BooleanExpression operand) {
         return this instanceof BinaryLogicalOperation operator ?
                 operator.fluentAnd(operand) :
                 Operators.and(this, operand);
     }
 
-    default BinaryLogicalOperation andExists(Expression operand) {
+    default BinaryLogicalOperation andExists(QueryExpression operand) {
         return and(Operators.exists(operand));
     }
 
-    default BinaryLogicalOperation andNot(LogicalExpression operand) {
+    default BinaryLogicalOperation andNot(BooleanExpression operand) {
         return and(Operators.not(operand));
     }
 
-    default BinaryLogicalOperation andNotExists(Expression operand) {
+    default BinaryLogicalOperation andNotExists(QueryExpression operand) {
         return and(Operators.not(Operators.exists(operand)));
     }
 
-    default BinaryLogicalOperation or(LogicalExpression operand) {
+    default BinaryLogicalOperation or(BooleanExpression operand) {
         return this instanceof BinaryLogicalOperation operator ?
                 operator.fluentOr(operand) :
                 Operators.or(this, operand);
     }
 
-    default BinaryLogicalOperation orExists(Expression operand) {
+    default BinaryLogicalOperation orExists(QueryExpression operand) {
         return or(Operators.exists(operand));
     }
 
-    default BinaryLogicalOperation orNot(LogicalExpression operand) {
+    default BinaryLogicalOperation orNot(BooleanExpression operand) {
         return or(Operators.not(operand));
     }
 
-    default BinaryLogicalOperation orNotExists(Expression operand) {
+    default BinaryLogicalOperation orNotExists(QueryExpression operand) {
         return or(Operators.not(Operators.exists(operand)));
     }
 

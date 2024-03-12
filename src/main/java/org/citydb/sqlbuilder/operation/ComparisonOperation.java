@@ -23,5 +23,5 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.query.Selection;
 
-public interface LogicalOperation extends BooleanExpression, Operation, Selection<LogicalOperation> {
+public interface ComparisonOperation extends BooleanExpression, Operation, Selection<ComparisonOperation> {
 }

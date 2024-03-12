@@ -23,30 +23,45 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
+import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Not implements LogicalOperation {
-    private final BooleanExpression operand;
+public class Exists implements LogicalOperation {
+    private final QueryExpression operand;
+    private boolean negate;
     private String alias;
 
-    private Not(BooleanExpression operand) {
+    private Exists(QueryExpression operand, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
+        this.negate = negate;
     }
 
-    public static Not of(BooleanExpression operand) {
-        return new Not(operand);
+    public static Exists of(QueryExpression operand, boolean negate) {
+        return new Exists(operand, negate);
     }
 
-    public BooleanExpression getOperand() {
+    public static Exists of(QueryExpression operand) {
+        return new Exists(operand, false);
+    }
+
+    public QueryExpression getOperand() {
         return operand;
+    }
+
+    public boolean isNegate() {
+        return negate;
+    }
+
+    public void setNegate(boolean negate) {
+        this.negate = negate;
     }
 
     @Override
     public String getOperator() {
-        return Operators.NOT;
+        return !negate ? Operators.EXISTS : Operators.NOT_EXISTS;
     }
 
     @Override
@@ -55,7 +70,7 @@ public class Not implements LogicalOperation {
     }
 
     @Override
-    public Not as(String alias) {
+    public Exists as(String alias) {
         this.alias = alias;
         return this;
     }

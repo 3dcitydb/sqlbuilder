@@ -24,6 +24,7 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.literal.StringLiteral;
+import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.List;
 
@@ -139,12 +140,11 @@ public class Operators {
         return isNull(operand, false);
     }
 
-    public static UnaryLogicalOperation exists(Expression operand, boolean negate) {
-        return UnaryLogicalOperation.of(operand,
-                !negate ? EXISTS : NOT_EXISTS);
+    public static LogicalOperation exists(QueryExpression operand, boolean negate) {
+        return Exists.of(operand, negate);
     }
 
-    public static UnaryLogicalOperation exists(Expression operand) {
+    public static LogicalOperation exists(QueryExpression operand) {
         return exists(operand, false);
     }
 
@@ -192,23 +192,23 @@ public class Operators {
         return In.of(operand, values);
     }
 
-    public static BinaryLogicalOperation and(List<LogicalExpression> operands) {
+    public static BinaryLogicalOperation and(List<BooleanExpression> operands) {
         return BinaryLogicalOperation.of(AND, operands);
     }
 
-    public static BinaryLogicalOperation and(LogicalExpression... operands) {
+    public static BinaryLogicalOperation and(BooleanExpression... operands) {
         return BinaryLogicalOperation.of(AND, operands);
     }
 
-    public static BinaryLogicalOperation or(List<LogicalExpression> operands) {
+    public static BinaryLogicalOperation or(List<BooleanExpression> operands) {
         return BinaryLogicalOperation.of(OR, operands);
     }
 
-    public static BinaryLogicalOperation or(LogicalExpression... operands) {
+    public static BinaryLogicalOperation or(BooleanExpression... operands) {
         return BinaryLogicalOperation.of(OR, operands);
     }
 
-    public static Not not(LogicalExpression operand) {
+    public static Not not(BooleanExpression operand) {
         return Not.of(operand);
     }
 }

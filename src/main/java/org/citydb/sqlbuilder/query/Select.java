@@ -26,9 +26,9 @@ import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
 import org.citydb.sqlbuilder.operation.BinaryComparisonOperation;
-import org.citydb.sqlbuilder.operation.LogicalExpression;
+import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
+import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
@@ -43,7 +43,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     private final List<CommonTableExpression> with;
     private final List<Selection<?>> select;
     private final List<Join> joins;
-    private final List<LogicalExpression> where;
+    private final List<BooleanExpression> where;
     private boolean withRecursive;
     private boolean distinct;
     private Table from;
@@ -185,11 +185,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return new JoinBuilder(table, type);
     }
 
-    public List<LogicalExpression> getWhere() {
+    public List<BooleanExpression> getWhere() {
         return where;
     }
 
-    public Select where(LogicalExpression... operators) {
+    public Select where(BooleanExpression... operators) {
         if (operators != null) {
             where.addAll(Arrays.asList(operators));
         }

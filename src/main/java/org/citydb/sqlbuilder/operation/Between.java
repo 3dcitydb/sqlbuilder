@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Between implements LogicalOperation {
+public class Between implements ComparisonOperation {
     private final Expression operand;
     private final Expression lowerBound;
     private final Expression upperBound;

@@ -28,7 +28,7 @@ import org.citydb.sqlbuilder.literal.ScalarExpression;
 
 import java.util.*;
 
-public class In implements LogicalOperation {
+public class In implements ComparisonOperation {
     private final Expression operand;
     private final List<ScalarExpression> values;
     private boolean negate;

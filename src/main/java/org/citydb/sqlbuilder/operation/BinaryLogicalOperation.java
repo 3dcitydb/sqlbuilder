@@ -27,11 +27,11 @@ import org.citydb.sqlbuilder.literal.PlaceHolder;
 import java.util.*;
 
 public class BinaryLogicalOperation implements LogicalOperation {
-    private final List<LogicalExpression> operands;
+    private final List<BooleanExpression> operands;
     private final String operator;
     private String alias;
 
-    private BinaryLogicalOperation(String operator, List<LogicalExpression> operands) {
+    private BinaryLogicalOperation(String operator, List<BooleanExpression> operands) {
         this.operands = Objects.requireNonNull(operands, "The operands list must not be null.");
         this.operator = Objects.requireNonNull(operator, "The operator type must not be null.");
 
@@ -42,24 +42,24 @@ public class BinaryLogicalOperation implements LogicalOperation {
         }
     }
 
-    public static BinaryLogicalOperation of(String operator, List<LogicalExpression> operands) {
+    public static BinaryLogicalOperation of(String operator, List<BooleanExpression> operands) {
         return new BinaryLogicalOperation(operator, operands);
     }
 
-    public static BinaryLogicalOperation of(String operator, LogicalExpression... operands) {
+    public static BinaryLogicalOperation of(String operator, BooleanExpression... operands) {
         return new BinaryLogicalOperation(operator, operands != null ?
                 new ArrayList<>(Arrays.asList(operands)) :
                 null);
     }
 
-    public static BinaryLogicalOperation of(LogicalExpression leftOperand, String operator, LogicalExpression rightOperand) {
-        List<LogicalExpression> operands = new ArrayList<>();
+    public static BinaryLogicalOperation of(BooleanExpression leftOperand, String operator, BooleanExpression rightOperand) {
+        List<BooleanExpression> operands = new ArrayList<>();
         operands.add(Objects.requireNonNull(leftOperand, "The left operand must not be null."));
         operands.add(Objects.requireNonNull(rightOperand, "The right operand must not be null."));
         return new BinaryLogicalOperation(operator, operands);
     }
 
-    public List<LogicalExpression> getOperands() {
+    public List<BooleanExpression> getOperands() {
         return operands;
     }
 
@@ -73,11 +73,11 @@ public class BinaryLogicalOperation implements LogicalOperation {
         return reduced;
     }
 
-    public BinaryLogicalOperation add(LogicalExpression... operands) {
+    public BinaryLogicalOperation add(BooleanExpression... operands) {
         return operands != null ? add(Arrays.asList(operands)) : this;
     }
 
-    public BinaryLogicalOperation add(List<LogicalExpression> operands) {
+    public BinaryLogicalOperation add(List<BooleanExpression> operands) {
         if (operands != null && !operands.isEmpty()) {
             operands.stream()
                     .filter(Objects::nonNull)
@@ -87,7 +87,7 @@ public class BinaryLogicalOperation implements LogicalOperation {
         return this;
     }
 
-    BinaryLogicalOperation fluentAnd(LogicalExpression operand) {
+    BinaryLogicalOperation fluentAnd(BooleanExpression operand) {
         if (operand != null) {
             if (hasOperator(Operators.OR)) {
                 int index = operands.size() - 1;
@@ -100,7 +100,7 @@ public class BinaryLogicalOperation implements LogicalOperation {
         return this;
     }
 
-    BinaryLogicalOperation fluentOr(LogicalExpression operand) {
+    BinaryLogicalOperation fluentOr(BooleanExpression operand) {
         if (operand != null) {
             if (hasOperator(Operators.AND)) {
                 return Operators.or(this, operand);

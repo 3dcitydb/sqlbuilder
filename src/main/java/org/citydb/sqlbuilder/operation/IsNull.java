@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class IsNull implements LogicalOperation {
+public class IsNull implements ComparisonOperation {
     private final Expression operand;
     private boolean negate;
     private String alias;
