@@ -32,163 +32,163 @@ public interface ScalarExpression extends Expression {
         return Operators.concat(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default ComparisonOperation eq(Object operand) {
+    default BinaryComparisonOperation eq(Object operand) {
         return Operators.eq(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default ComparisonOperation eqAll(Expression expression) {
+    default BinaryComparisonOperation eqAll(Expression expression) {
         return Operators.eq(this, Operators.all(expression));
     }
 
-    default ComparisonOperation eqAny(Expression expression) {
+    default BinaryComparisonOperation eqAny(Expression expression) {
         return Operators.eq(this, Operators.any(expression));
     }
 
-    default ComparisonOperation eqSome(Expression expression) {
+    default BinaryComparisonOperation eqSome(Expression expression) {
         return Operators.eq(this, Operators.some(expression));
     }
 
-    default ComparisonOperation ne(Object operand) {
+    default BinaryComparisonOperation ne(Object operand) {
         return Operators.eq(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default ComparisonOperation neAll(Expression expression) {
+    default BinaryComparisonOperation neAll(Expression expression) {
         return Operators.eq(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperation neAny(Expression expression) {
+    default BinaryComparisonOperation neAny(Expression expression) {
         return Operators.eq(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperation neSome(Expression expression) {
+    default BinaryComparisonOperation neSome(Expression expression) {
         return Operators.eq(this, Operators.some(expression), true);
     }
 
-    default ComparisonOperation lt(Object operand) {
+    default BinaryComparisonOperation lt(Object operand) {
         return Operators.lt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default ComparisonOperation ltAll(Expression expression) {
+    default BinaryComparisonOperation ltAll(Expression expression) {
         return Operators.lt(this, Operators.all(expression));
     }
 
-    default ComparisonOperation ltAny(Expression expression) {
+    default BinaryComparisonOperation ltAny(Expression expression) {
         return Operators.lt(this, Operators.any(expression));
     }
 
-    default ComparisonOperation ltSome(Expression expression) {
+    default BinaryComparisonOperation ltSome(Expression expression) {
         return Operators.lt(this, Operators.some(expression));
     }
 
-    default ComparisonOperation nl(Object operand) {
+    default BinaryComparisonOperation nl(Object operand) {
         return Operators.lt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default ComparisonOperation nlAll(Expression expression) {
+    default BinaryComparisonOperation nlAll(Expression expression) {
         return Operators.lt(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperation nlAny(Expression expression) {
+    default BinaryComparisonOperation nlAny(Expression expression) {
         return Operators.lt(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperation nlSome(Expression expression) {
+    default BinaryComparisonOperation nlSome(Expression expression) {
         return Operators.lt(this, Operators.some(expression), true);
     }
 
-    default ComparisonOperation le(Object operand) {
+    default BinaryComparisonOperation le(Object operand) {
         return Operators.le(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default ComparisonOperation leAll(Expression expression) {
+    default BinaryComparisonOperation leAll(Expression expression) {
         return Operators.le(this, Operators.all(expression));
     }
 
-    default ComparisonOperation leAny(Expression expression) {
+    default BinaryComparisonOperation leAny(Expression expression) {
         return Operators.le(this, Operators.any(expression));
     }
 
-    default ComparisonOperation leSome(Expression expression) {
+    default BinaryComparisonOperation leSome(Expression expression) {
         return Operators.le(this, Operators.some(expression));
     }
 
-    default ComparisonOperation nle(Object operand) {
+    default BinaryComparisonOperation nle(Object operand) {
         return Operators.le(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default ComparisonOperation nleAll(Expression expression) {
+    default BinaryComparisonOperation nleAll(Expression expression) {
         return Operators.le(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperation nleAny(Expression expression) {
+    default BinaryComparisonOperation nleAny(Expression expression) {
         return Operators.le(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperation nleSome(Expression expression) {
+    default BinaryComparisonOperation nleSome(Expression expression) {
         return Operators.le(this, Operators.some(expression), true);
     }
 
-    default ComparisonOperation gt(Object operand) {
+    default BinaryComparisonOperation gt(Object operand) {
         return Operators.gt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default ComparisonOperation gtAll(Expression expression) {
+    default BinaryComparisonOperation gtAll(Expression expression) {
         return Operators.gt(this, Operators.all(expression));
     }
 
-    default ComparisonOperation gtAny(Expression expression) {
+    default BinaryComparisonOperation gtAny(Expression expression) {
         return Operators.gt(this, Operators.any(expression));
     }
 
-    default ComparisonOperation gtSome(Expression expression) {
+    default BinaryComparisonOperation gtSome(Expression expression) {
         return Operators.gt(this, Operators.some(expression));
     }
 
-    default ComparisonOperation ng(Object operand) {
+    default BinaryComparisonOperation ng(Object operand) {
         return Operators.gt(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default ComparisonOperation ngAll(Expression expression) {
+    default BinaryComparisonOperation ngAll(Expression expression) {
         return Operators.gt(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperation ngAny(Expression expression) {
+    default BinaryComparisonOperation ngAny(Expression expression) {
         return Operators.gt(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperation ngSome(Expression expression) {
+    default BinaryComparisonOperation ngSome(Expression expression) {
         return Operators.gt(this, Operators.some(expression), true);
     }
 
-    default ComparisonOperation ge(Object operand) {
+    default BinaryComparisonOperation ge(Object operand) {
         return Operators.ge(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand));
     }
 
-    default ComparisonOperation geAll(Expression expression) {
+    default BinaryComparisonOperation geAll(Expression expression) {
         return Operators.ge(this, Operators.all(expression));
     }
 
-    default ComparisonOperation geAny(Expression expression) {
+    default BinaryComparisonOperation geAny(Expression expression) {
         return Operators.ge(this, Operators.any(expression));
     }
 
-    default ComparisonOperation geSome(Expression expression) {
+    default BinaryComparisonOperation geSome(Expression expression) {
         return Operators.ge(this, Operators.some(expression));
     }
 
-    default ComparisonOperation nge(Object operand) {
+    default BinaryComparisonOperation nge(Object operand) {
         return Operators.ge(this, operand instanceof Expression expression ? expression : Literal.ofScalar(operand), true);
     }
 
-    default ComparisonOperation ngeAll(Expression expression) {
+    default BinaryComparisonOperation ngeAll(Expression expression) {
         return Operators.ge(this, Operators.all(expression), true);
     }
 
-    default ComparisonOperation ngeAny(Expression expression) {
+    default BinaryComparisonOperation ngeAny(Expression expression) {
         return Operators.ge(this, Operators.any(expression), true);
     }
 
-    default ComparisonOperation ngeSome(Expression expression) {
+    default BinaryComparisonOperation ngeSome(Expression expression) {
         return Operators.ge(this, Operators.some(expression), true);
     }
 

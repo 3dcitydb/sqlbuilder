@@ -30,20 +30,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ComparisonOperation implements LogicalExpression, Operation, Selection<ComparisonOperation> {
+public class BinaryComparisonOperation implements LogicalExpression, Operation, Selection<BinaryComparisonOperation> {
     private final Expression leftOperand;
     private final Expression rightOperand;
     private final String operator;
     private String alias;
 
-    protected ComparisonOperation(Expression leftOperand, String operator, Expression rightOperand) {
+    protected BinaryComparisonOperation(Expression leftOperand, String operator, Expression rightOperand) {
         this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
         this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
         this.operator = Objects.requireNonNull(operator, "The operator must not be null.");
     }
 
-    public static ComparisonOperation of(Expression leftOperand, String operator, Expression rightOperand) {
-        return new ComparisonOperation(leftOperand, operator, rightOperand);
+    public static BinaryComparisonOperation of(Expression leftOperand, String operator, Expression rightOperand) {
+        return new BinaryComparisonOperation(leftOperand, operator, rightOperand);
     }
 
     public Expression getLeftOperand() {
@@ -65,7 +65,7 @@ public class ComparisonOperation implements LogicalExpression, Operation, Select
     }
 
     @Override
-    public ComparisonOperation as(String alias) {
+    public BinaryComparisonOperation as(String alias) {
         this.alias = alias;
         return this;
     }

@@ -27,7 +27,7 @@ import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
-import org.citydb.sqlbuilder.operation.ComparisonOperation;
+import org.citydb.sqlbuilder.operation.BinaryComparisonOperation;
 import org.citydb.sqlbuilder.operation.LogicalExpression;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
@@ -314,7 +314,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
             this.type = type;
         }
 
-        public Select on(ComparisonOperation operator) {
+        public Select on(BinaryComparisonOperation operator) {
             if (operator.getLeftOperand() instanceof Column left
                     && operator.getRightOperand() instanceof Column right
                     && (left.getTable() == table

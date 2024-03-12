@@ -81,53 +81,53 @@ public class Operators {
         return ArithmeticOperation.of(leftOperand, CONCAT, rightOperand);
     }
 
-    public static ComparisonOperation eq(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperation.of(leftOperand,
+    public static BinaryComparisonOperation eq(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return BinaryComparisonOperation.of(leftOperand,
                 !negate ? EQUAL_TO : NOT_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperation eq(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation eq(Expression leftOperand, Expression rightOperand) {
         return eq(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperation lt(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperation.of(leftOperand,
+    public static BinaryComparisonOperation lt(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return BinaryComparisonOperation.of(leftOperand,
                 !negate ? LESS_THAN : GREATER_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperation lt(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation lt(Expression leftOperand, Expression rightOperand) {
         return lt(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperation le(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperation.of(leftOperand,
+    public static BinaryComparisonOperation le(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return BinaryComparisonOperation.of(leftOperand,
                 !negate ? LESS_THAN_OR_EQUAL_TO : GREATER_THAN,
                 rightOperand);
     }
 
-    public static ComparisonOperation le(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation le(Expression leftOperand, Expression rightOperand) {
         return le(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperation gt(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperation.of(leftOperand,
+    public static BinaryComparisonOperation gt(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return BinaryComparisonOperation.of(leftOperand,
                 !negate ? GREATER_THAN : LESS_THAN_OR_EQUAL_TO,
                 rightOperand);
     }
 
-    public static ComparisonOperation gt(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation gt(Expression leftOperand, Expression rightOperand) {
         return gt(leftOperand, rightOperand, false);
     }
 
-    public static ComparisonOperation ge(Expression leftOperand, Expression rightOperand, boolean negate) {
-        return ComparisonOperation.of(leftOperand,
+    public static BinaryComparisonOperation ge(Expression leftOperand, Expression rightOperand, boolean negate) {
+        return BinaryComparisonOperation.of(leftOperand,
                 !negate ? GREATER_THAN_OR_EQUAL_TO : LESS_THAN,
                 rightOperand);
     }
 
-    public static ComparisonOperation ge(Expression leftOperand, Expression rightOperand) {
+    public static BinaryComparisonOperation ge(Expression leftOperand, Expression rightOperand) {
         return ge(leftOperand, rightOperand, false);
     }
 
