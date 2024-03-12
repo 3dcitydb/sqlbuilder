@@ -175,7 +175,7 @@ public class Update implements Statement {
                     .indentln(set, ", ");
         }
 
-        if (where != null) {
+        if (!where.isEmpty()) {
             BinaryLogicalOperation where = Operators.and(this.where).reduce();
             builder.appendln()
                     .appendln(builder.keyword("where "))

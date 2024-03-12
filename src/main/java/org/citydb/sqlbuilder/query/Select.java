@@ -285,7 +285,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
                     .indentln(joins, " ");
         }
 
-        if (where != null) {
+        if (!where.isEmpty()) {
             BinaryLogicalOperation where = Operators.and(this.where).reduce();
             builder.appendln()
                     .appendln(builder.keyword("where "))
