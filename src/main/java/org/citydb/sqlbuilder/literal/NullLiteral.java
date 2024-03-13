@@ -22,12 +22,13 @@
 package org.citydb.sqlbuilder.literal;
 
 public class NullLiteral extends Literal<Void> implements ScalarExpression {
+    private static final NullLiteral instance = new NullLiteral();
 
     private NullLiteral() {
         super(null);
     }
 
-    public static NullLiteral newInstance() {
-        return new NullLiteral();
+    public static NullLiteral getInstance() {
+        return instance;
     }
 }

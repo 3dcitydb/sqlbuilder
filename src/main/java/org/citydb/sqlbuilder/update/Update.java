@@ -37,6 +37,7 @@ import org.citydb.sqlbuilder.schema.Table;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class Update implements Statement {
     private final List<CommonTableExpression> with;
@@ -67,8 +68,8 @@ public class Update implements Statement {
         return new Update(other);
     }
 
-    public Table getTable() {
-        return table;
+    public Optional<Table> getTable() {
+        return Optional.ofNullable(table);
     }
 
     public Update table(Table table) {
@@ -103,6 +104,10 @@ public class Update implements Statement {
         }
 
         return this;
+    }
+
+    public boolean isWithRecursive() {
+        return withRecursive;
     }
 
     public List<UpdateValue> getSet() {

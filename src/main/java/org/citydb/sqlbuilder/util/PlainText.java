@@ -45,6 +45,10 @@ public class PlainText implements ColumnExpression, Selection<PlainText>, QueryE
         return new PlainText(sql);
     }
 
+    public String getSql() {
+        return sql;
+    }
+
     @Override
     public List<PlaceHolder> getPlaceHolders() {
         return Collections.emptyList();

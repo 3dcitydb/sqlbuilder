@@ -62,7 +62,7 @@ public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
         } else if (value instanceof Timestamp literal) {
             return TimestampLiteral.of(literal);
         } else {
-            return NullLiteral.newInstance();
+            return NullLiteral.getInstance();
         }
     }
 
@@ -80,8 +80,8 @@ public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
                 null;
     }
 
-    public T getValue() {
-        return value;
+    public Optional<T> getValue() {
+        return Optional.ofNullable(value);
     }
 
     @Override

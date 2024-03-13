@@ -132,6 +132,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return this;
     }
 
+    public boolean isWithRecursive() {
+        return withRecursive;
+    }
+
     public List<Selection<?>> getSelect() {
         return select;
     }
@@ -144,8 +148,8 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return this;
     }
 
-    public Table getFrom() {
-        return from;
+    public Optional<Table> getFrom() {
+        return Optional.ofNullable(from);
     }
 
     public Select from(Table from) {
