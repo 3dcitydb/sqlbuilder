@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
@@ -84,6 +85,11 @@ public class IsNull implements ComparisonOperation {
     public void buildSql(SqlBuilder builder) {
         builder.append(operand)
                 .append(" " + builder.keyword(getOperator()));
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

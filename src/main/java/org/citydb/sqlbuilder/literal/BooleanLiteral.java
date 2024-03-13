@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 
 public class BooleanLiteral extends Literal<Boolean> implements BooleanExpression, ScalarExpression {
@@ -51,5 +52,10 @@ public class BooleanLiteral extends Literal<Boolean> implements BooleanExpressio
         } else {
             super.buildSql(builder);
         }
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 }

@@ -22,8 +22,9 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.SqlObject;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
@@ -232,6 +233,11 @@ public class Window implements SqlObject {
         }
 
         builder.append(")");
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

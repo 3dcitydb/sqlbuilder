@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -69,5 +70,10 @@ public class TimestampLiteral extends Literal<Timestamp> implements ScalarExpres
         } else {
             super.buildSql(builder);
         }
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 }

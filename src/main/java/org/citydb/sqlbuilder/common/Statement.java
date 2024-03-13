@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.common;
 
-import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;

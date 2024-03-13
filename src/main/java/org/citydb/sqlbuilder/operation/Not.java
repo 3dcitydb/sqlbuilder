@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
@@ -69,6 +70,11 @@ public class Not implements LogicalOperation {
     public void buildSql(SqlBuilder builder) {
         builder.append(builder.keyword(getOperator()) + " ")
                 .append(operand);
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

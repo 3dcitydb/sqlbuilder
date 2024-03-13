@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Buildable;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -297,6 +298,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         }
 
         super.buildSql(builder);
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

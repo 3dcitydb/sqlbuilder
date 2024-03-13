@@ -22,7 +22,8 @@
 package org.citydb.sqlbuilder.join;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.SqlObject;
+import org.citydb.sqlbuilder.common.SqlObject;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BinaryComparisonOperation;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
@@ -97,6 +98,11 @@ public class Join implements SqlObject {
                 .append(toColumn.getTable())
                 .append(builder.keyword(" on "))
                 .append(Operators.and(conditions).reduce());
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

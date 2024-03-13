@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.function;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.query.Window;
@@ -92,6 +93,11 @@ public class WindowFunction implements Selection<WindowFunction> {
         } else {
             builder.append(window);
         }
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

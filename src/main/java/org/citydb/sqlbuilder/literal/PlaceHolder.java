@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.util.UserProperties;
 
 import java.util.List;
@@ -71,6 +72,11 @@ public class PlaceHolder extends Literal<Object> {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         placeHolders.add(this);
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

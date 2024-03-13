@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.*;
@@ -99,6 +100,11 @@ public class SetOperator extends QueryStatement<SetOperator> {
         }
 
         super.buildSql(builder);
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

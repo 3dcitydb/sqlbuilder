@@ -21,7 +21,5 @@
 
 package org.citydb.sqlbuilder.common;
 
-import org.citydb.sqlbuilder.SqlObject;
-
 public interface Expression extends SqlObject {
 }

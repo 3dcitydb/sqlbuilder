@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.query.Selection;
@@ -100,6 +101,11 @@ public class ArithmeticOperation implements NumericExpression, Operation, Select
                 .append(" " + builder.keyword(operator) + " ")
                 .append(rightOperand)
                 .append(")");
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

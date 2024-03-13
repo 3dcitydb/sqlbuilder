@@ -22,7 +22,8 @@
 package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.SqlObject;
+import org.citydb.sqlbuilder.common.SqlObject;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
@@ -159,6 +160,11 @@ public final class Table implements SqlObject {
         }
 
         builder.append(" " + alias);
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

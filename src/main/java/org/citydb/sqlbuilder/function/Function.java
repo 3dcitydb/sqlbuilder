@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder.function;
 
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.query.Selection;
@@ -134,6 +135,11 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
 
         builder.append(SqlBuilder.of(builder.getOptions()).append(arguments, ", ").build())
                 .append(")");
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

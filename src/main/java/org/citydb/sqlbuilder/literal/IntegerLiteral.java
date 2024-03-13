@@ -21,6 +21,7 @@
 
 package org.citydb.sqlbuilder.literal;
 
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.operation.NumericExpression;
 
 public class IntegerLiteral extends Literal<Long> implements NumericExpression {
@@ -43,5 +44,10 @@ public class IntegerLiteral extends Literal<Long> implements NumericExpression {
 
     public static IntegerLiteral of(Number value) {
         return new IntegerLiteral(value != null ? value.longValue() : null);
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 }

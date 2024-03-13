@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 
@@ -80,6 +81,11 @@ public class BinaryComparisonOperation implements ComparisonOperation {
         builder.append(leftOperand)
                 .append(" " + builder.keyword(operator) + " ")
                 .append(rightOperand);
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

@@ -22,8 +22,9 @@
 package org.citydb.sqlbuilder.update;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.SqlObject;
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.SqlObject;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
 
@@ -62,6 +63,11 @@ public class UpdateValue implements SqlObject {
         builder.append(builder.identifier(column.getName()))
                 .append(" = ")
                 .append(value);
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

@@ -22,7 +22,8 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.SqlObject;
+import org.citydb.sqlbuilder.common.SqlObject;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
 
@@ -100,6 +101,11 @@ public class OrderBy implements SqlObject {
         if (nullOrder != null) {
             builder.append(" " + builder.keyword(nullOrder));
         }
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

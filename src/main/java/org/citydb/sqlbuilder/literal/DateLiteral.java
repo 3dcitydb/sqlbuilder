@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 
 import java.sql.Date;
 import java.time.Instant;
@@ -68,5 +69,10 @@ public class DateLiteral extends Literal<Date> implements ScalarExpression {
         } else {
             super.buildSql(builder);
         }
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 }

@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.SqlBuilder;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 
 public class StringLiteral extends Literal<String> implements ScalarExpression {
 
@@ -40,5 +41,10 @@ public class StringLiteral extends Literal<String> implements ScalarExpression {
         } else {
             super.buildSql(builder);
         }
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 }

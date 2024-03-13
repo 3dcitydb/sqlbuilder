@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder.update;
 
 import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -42,7 +43,7 @@ import java.util.Optional;
 public class Update implements Statement {
     private final List<CommonTableExpression> with;
     private final List<UpdateValue> set;
-    private List<BooleanExpression> where;
+    private final List<BooleanExpression> where;
     private boolean withRecursive;
     private Table table;
 
@@ -186,6 +187,11 @@ public class Update implements Statement {
                     .appendln(builder.keyword("where "))
                     .indentln(where.getOperands(), " ", builder.keyword(where.getOperator()) + " ");
         }
+    }
+
+    @Override
+    public void accept(SqlVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

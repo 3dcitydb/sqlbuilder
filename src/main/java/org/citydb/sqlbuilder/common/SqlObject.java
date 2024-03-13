@@ -19,14 +19,17 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder;
+package org.citydb.sqlbuilder.common;
 
-import org.citydb.sqlbuilder.common.Buildable;
+import org.citydb.sqlbuilder.SqlBuildOptions;
+import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
 
 public interface SqlObject extends Buildable {
+    void accept(SqlVisitor visitor);
+
     void getPlaceHolders(List<PlaceHolder> placeHolders);
 
     default String toSql(SqlBuildOptions options) {
