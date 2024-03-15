@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
@@ -86,20 +85,6 @@ public class SetOperator extends QueryStatement<SetOperator> {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         operands.forEach(operand -> operand.getPlaceHolders(placeHolders));
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        for (Iterator<Select> iterator = operands.iterator(); iterator.hasNext(); ) {
-            builder.append(iterator.next());
-            if (iterator.hasNext()) {
-                builder.appendln(" ")
-                        .append(builder.keyword(type))
-                        .appendln(" ");
-            }
-        }
-
-        super.buildSql(builder);
     }
 
     @Override

@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 
@@ -43,15 +42,6 @@ public class BooleanLiteral extends Literal<Boolean> implements BooleanExpressio
 
     public static BooleanLiteral of(Boolean value) {
         return value != null ? of(value) : new BooleanLiteral(null);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (value != null) {
-            builder.append(value ? "TRUE" : "FALSE");
-        } else {
-            super.buildSql(builder);
-        }
     }
 
     @Override

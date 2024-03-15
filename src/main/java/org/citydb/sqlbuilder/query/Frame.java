@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.Literal;
@@ -113,31 +112,6 @@ public class Frame implements SqlObject {
 
         if (endExpression != null) {
             endExpression.getPlaceHolders(placeHolders);
-        }
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(builder.keyword(units))
-                .append(" ");
-        if (end != null) {
-            builder.append(builder.keyword("between "));
-        }
-
-        if (startExpression != null) {
-            builder.append(startExpression)
-                    .append(" ");
-        }
-
-        builder.append(builder.keyword(start));
-        if (end != null) {
-            builder.append(builder.keyword(" and "));
-            if (endExpression != null) {
-                builder.append(endExpression)
-                        .append(" ");
-            }
-
-            builder.append(builder.keyword(end));
         }
     }
 

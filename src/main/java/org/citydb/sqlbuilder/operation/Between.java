@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -94,15 +93,6 @@ public class Between implements ComparisonOperation {
         operand.getPlaceHolders(placeHolders);
         lowerBound.getPlaceHolders(placeHolders);
         upperBound.getPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(operand)
-                .append(" " + builder.keyword(getOperator()) + " ")
-                .append(lowerBound)
-                .append(builder.keyword(" and "))
-                .append(upperBound);
     }
 
     @Override

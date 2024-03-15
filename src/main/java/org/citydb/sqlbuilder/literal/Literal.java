@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.query.Selection;
 
@@ -97,11 +96,6 @@ public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
 
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(value != null ? value.toString() : "null");
     }
 
     @Override

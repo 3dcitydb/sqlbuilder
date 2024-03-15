@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 
 import java.sql.Date;
@@ -58,17 +57,6 @@ public class DateLiteral extends Literal<Date> implements ScalarExpression {
 
     public static DateLiteral of(GregorianCalendar value) {
         return of(value != null ? value.toInstant() : null);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (value != null) {
-            builder.append(builder.isUseJdbcEscapeNotation() ?
-                    "{d '" + value + "'}" :
-                    "'" + value + "'");
-        } else {
-            super.buildSql(builder);
-        }
     }
 
     @Override

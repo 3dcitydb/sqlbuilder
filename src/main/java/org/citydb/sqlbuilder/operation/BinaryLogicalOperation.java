@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
@@ -132,18 +131,6 @@ public class BinaryLogicalOperation implements LogicalOperation {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         operands.forEach(operand -> operand.getPlaceHolders(placeHolders));
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (operands.size() > 1) {
-            builder.appendln("(")
-                    .indentln(operands, " ", builder.keyword(operator) + " ")
-                    .appendln()
-                    .append(")");
-        } else {
-            builder.append(operands.get(0));
-        }
     }
 
     @Override

@@ -21,15 +21,12 @@
 
 package org.citydb.sqlbuilder.update;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
-import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryStatement;
 import org.citydb.sqlbuilder.schema.Column;
@@ -156,37 +153,6 @@ public class Update implements Statement {
 
         set.forEach(value -> value.getPlaceHolders(placeHolders));
         where.forEach(operator -> operator.getPlaceHolders(placeHolders));
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (!with.isEmpty()) {
-            builder.append(builder.keyword("with "));
-            if (withRecursive) {
-                builder.append(builder.keyword("recursive "));
-            }
-
-            builder.append(with, ", ")
-                    .appendln(" ");
-        }
-
-        builder.append(builder.keyword("update "));
-        builder.appendln()
-                .indent(table != null ? table : Table.of("null"))
-                .append(" ");
-
-        if (!set.isEmpty()) {
-            builder.appendln()
-                    .appendln(builder.keyword("set "))
-                    .indentln(set, ", ");
-        }
-
-        if (!where.isEmpty()) {
-            BinaryLogicalOperation where = Operators.and(this.where).reduce();
-            builder.appendln()
-                    .appendln(builder.keyword("where "))
-                    .indentln(where.getOperands(), " ", builder.keyword(where.getOperator()) + " ");
-        }
     }
 
     @Override

@@ -27,7 +27,7 @@ public class SqlBuildOptions {
     private String identifierDelimiter;
     private IdentifierCase identifierCase = IdentifierCase.UNCHANGED;
     private KeywordCase keywordCase = KeywordCase.LOWERCASE;
-    private boolean useJDBCEscapeNotation = true;
+    private boolean useJdbcEscapeNotation = true;
     private boolean stripParentheses = true;
 
     public enum IdentifierCase {
@@ -107,12 +107,12 @@ public class SqlBuildOptions {
         return this;
     }
 
-    public boolean isUseJDBCEscapeNotation() {
-        return useJDBCEscapeNotation;
+    public boolean isUseJdbcEscapeNotation() {
+        return useJdbcEscapeNotation;
     }
 
-    public SqlBuildOptions setUseJDBCEscapeNotation(boolean useJdbcEscapeNotation) {
-        this.useJDBCEscapeNotation = useJdbcEscapeNotation;
+    public SqlBuildOptions setUseJdbcEscapeNotation(boolean useJdbcEscapeNotation) {
+        this.useJdbcEscapeNotation = useJdbcEscapeNotation;
         return this;
     }
 

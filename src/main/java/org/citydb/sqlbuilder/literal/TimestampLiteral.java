@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 
 import java.sql.Timestamp;
@@ -59,17 +58,6 @@ public class TimestampLiteral extends Literal<Timestamp> implements ScalarExpres
 
     public static TimestampLiteral of(GregorianCalendar value) {
         return of(value != null ? value.toInstant() : null);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (value != null) {
-            builder.append(builder.isUseJdbcEscapeNotation() ?
-                    "{ts '" + value + "'}" :
-                    "'" + value + "'");
-        } else {
-            super.buildSql(builder);
-        }
     }
 
     @Override

@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.function.Function;
@@ -164,50 +163,5 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Sta
 
     public CommonTableExpression cte(String name, String... columns) {
         return CommonTableExpression.of(name, this, columns);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (!groupBy.isEmpty()) {
-            builder.appendln()
-                    .appendln(builder.keyword("group by "))
-                    .indentln(groupBy, ", ");
-        }
-
-        if (!having.isEmpty()) {
-            builder.appendln()
-                    .appendln(builder.keyword("having "))
-                    .indentln(having, ", ");
-        }
-
-        if (!window.isEmpty()) {
-            builder.appendln()
-                    .appendln(builder.keyword("window "))
-                    .indentln(window, ", ", (window, i) -> window.getName() + builder.keyword(" as "));
-        }
-
-        if (!orderBy.isEmpty()) {
-            builder.appendln()
-                    .appendln(builder.keyword("order by "))
-                    .indentln(orderBy, ", ");
-        }
-
-        if (offset != null) {
-            builder.appendln()
-                    .append(builder.keyword("offset "))
-                    .append(offset)
-                    .append(builder.keyword(" rows "));
-        }
-
-        if (fetch != null) {
-            if (offset == null) {
-                builder.appendln();
-            }
-
-            builder.append(builder.keyword("fetch "))
-                    .append(builder.keyword(offset != null ? "next " : "first "))
-                    .append(fetch)
-                    .append(builder.keyword(" rows only "));
-        }
     }
 }

@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -103,23 +102,6 @@ public class Like implements ComparisonOperation {
         operand.getPlaceHolders(placeHolders);
         pattern.getPlaceHolders(placeHolders);
         escapeCharacter.getPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(operand)
-                .append(" " + builder.keyword(getOperator()) + " ")
-                .append(pattern);
-        if (escapeCharacter != null) {
-            if (builder.isUseJdbcEscapeNotation()) {
-                builder.append(" {escape ")
-                        .append(escapeCharacter)
-                        .append("}");
-            } else {
-                builder.append(builder.keyword(" escape "))
-                        .append(escapeCharacter);
-            }
-        }
     }
 
     @Override

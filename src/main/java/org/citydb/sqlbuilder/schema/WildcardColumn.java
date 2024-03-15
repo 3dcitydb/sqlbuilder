@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.schema;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -64,11 +63,6 @@ public class WildcardColumn implements Expression, Selection<WildcardColumn> {
         if (table != null) {
             table.getPlaceHolders(placeHolders);
         }
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(table != null ? table.getAlias() + ".*" : "*");
     }
 
     @Override

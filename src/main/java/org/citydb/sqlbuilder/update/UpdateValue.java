@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.update;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
@@ -56,13 +55,6 @@ public class UpdateValue implements SqlObject {
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         column.getPlaceHolders(placeHolders);
         value.getPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(builder.identifier(column.getName()))
-                .append(" = ")
-                .append(value);
     }
 
     @Override

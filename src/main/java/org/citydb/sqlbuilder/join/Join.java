@@ -21,13 +21,11 @@
 
 package org.citydb.sqlbuilder.join;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BinaryComparisonOperation;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
-import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 
@@ -90,14 +88,6 @@ public class Join implements SqlObject {
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         toColumn.getPlaceHolders(placeHolders);
         conditions.forEach(condition -> condition.getPlaceHolders(placeHolders));
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(builder.keyword(type) + " ")
-                .append(toColumn.getTable())
-                .append(builder.keyword(" on "))
-                .append(Operators.and(conditions).reduce());
     }
 
     @Override

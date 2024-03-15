@@ -21,16 +21,12 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.common.Buildable;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BinaryComparisonOperation;
-import org.citydb.sqlbuilder.operation.BinaryLogicalOperation;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
-import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
 
@@ -246,58 +242,6 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         groupBy.forEach(groupBy -> groupBy.getPlaceHolders(placeHolders));
         having.forEach(having -> having.getPlaceHolders(placeHolders));
         orderBy.forEach(orderBy -> orderBy.getPlaceHolders(placeHolders));
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (!with.isEmpty()) {
-            builder.append(builder.keyword("with "));
-            if (withRecursive) {
-                builder.append(builder.keyword("recursive "));
-            }
-
-            builder.append(with, ", ")
-                    .appendln(" ");
-        }
-
-        builder.append(builder.keyword("select "));
-
-        if (!hints.isEmpty()) {
-            builder.append("/*+ " + String.join(" ", hints) + " */ ");
-        }
-
-        if (distinct) {
-            builder.append(builder.keyword("distinct "));
-        }
-
-        if (!select.isEmpty()) {
-            builder.appendln()
-                    .indentln(select.stream()
-                            .map(projection -> (Buildable) projection::buildSelection)
-                            .toList(), ", ");
-        } else {
-            builder.appendln()
-                    .indent(Column.WILDCARD + " ");
-        }
-
-        builder.appendln()
-                .appendln(builder.keyword("from "))
-                .indent(from != null ? from : Table.of("null"))
-                .append(" ");
-
-        if (!joins.isEmpty()) {
-            builder.appendln()
-                    .indentln(joins, " ");
-        }
-
-        if (!where.isEmpty()) {
-            BinaryLogicalOperation where = Operators.and(this.where).reduce();
-            builder.appendln()
-                    .appendln(builder.keyword("where "))
-                    .indentln(where.getOperands(), " ", builder.keyword(where.getOperator()) + " ");
-        }
-
-        super.buildSql(builder);
     }
 
     @Override

@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.function;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.Selection;
@@ -81,18 +80,6 @@ public class WindowFunction implements Selection<WindowFunction> {
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         function.getPlaceHolders(placeHolders);
         window.getPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        function.buildSql(builder);
-        builder.append(builder.keyword(" over "));
-
-        if (window.isReferenceOnly()) {
-            builder.append(window.getReference().getName());
-        } else {
-            builder.append(window);
-        }
     }
 
     @Override

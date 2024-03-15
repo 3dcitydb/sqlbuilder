@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 
 public class StringLiteral extends Literal<String> implements ScalarExpression {
@@ -32,15 +31,6 @@ public class StringLiteral extends Literal<String> implements ScalarExpression {
 
     public static StringLiteral of(String value) {
         return new StringLiteral(value);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (value != null) {
-            builder.append("'" + value.replace("'", "''") + "'");
-        } else {
-            super.buildSql(builder);
-        }
     }
 
     @Override

@@ -27,15 +27,13 @@ import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.List;
 
-public interface SqlObject extends Buildable {
+public interface SqlObject {
     void accept(SqlVisitor visitor);
 
     void getPlaceHolders(List<PlaceHolder> placeHolders);
 
     default String toSql(SqlBuildOptions options) {
-        SqlBuilder builder = SqlBuilder.of(options);
-        buildSql(builder);
-        return builder.build();
+        return SqlBuilder.of(options).build(this);
     }
 
     default String toSql() {

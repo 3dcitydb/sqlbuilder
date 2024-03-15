@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.schema;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.OrderBy;
@@ -90,11 +89,6 @@ public class Column implements ColumnExpression, Selection<Column> {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         table.getPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(table.getAlias() + "." + builder.identifier(name));
     }
 
     @Override

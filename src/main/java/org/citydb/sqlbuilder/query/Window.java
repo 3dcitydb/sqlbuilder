@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
@@ -199,40 +198,6 @@ public class Window implements SqlObject {
         if (frame != null) {
             frame.getPlaceHolders(placeHolders);
         }
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append("(");
-
-        if (isReferenceOnly()) {
-            builder.append(reference.getName());
-        } else if (!isEmpty()) {
-            builder.appendln();
-            if (reference != null) {
-                builder.indent(reference.getName())
-                        .appendln(" ");
-            }
-
-            if (!partitionBy.isEmpty()) {
-                builder.indent(builder.keyword("partition "))
-                        .append(partitionBy, ", ")
-                        .appendln(" ");
-            }
-
-            if (!orderBy.isEmpty()) {
-                builder.indent(builder.keyword("order by "))
-                        .append(orderBy, ", ")
-                        .appendln(" ");
-            }
-
-            if (frame != null) {
-                builder.indent(frame)
-                        .appendln(" ");
-            }
-        }
-
-        builder.append(")");
     }
 
     @Override

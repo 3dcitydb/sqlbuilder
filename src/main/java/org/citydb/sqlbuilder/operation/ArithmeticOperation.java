@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
@@ -92,15 +91,6 @@ public class ArithmeticOperation implements NumericExpression, Operation, Select
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         leftOperand.getPlaceHolders(placeHolders);
         rightOperand.getPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append("(")
-                .append(leftOperand)
-                .append(" " + builder.keyword(operator) + " ")
-                .append(rightOperand)
-                .append(")");
     }
 
     @Override

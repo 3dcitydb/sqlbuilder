@@ -21,13 +21,11 @@
 
 package org.citydb.sqlbuilder.query;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CommonTableExpression implements SqlObject {
     private final String name;
@@ -65,21 +63,6 @@ public class CommonTableExpression implements SqlObject {
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         queryStatement.getPlaceHolders(placeHolders);
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(name);
-        if (columns != null && !columns.isEmpty()) {
-            builder.append(" (")
-                    .append(columns.stream()
-                            .map(builder::identifier)
-                            .collect(Collectors.joining(", ")))
-                    .append(")");
-        }
-
-        builder.append(builder.keyword(" as "))
-                .append(queryStatement);
     }
 
     @Override

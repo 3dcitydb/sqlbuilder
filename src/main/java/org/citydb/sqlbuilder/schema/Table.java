@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.schema;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -145,21 +144,6 @@ public final class Table implements SqlObject {
         if (queryExpression != null) {
             queryExpression.getPlaceHolders(placeHolders);
         }
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        if (queryExpression == null) {
-            if (schema != null && !schema.isEmpty()) {
-                builder.append(schema + ".");
-            }
-
-            builder.append(builder.identifier(name));
-        } else {
-            builder.append(queryExpression);
-        }
-
-        builder.append(" " + alias);
     }
 
     @Override

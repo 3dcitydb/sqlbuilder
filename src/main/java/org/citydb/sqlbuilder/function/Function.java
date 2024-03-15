@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.function;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -31,7 +30,6 @@ import org.citydb.sqlbuilder.query.Window;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Function implements BooleanExpression, ColumnExpression, Selection<Function> {
     private final String name;
@@ -120,21 +118,6 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
     @Override
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         arguments.forEach(argument -> argument.getPlaceHolders(placeHolders));
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(builder.keyword(name))
-                .append("(");
-        if (!qualifiers.isEmpty()) {
-            builder.append(qualifiers.stream()
-                            .map(builder::keyword)
-                            .collect(Collectors.joining(" ")))
-                    .append(" ");
-        }
-
-        builder.append(SqlBuilder.of(builder.getOptions()).append(arguments, ", ").build())
-                .append(")");
     }
 
     @Override

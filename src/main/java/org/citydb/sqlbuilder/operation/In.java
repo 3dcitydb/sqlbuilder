@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.PlaceHolder;
@@ -103,15 +102,6 @@ public class In implements ComparisonOperation {
     public void getPlaceHolders(List<PlaceHolder> placeHolders) {
         operand.getPlaceHolders(placeHolders);
         values.forEach(value -> value.getPlaceHolders(placeHolders));
-    }
-
-    @Override
-    public void buildSql(SqlBuilder builder) {
-        builder.append(operand)
-                .append(" " + builder.keyword(getOperator()) + " ")
-                .append("(")
-                .append(SqlBuilder.of(builder.getOptions()).append(values, ", ").build())
-                .append(")");
     }
 
     @Override
