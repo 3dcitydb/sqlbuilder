@@ -41,10 +41,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class SqlBuilder implements SqlVisitor {
-    private final StringBuilder builder = new StringBuilder();
+public class SqlBuilder {
     private final SqlBuildOptions options;
-    private int level;
 
     private SqlBuilder(SqlBuildOptions options) {
         this.options = options;
@@ -59,588 +57,589 @@ public class SqlBuilder implements SqlVisitor {
     }
 
     public String build(SqlObject object) {
-        try {
-            if (object instanceof Select select) {
-                build(select);
-            } else if (object instanceof SetOperator operator) {
-                build(operator);
+        Processor processor = new Processor();
+        if (object instanceof Select select) {
+            processor.build(select);
+        } else if (object instanceof SetOperator operator) {
+            processor.build(operator);
+        } else {
+            object.accept(processor);
+        }
+
+        return processor.builder.toString();
+    }
+
+    private class Processor implements SqlVisitor {
+        private final StringBuilder builder = new StringBuilder();
+        private int level;
+
+        @Override
+        public void visit(ArithmeticOperation operation) {
+            builder.append("(");
+            operation.getLeftOperand().accept(this);
+            builder.append(" ")
+                    .append(keyword(operation.getOperator()))
+                    .append(" ");
+            operation.getRightOperand().accept(this);
+            builder.append(")");
+        }
+
+        @Override
+        public void visit(Between between) {
+            between.getOperand().accept(this);
+            builder.append(" ")
+                    .append(keyword(between.getOperator()))
+                    .append(" ");
+            between.getLowerBound().accept(this);
+            builder.append(keyword(" and "));
+            between.getUpperBound().accept(this);
+        }
+
+        @Override
+        public void visit(BinaryComparisonOperation operation) {
+            operation.getLeftOperand().accept(this);
+            builder.append(" ")
+                    .append(keyword(operation.getOperator()))
+                    .append(" ");
+            operation.getRightOperand().accept(this);
+        }
+
+        @Override
+        public void visit(BinaryLogicalOperation operation) {
+            if (operation.getOperands().size() > 1) {
+                builder.append("(");
+                newlineAndIndent(() -> build(operation.getOperands(), " ", keyword(operation.getOperator()) + " "));
+                newlineAndAppend(")");
             } else {
-                object.accept(this);
+                operation.getOperands().get(0).accept(this);
+            }
+        }
+
+        @Override
+        public void visit(BooleanLiteral literal) {
+            literal.getValue().ifPresentOrElse(value ->
+                            builder.append(keyword(value ? "true" : "false")),
+                    () -> build(literal));
+        }
+
+        @Override
+        public void visit(Column column) {
+            builder.append(column.getTable().getAlias())
+                    .append(".")
+                    .append(identifier(column.getName()));
+        }
+
+        @Override
+        public void visit(CommonTableExpression expression) {
+            builder.append(expression.getName());
+            if (!expression.getColumns().isEmpty()) {
+                builder.append(" (")
+                        .append(expression.getColumns().stream()
+                                .map(this::identifier)
+                                .collect(Collectors.joining(", ")))
+                        .append(") ");
             }
 
-            return builder.toString();
-        } finally {
-            builder.setLength(0);
-            level = 0;
-        }
-    }
-
-    @Override
-    public void visit(ArithmeticOperation operation) {
-        builder.append("(");
-        operation.getLeftOperand().accept(this);
-        builder.append(" ")
-                .append(keyword(operation.getOperator()))
-                .append(" ");
-        operation.getRightOperand().accept(this);
-        builder.append(")");
-    }
-
-    @Override
-    public void visit(Between between) {
-        between.getOperand().accept(this);
-        builder.append(" ")
-                .append(keyword(between.getOperator()))
-                .append(" ");
-        between.getLowerBound().accept(this);
-        builder.append(keyword(" and "));
-        between.getUpperBound().accept(this);
-    }
-
-    @Override
-    public void visit(BinaryComparisonOperation operation) {
-        operation.getLeftOperand().accept(this);
-        builder.append(" ")
-                .append(keyword(operation.getOperator()))
-                .append(" ");
-        operation.getRightOperand().accept(this);
-    }
-
-    @Override
-    public void visit(BinaryLogicalOperation operation) {
-        if (operation.getOperands().size() > 1) {
-            builder.append("(");
-            newlineAndIndent(() -> build(operation.getOperands(), " ", keyword(operation.getOperator()) + " "));
-            newlineAndAppend(")");
-        } else {
-            operation.getOperands().get(0).accept(this);
-        }
-    }
-
-    @Override
-    public void visit(BooleanLiteral literal) {
-        literal.getValue().ifPresentOrElse(value ->
-                        builder.append(keyword(value ? "true" : "false")),
-                () -> build(literal));
-    }
-
-    @Override
-    public void visit(Column column) {
-        builder.append(column.getTable().getAlias())
-                .append(".")
-                .append(identifier(column.getName()));
-    }
-
-    @Override
-    public void visit(CommonTableExpression expression) {
-        builder.append(expression.getName());
-        if (!expression.getColumns().isEmpty()) {
-            builder.append(" (")
-                    .append(expression.getColumns().stream()
-                            .map(this::identifier)
-                            .collect(Collectors.joining(", ")))
-                    .append(") ");
+            builder.append(keyword(" as "));
+            expression.getQueryStatement().accept(this);
         }
 
-        builder.append(keyword(" as "));
-        expression.getQueryStatement().accept(this);
-    }
+        @Override
+        public void visit(DateLiteral literal) {
+            literal.getValue().ifPresentOrElse(value ->
+                            builder.append(options.isUseJdbcEscapeNotation() ?
+                                    "{d '" + value + "'}" :
+                                    "'" + value + "'"),
+                    () -> build(literal));
+        }
 
-    @Override
-    public void visit(DateLiteral literal) {
-        literal.getValue().ifPresentOrElse(value ->
-                        builder.append(options.isUseJdbcEscapeNotation() ?
-                                "{d '" + value + "'}" :
-                                "'" + value + "'"),
-                () -> build(literal));
-    }
+        @Override
+        public void visit(DoubleLiteral literal) {
+            build(literal);
+        }
 
-    @Override
-    public void visit(DoubleLiteral literal) {
-        build(literal);
-    }
+        @Override
+        public void visit(Exists exists) {
+            builder.append(keyword(exists.getOperator()))
+                    .append(" ");
+            exists.getOperand().accept(this);
+        }
 
-    @Override
-    public void visit(Exists exists) {
-        builder.append(keyword(exists.getOperator()))
-                .append(" ");
-        exists.getOperand().accept(this);
-    }
-
-    @Override
-    public void visit(Frame frame) {
-        builder.append(keyword(frame.getUnits()))
-                .append(" ");
-        frame.getEnd().ifPresent(end -> builder.append(keyword("between ")));
-        frame.getStartExpression().ifPresent(expression -> {
-            expression.accept(this);
-            builder.append(" ");
-        });
-
-        builder.append(keyword(frame.getStart()));
-        frame.getEnd().ifPresent(end -> {
-            builder.append(keyword(" and "));
-            frame.getEndExpression().ifPresent(expression -> {
+        @Override
+        public void visit(Frame frame) {
+            builder.append(keyword(frame.getUnits()))
+                    .append(" ");
+            frame.getEnd().ifPresent(end -> builder.append(keyword("between ")));
+            frame.getStartExpression().ifPresent(expression -> {
                 expression.accept(this);
-                builder.append(expression);
                 builder.append(" ");
             });
-            builder.append(keyword(end));
-        });
-    }
 
-    @Override
-    public void visit(Function function) {
-        builder.append(keyword(function.getName()))
-                .append("(");
-        if (!function.getQualifiers().isEmpty()) {
-            builder.append(function.getQualifiers().stream()
-                            .map(this::keyword)
-                            .collect(Collectors.joining(" ")))
-                    .append(" ");
-        }
-
-        build(function.getArguments(), ", ", false);
-        builder.append(")");
-    }
-
-    @Override
-    public void visit(In in) {
-        in.getOperand().accept(this);
-        builder.append(" ")
-                .append(keyword(in.getOperator()))
-                .append(" (");
-        build(in.getValues(), ", ", false);
-        builder.append(")");
-    }
-
-    @Override
-    public void visit(IntegerLiteral literal) {
-        build(literal);
-    }
-
-    @Override
-    public void visit(IsNull isNull) {
-        isNull.getOperand().accept(this);
-        builder.append(" ")
-                .append(keyword(isNull.getOperator()));
-    }
-
-    @Override
-    public void visit(Join join) {
-        builder.append(join.getType())
-                .append(" ");
-        join.getToColumn().getTable().accept(this);
-        builder.append(keyword(" on "));
-        Operators.and(join.getConditions()).reduce().accept(this);
-    }
-
-    @Override
-    public void visit(Like like) {
-        like.getOperand().accept(this);
-        builder.append(" ")
-                .append(keyword(like.getOperator()))
-                .append(" ");
-        like.getPattern().accept(this);
-        like.getEscapeCharacter().ifPresent(escapeCharacter -> {
-            if (options.isUseJdbcEscapeNotation()) {
-                builder.append(" {escape ")
-                        .append(escapeCharacter)
-                        .append("}");
-            } else {
-                builder.append(keyword(" escape "))
-                        .append(escapeCharacter);
-            }
-        });
-    }
-
-    @Override
-    public void visit(Not not) {
-        builder.append(keyword(not.getOperator()))
-                .append(" ");
-        not.getOperand().accept(this);
-    }
-
-    @Override
-    public void visit(NullLiteral literal) {
-        build(literal);
-    }
-
-    @Override
-    public void visit(OrderBy orderBy) {
-        orderBy.getColumn().accept(this);
-        if (!OrderBy.ASCENDING.equalsIgnoreCase(orderBy.getSortOrder())) {
-            builder.append(" ")
-                    .append(keyword(orderBy.getSortOrder()));
-        }
-
-        orderBy.getNullOrder().ifPresent(nullOrder ->
-                builder.append(" ")
-                        .append(keyword(nullOrder)));
-    }
-
-    @Override
-    public void visit(PlaceHolder placeHolder) {
-        builder.append("?");
-    }
-
-    @Override
-    public void visit(PlainText plainText) {
-        builder.append(plainText.getSql());
-    }
-
-    @Override
-    public void visit(Select select) {
-        builder.append("(");
-        newlineAndIndent(() -> build(select));
-        newlineAndAppend(")");
-    }
-
-    @Override
-    public void visit(SetOperator operator) {
-        builder.append("(");
-        newlineAndIndent(() -> build(operator));
-        newlineAndAppend(")");
-    }
-
-    @Override
-    public void visit(SubQueryOperator operator) {
-        builder.append(keyword(operator.getOperator()))
-                .append(" ");
-        operator.getOperand().accept(this);
-    }
-
-    @Override
-    public void visit(StringLiteral literal) {
-        literal.getValue().ifPresentOrElse(value ->
-                        builder.append("'")
-                                .append(value.replace("'", "''"))
-                                .append("'"),
-                () -> build(literal));
-    }
-
-    @Override
-    public void visit(Table table) {
-        table.getQueryExpression().ifPresentOrElse(expression -> expression.accept(this),
-                () -> {
-                    table.getSchema().ifPresent(schema ->
-                            builder.append(schema)
-                                    .append("."));
-                    builder.append(identifier(table.getName()));
-                });
-        builder.append(" ")
-                .append(table.getAlias());
-    }
-
-    @Override
-    public void visit(TimestampLiteral literal) {
-        literal.getValue().ifPresentOrElse(value ->
-                        builder.append(options.isUseJdbcEscapeNotation() ?
-                                "{ts '" + value + "'}" :
-                                "'" + value + "'"),
-                () -> build(literal));
-    }
-
-    @Override
-    public void visit(Update update) {
-        if (!update.getWith().isEmpty()) {
-            builder.append(keyword("with "));
-            if (update.isWithRecursive()) {
-                builder.append(keyword("recursive "));
-            }
-
-            build(update.getWith(), ", ");
-            newline();
-        }
-
-        builder.append(keyword("update "));
-        newlineAndIndent(() -> builder.append(update.getTable().orElse(Table.of("null")))
-                .append(" "));
-
-        if (!update.getSet().isEmpty()) {
-            newlineAndAppend(keyword("set "));
-            newlineAndIndent(() -> build(update.getSet(), ", "));
-        }
-
-        if (!update.getWhere().isEmpty()) {
-            BinaryLogicalOperation where = Operators.and(update.getWhere()).reduce();
-            newlineAndAppend(keyword("where "));
-            newlineAndIndent(() -> build(where.getOperands(), " ", keyword(where.getOperator()) + " "));
-        }
-    }
-
-    @Override
-    public void visit(UpdateValue value) {
-        builder.append(identifier(value.getColumn().getName()))
-                .append(" = ");
-        value.getValue().accept(this);
-    }
-
-    @Override
-    public void visit(WildcardColumn column) {
-        builder.append(column.getTable()
-                .map(table -> table.getAlias() + ".*")
-                .orElse("*"));
-    }
-
-    @Override
-    public void visit(Window window) {
-        builder.append("(");
-        if (window.isReferenceOnly()) {
-            builder.append(window.getReference().getName());
-        } else if (!window.isEmpty()) {
-            if (window.getReference() != null) {
-                newlineAndIndent(() -> builder.append(window.getReference().getName())
-                        .append(" "));
-            }
-
-            if (!window.getPartitionBy().isEmpty()) {
-                newlineAndIndent(() -> {
-                    builder.append(keyword("partition "));
-                    build(window.getPartitionBy(), ", ");
-                });
-            }
-
-            if (!window.getOrderBy().isEmpty()) {
-                newlineAndIndent(() -> {
-                    builder.append("order by ");
-                    build(window.getOrderBy(), ", ");
-                });
-            }
-
-            window.getFrame().ifPresent(frame -> {
-                newlineAndIndent(() -> {
-                    frame.accept(this);
+            builder.append(keyword(frame.getStart()));
+            frame.getEnd().ifPresent(end -> {
+                builder.append(keyword(" and "));
+                frame.getEndExpression().ifPresent(expression -> {
+                    expression.accept(this);
+                    builder.append(expression);
                     builder.append(" ");
                 });
+                builder.append(keyword(end));
+            });
+        }
+
+        @Override
+        public void visit(Function function) {
+            builder.append(keyword(function.getName()))
+                    .append("(");
+            if (!function.getQualifiers().isEmpty()) {
+                builder.append(function.getQualifiers().stream()
+                                .map(this::keyword)
+                                .collect(Collectors.joining(" ")))
+                        .append(" ");
+            }
+
+            build(function.getArguments(), ", ", false);
+            builder.append(")");
+        }
+
+        @Override
+        public void visit(In in) {
+            in.getOperand().accept(this);
+            builder.append(" ")
+                    .append(keyword(in.getOperator()))
+                    .append(" (");
+            build(in.getValues(), ", ", false);
+            builder.append(")");
+        }
+
+        @Override
+        public void visit(IntegerLiteral literal) {
+            build(literal);
+        }
+
+        @Override
+        public void visit(IsNull isNull) {
+            isNull.getOperand().accept(this);
+            builder.append(" ")
+                    .append(keyword(isNull.getOperator()));
+        }
+
+        @Override
+        public void visit(Join join) {
+            builder.append(join.getType())
+                    .append(" ");
+            join.getToColumn().getTable().accept(this);
+            builder.append(keyword(" on "));
+            Operators.and(join.getConditions()).reduce().accept(this);
+        }
+
+        @Override
+        public void visit(Like like) {
+            like.getOperand().accept(this);
+            builder.append(" ")
+                    .append(keyword(like.getOperator()))
+                    .append(" ");
+            like.getPattern().accept(this);
+            like.getEscapeCharacter().ifPresent(escapeCharacter -> {
+                if (options.isUseJdbcEscapeNotation()) {
+                    builder.append(" {escape ")
+                            .append(escapeCharacter)
+                            .append("}");
+                } else {
+                    builder.append(keyword(" escape "))
+                            .append(escapeCharacter);
+                }
+            });
+        }
+
+        @Override
+        public void visit(Not not) {
+            builder.append(keyword(not.getOperator()))
+                    .append(" ");
+            not.getOperand().accept(this);
+        }
+
+        @Override
+        public void visit(NullLiteral literal) {
+            build(literal);
+        }
+
+        @Override
+        public void visit(OrderBy orderBy) {
+            orderBy.getColumn().accept(this);
+            if (!OrderBy.ASCENDING.equalsIgnoreCase(orderBy.getSortOrder())) {
+                builder.append(" ")
+                        .append(keyword(orderBy.getSortOrder()));
+            }
+
+            orderBy.getNullOrder().ifPresent(nullOrder ->
+                    builder.append(" ")
+                            .append(keyword(nullOrder)));
+        }
+
+        @Override
+        public void visit(PlaceHolder placeHolder) {
+            builder.append("?");
+        }
+
+        @Override
+        public void visit(PlainText plainText) {
+            builder.append(plainText.getSql());
+        }
+
+        @Override
+        public void visit(Select select) {
+            builder.append("(");
+            newlineAndIndent(() -> build(select));
+            newlineAndAppend(")");
+        }
+
+        @Override
+        public void visit(SetOperator operator) {
+            builder.append("(");
+            newlineAndIndent(() -> build(operator));
+            newlineAndAppend(")");
+        }
+
+        @Override
+        public void visit(SubQueryOperator operator) {
+            builder.append(keyword(operator.getOperator()))
+                    .append(" ");
+            operator.getOperand().accept(this);
+        }
+
+        @Override
+        public void visit(StringLiteral literal) {
+            literal.getValue().ifPresentOrElse(value ->
+                            builder.append("'")
+                                    .append(value.replace("'", "''"))
+                                    .append("'"),
+                    () -> build(literal));
+        }
+
+        @Override
+        public void visit(Table table) {
+            table.getQueryExpression().ifPresentOrElse(expression -> expression.accept(this),
+                    () -> {
+                        table.getSchema().ifPresent(schema ->
+                                builder.append(schema)
+                                        .append("."));
+                        builder.append(identifier(table.getName()));
+                    });
+            builder.append(" ")
+                    .append(table.getAlias());
+        }
+
+        @Override
+        public void visit(TimestampLiteral literal) {
+            literal.getValue().ifPresentOrElse(value ->
+                            builder.append(options.isUseJdbcEscapeNotation() ?
+                                    "{ts '" + value + "'}" :
+                                    "'" + value + "'"),
+                    () -> build(literal));
+        }
+
+        @Override
+        public void visit(Update update) {
+            if (!update.getWith().isEmpty()) {
+                builder.append(keyword("with "));
+                if (update.isWithRecursive()) {
+                    builder.append(keyword("recursive "));
+                }
+
+                build(update.getWith(), ", ");
+                newline();
+            }
+
+            builder.append(keyword("update "));
+            newlineAndIndent(() -> builder.append(update.getTable().orElse(Table.of("null")))
+                    .append(" "));
+
+            if (!update.getSet().isEmpty()) {
+                newlineAndAppend(keyword("set "));
+                newlineAndIndent(() -> build(update.getSet(), ", "));
+            }
+
+            if (!update.getWhere().isEmpty()) {
+                BinaryLogicalOperation where = Operators.and(update.getWhere()).reduce();
+                newlineAndAppend(keyword("where "));
+                newlineAndIndent(() -> build(where.getOperands(), " ", keyword(where.getOperator()) + " "));
+            }
+        }
+
+        @Override
+        public void visit(UpdateValue value) {
+            builder.append(identifier(value.getColumn().getName()))
+                    .append(" = ");
+            value.getValue().accept(this);
+        }
+
+        @Override
+        public void visit(WildcardColumn column) {
+            builder.append(column.getTable()
+                    .map(table -> table.getAlias() + ".*")
+                    .orElse("*"));
+        }
+
+        @Override
+        public void visit(Window window) {
+            builder.append("(");
+            if (window.isReferenceOnly()) {
+                builder.append(window.getReference().getName());
+            } else if (!window.isEmpty()) {
+                if (window.getReference() != null) {
+                    newlineAndIndent(() -> builder.append(window.getReference().getName())
+                            .append(" "));
+                }
+
+                if (!window.getPartitionBy().isEmpty()) {
+                    newlineAndIndent(() -> {
+                        builder.append(keyword("partition "));
+                        build(window.getPartitionBy(), ", ");
+                    });
+                }
+
+                if (!window.getOrderBy().isEmpty()) {
+                    newlineAndIndent(() -> {
+                        builder.append("order by ");
+                        build(window.getOrderBy(), ", ");
+                    });
+                }
+
+                window.getFrame().ifPresent(frame -> {
+                    newlineAndIndent(() -> {
+                        frame.accept(this);
+                        builder.append(" ");
+                    });
+                });
+
+                newline();
+            }
+
+            builder.append(")");
+        }
+
+        @Override
+        public void visit(WindowFunction function) {
+            function.getFunction().accept(this);
+            builder.append(keyword(" over "));
+
+            if (function.getWindow().isReferenceOnly()) {
+                builder.append(function.getWindow().getReference().getName());
+            } else {
+                function.getWindow().accept(this);
+            }
+        }
+
+        private void build(Literal<?> literal) {
+            builder.append(literal.getValue()
+                    .map(Object::toString)
+                    .orElse("null"));
+        }
+
+        private void build(Select select) {
+            if (!select.getWith().isEmpty()) {
+                builder.append(keyword("with "));
+                if (select.isWithRecursive()) {
+                    builder.append(keyword("recursive "));
+                }
+
+                build(select.getWith(), ", ");
+                newline();
+            }
+
+            builder.append(keyword("select "));
+            if (!select.getHints().isEmpty()) {
+                builder.append("/*+ ")
+                        .append(String.join(" ", select.getHints()))
+                        .append(" */ ");
+            }
+
+            if (select.isDistinct()) {
+                builder.append(keyword("distinct "));
+            }
+
+            newlineAndIndent(() -> {
+                if (!select.getSelect().isEmpty()) {
+                    build(select.getSelect().stream()
+                            .map(selection -> (ObjectBuilder) () -> build(selection))
+                            .toList(), ", ");
+                } else {
+                    builder.append(Column.WILDCARD)
+                            .append(" ");
+                }
             });
 
-            newline();
-        }
-
-        builder.append(")");
-    }
-
-    @Override
-    public void visit(WindowFunction function) {
-        function.getFunction().accept(this);
-        builder.append(keyword(" over "));
-
-        if (function.getWindow().isReferenceOnly()) {
-            builder.append(function.getWindow().getReference().getName());
-        } else {
-            function.getWindow().accept(this);
-        }
-    }
-
-    private void build(Literal<?> literal) {
-        builder.append(literal.getValue()
-                .map(Object::toString)
-                .orElse("null"));
-    }
-
-    private void build(Select select) {
-        if (!select.getWith().isEmpty()) {
-            builder.append(keyword("with "));
-            if (select.isWithRecursive()) {
-                builder.append(keyword("recursive "));
-            }
-
-            build(select.getWith(), ", ");
-            newline();
-        }
-
-        builder.append(keyword("select "));
-        if (!select.getHints().isEmpty()) {
-            builder.append("/*+ ")
-                    .append(String.join(" ", select.getHints()))
-                    .append(" */ ");
-        }
-
-        if (select.isDistinct()) {
-            builder.append(keyword("distinct "));
-        }
-
-        newlineAndIndent(() -> {
-            if (!select.getSelect().isEmpty()) {
-                build(select.getSelect().stream()
-                        .map(selection -> (ObjectBuilder) () -> build(selection))
-                        .toList(), ", ");
-            } else {
-                builder.append(Column.WILDCARD)
+            newlineAndAppend(keyword("from "));
+            newlineAndIndent(() -> {
+                builder.append(select.getFrom().orElse(Table.of("null")))
                         .append(" ");
-            }
-        });
+                if (!select.getJoins().isEmpty()) {
+                    newline();
+                    build(select.getJoins(), " ");
+                }
+            });
 
-        newlineAndAppend(keyword("from "));
-        newlineAndIndent(() -> {
-            builder.append(select.getFrom().orElse(Table.of("null")))
-                    .append(" ");
-            if (!select.getJoins().isEmpty()) {
-                newline();
-                build(select.getJoins(), " ");
-            }
-        });
-
-        if (!select.getWhere().isEmpty()) {
-            BinaryLogicalOperation where = Operators.and(select.getWhere()).reduce();
-            newlineAndAppend(keyword("where "));
-            newlineAndIndent(() -> build(where.getOperands(), " ", keyword(where.getOperator()) + " "));
-        }
-
-        build((QueryStatement<?>) select);
-    }
-
-    private void build(QueryStatement<?> statement) {
-        if (!statement.getGroupBy().isEmpty()) {
-            newlineAndAppend(keyword("group by "));
-            newlineAndIndent(() -> build(statement.getGroupBy(), ", "));
-        }
-
-        if (!statement.getHaving().isEmpty()) {
-            newlineAndAppend(keyword("having "));
-            newlineAndIndent(() -> build(statement.getHaving(), ", "));
-        }
-
-        if (!statement.getWindow().isEmpty()) {
-            newlineAndAppend(keyword("window "));
-            newlineAndIndent(() ->
-                    build(statement.getWindow(), ", ", (window, i) -> window.getName() + keyword(" as ")));
-        }
-
-        if (!statement.getOrderBy().isEmpty()) {
-            newlineAndAppend(keyword("order by "));
-            newlineAndIndent(() -> build(statement.getOrderBy(), ", "));
-        }
-
-        statement.getOffset().ifPresent(offset -> {
-            newlineAndAppend(keyword("offset "));
-            offset.accept(this);
-            builder.append(keyword(" rows "));
-        });
-
-        statement.getFetch().ifPresent(fetch -> {
-            if (statement.getOffset().isEmpty()) {
-                newline();
+            if (!select.getWhere().isEmpty()) {
+                BinaryLogicalOperation where = Operators.and(select.getWhere()).reduce();
+                newlineAndAppend(keyword("where "));
+                newlineAndIndent(() -> build(where.getOperands(), " ", keyword(where.getOperator()) + " "));
             }
 
-            builder.append(keyword("fetch "))
-                    .append(keyword(statement.getOffset().map(offset -> "next ").orElse("first ")));
-            fetch.accept(this);
-            builder.append(" rows only ");
-        });
-    }
-
-    private void build(Selection<?> selection) {
-        selection.accept(this);
-        selection.getAlias().ifPresent(alias ->
-                builder.append(keyword(" as "))
-                        .append(alias));
-    }
-
-    private void build(SetOperator operator) {
-        for (Iterator<Select> iterator = operator.getOperands().iterator(); iterator.hasNext(); ) {
-            iterator.next().accept(this);
-            if (iterator.hasNext()) {
-                builder.append(" ");
-                newlineAndAppend(keyword(operator.getType()))
-                        .append(" ");
-                newline();
-            }
+            build((QueryStatement<?>) select);
         }
 
-        build((QueryStatement<?>) operator);
-    }
-
-    private void build(Collection<?> builders, String delimiter) {
-        build(builders, delimiter, true);
-    }
-
-    private void build(Collection<?> builders, String delimiter, boolean newline) {
-        build(builders, delimiter, (object, i) -> null, newline);
-    }
-
-    private void build(Collection<?> builders, String delimiter, String prefix) {
-        build(builders, delimiter, (object, i) -> i > 0 ? prefix : null);
-    }
-
-    private <T> void build(Collection<T> builders, String delimiter, PrefixBuilder<T, Integer, String> prefixBuilder) {
-        build(builders, delimiter, prefixBuilder, true);
-    }
-
-    private <T> void build(Collection<T> builders, String delimiter, PrefixBuilder<T, Integer, String> prefixBuilder, boolean newline) {
-        Iterator<T> iterator = builders.iterator();
-        int counter = 0;
-
-        while (iterator.hasNext()) {
-            T object = iterator.next();
-            String prefix = prefixBuilder.build(object, counter++);
-            if (prefix != null) {
-                builder.append(prefix);
+        private void build(QueryStatement<?> statement) {
+            if (!statement.getGroupBy().isEmpty()) {
+                newlineAndAppend(keyword("group by "));
+                newlineAndIndent(() -> build(statement.getGroupBy(), ", "));
             }
 
-            if (object instanceof SqlObject sqlObject) {
-                sqlObject.accept(this);
-            } else if (object instanceof ObjectBuilder objectBuilder) {
-                objectBuilder.build();
+            if (!statement.getHaving().isEmpty()) {
+                newlineAndAppend(keyword("having "));
+                newlineAndIndent(() -> build(statement.getHaving(), ", "));
             }
 
-            if (iterator.hasNext()) {
-                builder.append(delimiter);
-                if (newline) {
+            if (!statement.getWindow().isEmpty()) {
+                newlineAndAppend(keyword("window "));
+                newlineAndIndent(() ->
+                        build(statement.getWindow(), ", ", (window, i) -> window.getName() + keyword(" as ")));
+            }
+
+            if (!statement.getOrderBy().isEmpty()) {
+                newlineAndAppend(keyword("order by "));
+                newlineAndIndent(() -> build(statement.getOrderBy(), ", "));
+            }
+
+            statement.getOffset().ifPresent(offset -> {
+                newlineAndAppend(keyword("offset "));
+                offset.accept(this);
+                builder.append(keyword(" rows "));
+            });
+
+            statement.getFetch().ifPresent(fetch -> {
+                if (statement.getOffset().isEmpty()) {
+                    newline();
+                }
+
+                builder.append(keyword("fetch "))
+                        .append(keyword(statement.getOffset().map(offset -> "next ").orElse("first ")));
+                fetch.accept(this);
+                builder.append(" rows only ");
+            });
+        }
+
+        private void build(Selection<?> selection) {
+            selection.accept(this);
+            selection.getAlias().ifPresent(alias ->
+                    builder.append(keyword(" as "))
+                            .append(alias));
+        }
+
+        private void build(SetOperator operator) {
+            for (Iterator<Select> iterator = operator.getOperands().iterator(); iterator.hasNext(); ) {
+                iterator.next().accept(this);
+                if (iterator.hasNext()) {
+                    builder.append(" ");
+                    newlineAndAppend(keyword(operator.getType()))
+                            .append(" ");
                     newline();
                 }
             }
+
+            build((QueryStatement<?>) operator);
         }
 
-        if (newline) {
-            builder.append(" ");
+        private void build(Collection<?> builders, String delimiter) {
+            build(builders, delimiter, true);
         }
-    }
 
-    private String keyword(String keyword) {
-        if (keyword != null) {
-            return options.getKeywordCase() == SqlBuildOptions.KeywordCase.UPPERCASE ?
-                    keyword.toUpperCase(Locale.ROOT) :
-                    keyword.toLowerCase(Locale.ROOT);
-        } else {
-            return "";
+        private void build(Collection<?> builders, String delimiter, boolean newline) {
+            build(builders, delimiter, (object, i) -> null, newline);
         }
-    }
 
-    private String identifier(String identifier) {
-        if (identifier != null) {
-            identifier = switch (options.getIdentifierCase()) {
-                case UPPERCASE -> identifier.toUpperCase(Locale.ROOT);
-                case LOWERCASE -> identifier.toLowerCase(Locale.ROOT);
-                case UNCHANGED -> identifier;
-            };
-
-            return options.isSetIdentifierDelimiter() ?
-                    options.isSetIdentifierDelimiter() + identifier + options.isSetIdentifierDelimiter() :
-                    identifier;
-        } else {
-            return "";
+        private void build(Collection<?> builders, String delimiter, String prefix) {
+            build(builders, delimiter, (object, i) -> i > 0 ? prefix : null);
         }
-    }
 
-    private void newline() {
-        if (options.isSetIndent()) {
-            builder.append(options.getNewline());
-            builder.append(options.getIndent().repeat(level));
+        private <T> void build(Collection<T> builders, String delimiter, PrefixBuilder<T, Integer, String> prefixBuilder) {
+            build(builders, delimiter, prefixBuilder, true);
         }
-    }
 
-    private StringBuilder newlineAndAppend(String text) {
-        newline();
-        return builder.append(text);
-    }
+        private <T> void build(Collection<T> builders, String delimiter, PrefixBuilder<T, Integer, String> prefixBuilder, boolean newline) {
+            Iterator<T> iterator = builders.iterator();
+            int counter = 0;
 
-    private void newlineAndIndent(Runnable action) {
-        level++;
-        newline();
-        action.run();
-        level--;
+            while (iterator.hasNext()) {
+                T object = iterator.next();
+                String prefix = prefixBuilder.build(object, counter++);
+                if (prefix != null) {
+                    builder.append(prefix);
+                }
+
+                if (object instanceof SqlObject sqlObject) {
+                    sqlObject.accept(this);
+                } else if (object instanceof ObjectBuilder objectBuilder) {
+                    objectBuilder.build();
+                }
+
+                if (iterator.hasNext()) {
+                    builder.append(delimiter);
+                    if (newline) {
+                        newline();
+                    }
+                }
+            }
+
+            if (newline) {
+                builder.append(" ");
+            }
+        }
+
+        private String keyword(String keyword) {
+            if (keyword != null) {
+                return options.getKeywordCase() == SqlBuildOptions.KeywordCase.UPPERCASE ?
+                        keyword.toUpperCase(Locale.ROOT) :
+                        keyword.toLowerCase(Locale.ROOT);
+            } else {
+                return "";
+            }
+        }
+
+        private String identifier(String identifier) {
+            if (identifier != null) {
+                identifier = switch (options.getIdentifierCase()) {
+                    case UPPERCASE -> identifier.toUpperCase(Locale.ROOT);
+                    case LOWERCASE -> identifier.toLowerCase(Locale.ROOT);
+                    case UNCHANGED -> identifier;
+                };
+
+                return options.isSetIdentifierDelimiter() ?
+                        options.isSetIdentifierDelimiter() + identifier + options.isSetIdentifierDelimiter() :
+                        identifier;
+            } else {
+                return "";
+            }
+        }
+
+        private void newline() {
+            if (options.isSetIndent()) {
+                builder.append(options.getNewline());
+                builder.append(options.getIndent().repeat(level));
+            }
+        }
+
+        private StringBuilder newlineAndAppend(String text) {
+            newline();
+            return builder.append(text);
+        }
+
+        private void newlineAndIndent(Runnable action) {
+            level++;
+            newline();
+            action.run();
+            level--;
+        }
     }
 
     @FunctionalInterface

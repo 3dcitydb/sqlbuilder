@@ -48,12 +48,12 @@ public class PlaceHolderHelper {
     }
 
     public List<PlaceHolder> getPlaceHolders(SqlObject object) {
-        Collector collector = new Collector();
-        object.accept(collector);
-        return collector.placeHolders;
+        Processor processor = new Processor();
+        object.accept(processor);
+        return processor.placeHolders;
     }
 
-    private static class Collector implements SqlVisitor {
+    private static class Processor implements SqlVisitor {
         private final List<PlaceHolder> placeHolders = new ArrayList<>();
 
         @Override
