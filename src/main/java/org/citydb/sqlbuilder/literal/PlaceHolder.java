@@ -24,7 +24,6 @@ package org.citydb.sqlbuilder.literal;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.util.UserProperties;
 
-import java.util.List;
 import java.util.Map;
 
 public class PlaceHolder extends Literal<Object> {
@@ -66,11 +65,6 @@ public class PlaceHolder extends Literal<Object> {
         }
 
         return userProperties;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        placeHolders.add(this);
     }
 
     @Override
