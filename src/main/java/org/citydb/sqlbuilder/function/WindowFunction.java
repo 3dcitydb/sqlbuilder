@@ -22,11 +22,9 @@
 package org.citydb.sqlbuilder.function;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.query.Window;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -74,12 +72,6 @@ public class WindowFunction implements Selection<WindowFunction> {
     public WindowFunction as(String alias) {
         this.alias = alias;
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        function.getPlaceHolders(placeHolders);
-        window.getPlaceHolders(placeHolders);
     }
 
     @Override

@@ -23,7 +23,6 @@ package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.*;
 
@@ -58,11 +57,6 @@ public class CommonTableExpression implements SqlObject {
 
     public List<String> getColumns() {
         return columns != null ? columns : Collections.emptyList();
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        queryStatement.getPlaceHolders(placeHolders);
     }
 
     @Override

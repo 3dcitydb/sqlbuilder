@@ -24,9 +24,7 @@ package org.citydb.sqlbuilder.query;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.Literal;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -102,17 +100,6 @@ public class Frame implements SqlObject {
 
     private boolean requiresExpression(String position) {
         return PRECEDING.equalsIgnoreCase(position) || FOLLOWING.equalsIgnoreCase(position);
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        if (startExpression != null) {
-            startExpression.getPlaceHolders(placeHolders);
-        }
-
-        if (endExpression != null) {
-            endExpression.getPlaceHolders(placeHolders);
-        }
     }
 
     @Override

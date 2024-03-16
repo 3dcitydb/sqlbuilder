@@ -22,11 +22,9 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
-import java.util.List;
 import java.util.Objects;
 
 public class SubQueryOperator implements Operation, ScalarExpression {
@@ -61,11 +59,6 @@ public class SubQueryOperator implements Operation, ScalarExpression {
 
     public QueryExpression getOperand() {
         return operand;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getPlaceHolders(placeHolders);
     }
 
     @Override

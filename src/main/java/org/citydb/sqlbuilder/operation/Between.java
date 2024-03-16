@@ -23,10 +23,8 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -86,13 +84,6 @@ public class Between implements ComparisonOperation {
     public Between as(String alias) {
         this.alias = alias;
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getPlaceHolders(placeHolders);
-        lowerBound.getPlaceHolders(placeHolders);
-        upperBound.getPlaceHolders(placeHolders);
     }
 
     @Override

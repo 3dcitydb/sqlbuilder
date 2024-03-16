@@ -23,10 +23,8 @@ package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -83,11 +81,6 @@ public class OrderBy implements SqlObject {
     public OrderBy nullOrder(String nullOrder) {
         this.nullOrder = nullOrder;
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        column.getPlaceHolders(placeHolders);
     }
 
     @Override

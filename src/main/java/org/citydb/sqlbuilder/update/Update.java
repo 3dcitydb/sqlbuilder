@@ -22,10 +22,9 @@
 package org.citydb.sqlbuilder.update;
 
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.literal.Literal;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryStatement;
@@ -37,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class Update implements Statement {
+public class Update implements SqlObject {
     private final List<CommonTableExpression> with;
     private final List<UpdateValue> set;
     private final List<BooleanExpression> where;
@@ -134,25 +133,6 @@ public class Update implements Statement {
         }
 
         return this;
-    }
-
-    @Override
-    public List<PlaceHolder> getPlaceHolders() {
-        List<PlaceHolder> placeHolders = new ArrayList<>();
-        getPlaceHolders(placeHolders);
-        return placeHolders;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        with.forEach(cte -> cte.getPlaceHolders(placeHolders));
-
-        if (table != null) {
-            table.getPlaceHolders(placeHolders);
-        }
-
-        set.forEach(value -> value.getPlaceHolders(placeHolders));
-        where.forEach(operator -> operator.getPlaceHolders(placeHolders));
     }
 
     @Override

@@ -23,7 +23,6 @@ package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Select;
@@ -137,13 +136,6 @@ public final class Table implements SqlObject {
 
     public WildcardColumn wildcard() {
         return WildcardColumn.of(this);
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        if (queryExpression != null) {
-            queryExpression.getPlaceHolders(placeHolders);
-        }
     }
 
     @Override

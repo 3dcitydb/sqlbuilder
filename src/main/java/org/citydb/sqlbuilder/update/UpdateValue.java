@@ -24,10 +24,8 @@ package org.citydb.sqlbuilder.update;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
 
-import java.util.List;
 import java.util.Objects;
 
 public class UpdateValue implements SqlObject {
@@ -49,12 +47,6 @@ public class UpdateValue implements SqlObject {
 
     public Expression getValue() {
         return value;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        column.getPlaceHolders(placeHolders);
-        value.getPlaceHolders(placeHolders);
     }
 
     @Override

@@ -22,18 +22,14 @@
 package org.citydb.sqlbuilder.util;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.common.Statement;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class PlainText implements ColumnExpression, Selection<PlainText>, QueryExpression, Statement {
+public class PlainText implements ColumnExpression, Selection<PlainText>, QueryExpression {
     private final String sql;
     private String alias;
 
@@ -47,15 +43,6 @@ public class PlainText implements ColumnExpression, Selection<PlainText>, QueryE
 
     public String getSql() {
         return sql;
-    }
-
-    @Override
-    public List<PlaceHolder> getPlaceHolders() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
     }
 
     @Override

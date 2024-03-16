@@ -95,10 +95,6 @@ public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
     }
 
     @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-    }
-
-    @Override
     public String toString() {
         return toSql();
     }

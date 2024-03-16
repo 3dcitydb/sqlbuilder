@@ -22,7 +22,6 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.common.Expression;
-import org.citydb.sqlbuilder.common.Statement;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.literal.IntegerLiteral;
 import org.citydb.sqlbuilder.literal.Literal;
@@ -34,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class QueryStatement<T extends QueryStatement<?>> implements Statement, QueryExpression {
+public abstract class QueryStatement<T extends QueryStatement<?>> implements QueryExpression {
     protected final List<Column> groupBy;
     protected final List<Expression> having;
     protected final List<Window> window;

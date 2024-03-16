@@ -22,10 +22,8 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -67,12 +65,6 @@ public class BinaryComparisonOperation implements ComparisonOperation {
     public BinaryComparisonOperation as(String alias) {
         this.alias = alias;
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        leftOperand.getPlaceHolders(placeHolders);
-        rightOperand.getPlaceHolders(placeHolders);
     }
 
     @Override

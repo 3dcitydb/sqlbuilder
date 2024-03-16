@@ -25,7 +25,6 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.Literal;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.util.AliasGenerator;
 import org.citydb.sqlbuilder.util.GlobalAliasGenerator;
@@ -189,15 +188,6 @@ public class Window implements SqlObject {
 
     public FrameBuilder units(String units) {
         return new FrameBuilder(units);
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        partitionBy.forEach(partitionBy -> partitionBy.getPlaceHolders(placeHolders));
-        orderBy.forEach(orderBy -> orderBy.getPlaceHolders(placeHolders));
-        if (frame != null) {
-            frame.getPlaceHolders(placeHolders);
-        }
     }
 
     @Override

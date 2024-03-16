@@ -23,10 +23,8 @@ package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.Selection;
 
-import java.util.List;
 import java.util.Optional;
 
 public class WildcardColumn implements Expression, Selection<WildcardColumn> {
@@ -56,13 +54,6 @@ public class WildcardColumn implements Expression, Selection<WildcardColumn> {
     @Override
     public WildcardColumn as(String alias) {
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        if (table != null) {
-            table.getPlaceHolders(placeHolders);
-        }
     }
 
     @Override

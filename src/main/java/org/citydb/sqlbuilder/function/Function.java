@@ -23,7 +23,6 @@ package org.citydb.sqlbuilder.function;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.query.Window;
@@ -113,11 +112,6 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
 
     public WindowFunction over(java.util.function.Function<Window, Window> builder) {
         return WindowFunction.of(this, builder.apply(Window.newInstance()));
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        arguments.forEach(argument -> argument.getPlaceHolders(placeHolders));
     }
 
     @Override

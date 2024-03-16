@@ -23,11 +23,9 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.literal.StringLiteral;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -95,13 +93,6 @@ public class Like implements ComparisonOperation {
     public Like as(String alias) {
         this.alias = alias;
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getPlaceHolders(placeHolders);
-        pattern.getPlaceHolders(placeHolders);
-        escapeCharacter.getPlaceHolders(placeHolders);
     }
 
     @Override

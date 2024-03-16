@@ -24,7 +24,6 @@ package org.citydb.sqlbuilder.query;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.operation.BinaryComparisonOperation;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.schema.Column;
@@ -219,29 +218,6 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     public Select as(String alias) {
         this.alias = alias;
         return this;
-    }
-
-    @Override
-    public List<PlaceHolder> getPlaceHolders() {
-        List<PlaceHolder> placeHolders = new ArrayList<>();
-        getPlaceHolders(placeHolders);
-        return placeHolders;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        with.forEach(cte -> cte.getPlaceHolders(placeHolders));
-        select.forEach(projection -> projection.getPlaceHolders(placeHolders));
-
-        if (from != null) {
-            from.getPlaceHolders(placeHolders);
-        }
-
-        joins.forEach(join -> join.getPlaceHolders(placeHolders));
-        where.forEach(operator -> operator.getPlaceHolders(placeHolders));
-        groupBy.forEach(groupBy -> groupBy.getPlaceHolders(placeHolders));
-        having.forEach(having -> having.getPlaceHolders(placeHolders));
-        orderBy.forEach(orderBy -> orderBy.getPlaceHolders(placeHolders));
     }
 
     @Override

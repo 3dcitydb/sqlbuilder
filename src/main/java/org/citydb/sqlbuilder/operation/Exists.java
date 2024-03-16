@@ -22,10 +22,8 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -73,11 +71,6 @@ public class Exists implements LogicalOperation {
     public Exists as(String alias) {
         this.alias = alias;
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getPlaceHolders(placeHolders);
     }
 
     @Override

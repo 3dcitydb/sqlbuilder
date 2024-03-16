@@ -22,7 +22,6 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 
 import java.util.*;
 
@@ -126,11 +125,6 @@ public class BinaryLogicalOperation implements LogicalOperation {
     public BinaryLogicalOperation as(String alias) {
         this.alias = alias;
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operands.forEach(operand -> operand.getPlaceHolders(placeHolders));
     }
 
     @Override

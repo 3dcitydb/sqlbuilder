@@ -22,9 +22,11 @@
 package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class SetOperator extends QueryStatement<SetOperator> {
     private final String type;
@@ -72,19 +74,6 @@ public class SetOperator extends QueryStatement<SetOperator> {
         }
 
         return this;
-    }
-
-    @Override
-    public List<PlaceHolder> getPlaceHolders() {
-        return operands.stream()
-                .map(Select::getPlaceHolders)
-                .flatMap(Collection::stream)
-                .toList();
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operands.forEach(operand -> operand.getPlaceHolders(placeHolders));
     }
 
     @Override

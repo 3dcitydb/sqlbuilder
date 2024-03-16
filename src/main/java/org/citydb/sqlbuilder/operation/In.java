@@ -23,7 +23,6 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 
 import java.util.*;
@@ -96,12 +95,6 @@ public class In implements ComparisonOperation {
     public In as(String alias) {
         this.alias = alias;
         return this;
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        operand.getPlaceHolders(placeHolders);
-        values.forEach(value -> value.getPlaceHolders(placeHolders));
     }
 
     @Override

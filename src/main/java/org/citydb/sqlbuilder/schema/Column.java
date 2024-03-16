@@ -22,11 +22,9 @@
 package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
 import org.citydb.sqlbuilder.query.OrderBy;
 import org.citydb.sqlbuilder.query.Selection;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -84,11 +82,6 @@ public class Column implements ColumnExpression, Selection<Column> {
 
     public OrderBy orderBy(String sortOrder) {
         return OrderBy.of(this, sortOrder);
-    }
-
-    @Override
-    public void getPlaceHolders(List<PlaceHolder> placeHolders) {
-        table.getPlaceHolders(placeHolders);
     }
 
     @Override
