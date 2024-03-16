@@ -26,5 +26,5 @@ Select select = Select.newInstance()
   .orderBy(author.column("title"));
 
 System.out.println(
-  select.toSQL(SQLBuildOptions.defaults().setIndent("  ")));
+  select.toSql(SqlBuildOptions.defaults().setIndent("  ")));
 ```
