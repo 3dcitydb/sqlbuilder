@@ -41,9 +41,9 @@ public class Window implements SqlObject {
     private Frame frame;
     private Window reference;
 
-    private Window(String name, List<Expression> partitionBy, List<OrderBy> orderBy, Frame frame, Window reference) {
+    private Window(String name, List<? extends Expression> partitionBy, List<OrderBy> orderBy, Frame frame, Window reference) {
         this.name = name;
-        this.partitionBy = partitionBy != null ? partitionBy : new ArrayList<>();
+        this.partitionBy = partitionBy != null ? new ArrayList<>(partitionBy) : new ArrayList<>();
         this.orderBy = orderBy != null ? orderBy : new ArrayList<>();
         this.frame = frame;
         this.reference = reference;
@@ -53,24 +53,24 @@ public class Window implements SqlObject {
         return new Window(null, null, null, null, null);
     }
 
-    public static Window of(String name, List<Expression> partitionBy, List<OrderBy> orderBy, Frame frame, Window reference) {
+    public static Window of(String name, List<? extends Expression> partitionBy, List<OrderBy> orderBy, Frame frame, Window reference) {
         return new Window(name, partitionBy, orderBy, frame, reference);
     }
 
-    public static Window of(List<Expression> partitionBy, List<OrderBy> orderBy, Frame frame) {
+    public static Window of(List<? extends Expression> partitionBy, List<OrderBy> orderBy, Frame frame) {
         return new Window(null, partitionBy, orderBy, frame, null);
     }
 
-    public static Window of(List<Expression> partitionBy, List<OrderBy> orderBy) {
+    public static Window of(List<? extends Expression> partitionBy, List<OrderBy> orderBy) {
         return of(partitionBy, orderBy, null);
     }
 
-    public static Window of(List<Expression> partitionBy) {
+    public static Window of(List<? extends Expression> partitionBy) {
         return of(partitionBy, null);
     }
 
     public static Window of(Expression... partitionBy) {
-        return of(partitionBy != null ? new ArrayList<>(Arrays.asList(partitionBy)) : null);
+        return of(partitionBy != null ? Arrays.asList(partitionBy) : null);
     }
 
     public static Window empty() {
@@ -106,16 +106,16 @@ public class Window implements SqlObject {
         return partitionBy;
     }
 
-    public Window partitionBy(Expression... expressions) {
-        return partitionBy(expressions != null ? Arrays.asList(expressions) : null);
-    }
-
-    public Window partitionBy(List<Expression> expressions) {
+    public Window partitionBy(List<? extends Expression> expressions) {
         if (expressions != null && !expressions.isEmpty()) {
             partitionBy.addAll(expressions);
         }
 
         return this;
+    }
+
+    public Window partitionBy(Expression... expressions) {
+        return partitionBy(expressions != null ? Arrays.asList(expressions) : null);
     }
 
     public List<OrderBy> getOrderBy() {

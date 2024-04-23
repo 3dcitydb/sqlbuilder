@@ -101,7 +101,7 @@ public class Functions {
                 .toList());
     }
 
-    public static Function concat(List<Expression> arguments) {
+    public static Function concat(List<? extends Expression> arguments) {
         return Function.of(CONCAT, arguments);
     }
 

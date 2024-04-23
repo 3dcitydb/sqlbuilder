@@ -266,7 +266,7 @@ public interface ScalarExpression extends Expression {
         return Operators.in(this, Literal.ofScalarList(values));
     }
 
-    default In in(List<ScalarExpression> values) {
-        return Operators.in(this, values);
+    default In in(List<?> values) {
+        return Operators.in(this, Literal.ofScalarList(values));
     }
 }

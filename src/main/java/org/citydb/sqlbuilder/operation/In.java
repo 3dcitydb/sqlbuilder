@@ -33,22 +33,22 @@ public class In implements ComparisonOperation {
     private boolean negate;
     private String alias;
 
-    private In(Expression operand, List<ScalarExpression> values, boolean negate) {
+    private In(Expression operand, List<? extends ScalarExpression> values, boolean negate) {
         this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.values = Objects.requireNonNull(values, "The values list must not be null.");
+        this.values = new ArrayList<>(Objects.requireNonNull(values, "The values list must not be null."));
         this.negate = negate;
     }
 
-    public static In of(Expression operand, List<ScalarExpression> values, boolean negate) {
+    public static In of(Expression operand, List<? extends ScalarExpression> values, boolean negate) {
         return new In(operand, values, negate);
     }
 
-    public static In of(Expression operand, List<ScalarExpression> values) {
+    public static In of(Expression operand, List<? extends ScalarExpression> values) {
         return new In(operand, values, false);
     }
 
     public static In of(Expression operand, ScalarExpression... values) {
-        return new In(operand, values != null ? new ArrayList<>(Arrays.asList(values)) : null, false);
+        return new In(operand, values != null ? Arrays.asList(values) : null, false);
     }
 
     public Expression getOperand() {
@@ -59,7 +59,7 @@ public class In implements ComparisonOperation {
         return values;
     }
 
-    public In add(List<ScalarExpression> values) {
+    public In add(List<? extends ScalarExpression> values) {
         if (values != null && !values.isEmpty()) {
             values.stream()
                     .filter(Objects::nonNull)

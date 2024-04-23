@@ -71,7 +71,7 @@ public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
                 null;
     }
 
-    public static List<ScalarExpression> ofScalarList(List<Object> values) {
+    public static List<ScalarExpression> ofScalarList(List<?> values) {
         return values != null ?
                 values.stream()
                         .map(Literal::ofScalar)

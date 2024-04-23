@@ -38,9 +38,7 @@ public class CommonTableExpression implements SqlObject {
     }
 
     public static CommonTableExpression of(String name, QueryStatement<?> queryStatement, String... columns) {
-        return of(name, queryStatement, columns != null ?
-                new ArrayList<>(Arrays.asList(columns)) :
-                null);
+        return of(name, queryStatement, columns != null ? new ArrayList<>(Arrays.asList(columns)) : null);
     }
 
     public static CommonTableExpression of(String name, QueryStatement<?> queryStatement, List<String> columns) {

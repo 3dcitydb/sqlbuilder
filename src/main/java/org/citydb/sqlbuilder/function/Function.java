@@ -36,23 +36,21 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
     private final List<String> qualifiers = new ArrayList<>();
     private String alias;
 
-    protected Function(String name, String alias, List<Expression> arguments) {
+    protected Function(String name, String alias, List<? extends Expression> arguments) {
         this.name = Objects.requireNonNull(name, "The name must not be null.");
         this.alias = alias;
-        this.arguments = arguments != null ? arguments : new ArrayList<>();
+        this.arguments = arguments != null ? new ArrayList<>(arguments) : new ArrayList<>();
     }
 
-    public static Function of(String name, String alias, List<Expression> arguments) {
+    public static Function of(String name, String alias, List<? extends Expression> arguments) {
         return new Function(name, alias, arguments);
     }
 
     public static Function of(String name, String alias, Expression... arguments) {
-        return new Function(name, alias, arguments != null ?
-                new ArrayList<>(Arrays.asList(arguments)) :
-                null);
+        return new Function(name, alias, arguments != null ? Arrays.asList(arguments) : null);
     }
 
-    public static Function of(String name, List<Expression> arguments) {
+    public static Function of(String name, List<? extends Expression> arguments) {
         return new Function(name, null, arguments);
     }
 
@@ -88,11 +86,7 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
         return arguments;
     }
 
-    public Function add(Expression... arguments) {
-        return arguments != null ? add(Arrays.asList(arguments)) : this;
-    }
-
-    public Function add(List<Expression> arguments) {
+    public Function add(List<? extends Expression> arguments) {
         if (arguments != null && !arguments.isEmpty()) {
             arguments.stream()
                     .filter(Objects::nonNull)
@@ -100,6 +94,10 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
         }
 
         return this;
+    }
+
+    public Function add(Expression... arguments) {
+        return arguments != null ? add(Arrays.asList(arguments)) : this;
     }
 
     public WindowFunction over() {

@@ -30,8 +30,8 @@ public class BinaryLogicalOperation implements LogicalOperation {
     private final String operator;
     private String alias;
 
-    private BinaryLogicalOperation(String operator, List<BooleanExpression> operands) {
-        this.operands = Objects.requireNonNull(operands, "The operands list must not be null.");
+    private BinaryLogicalOperation(String operator, List<? extends BooleanExpression> operands) {
+        this.operands = new ArrayList<>(Objects.requireNonNull(operands, "The operands list must not be null."));
         this.operator = Objects.requireNonNull(operator, "The operator type must not be null.");
 
         if (operands.isEmpty()) {
@@ -41,14 +41,12 @@ public class BinaryLogicalOperation implements LogicalOperation {
         }
     }
 
-    public static BinaryLogicalOperation of(String operator, List<BooleanExpression> operands) {
+    public static BinaryLogicalOperation of(String operator, List<? extends BooleanExpression> operands) {
         return new BinaryLogicalOperation(operator, operands);
     }
 
     public static BinaryLogicalOperation of(String operator, BooleanExpression... operands) {
-        return new BinaryLogicalOperation(operator, operands != null ?
-                new ArrayList<>(Arrays.asList(operands)) :
-                null);
+        return new BinaryLogicalOperation(operator, operands != null ? Arrays.asList(operands) : null);
     }
 
     public static BinaryLogicalOperation of(BooleanExpression leftOperand, String operator, BooleanExpression rightOperand) {
@@ -76,7 +74,7 @@ public class BinaryLogicalOperation implements LogicalOperation {
         return operands != null ? add(Arrays.asList(operands)) : this;
     }
 
-    public BinaryLogicalOperation add(List<BooleanExpression> operands) {
+    public BinaryLogicalOperation add(List<? extends BooleanExpression> operands) {
         if (operands != null && !operands.isEmpty()) {
             operands.stream()
                     .filter(Objects::nonNull)

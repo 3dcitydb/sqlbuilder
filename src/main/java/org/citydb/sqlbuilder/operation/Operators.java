@@ -180,11 +180,11 @@ public class Operators {
         return Between.of(operand, lowerBound, upperBound);
     }
 
-    public static In in(Expression operand, List<ScalarExpression> values, boolean negate) {
+    public static In in(Expression operand, List<? extends ScalarExpression> values, boolean negate) {
         return In.of(operand, values, negate);
     }
 
-    public static In in(Expression operand, List<ScalarExpression> values) {
+    public static In in(Expression operand, List<? extends ScalarExpression> values) {
         return In.of(operand, values);
     }
 
@@ -192,7 +192,7 @@ public class Operators {
         return In.of(operand, values);
     }
 
-    public static BinaryLogicalOperation and(List<BooleanExpression> operands) {
+    public static BinaryLogicalOperation and(List<? extends BooleanExpression> operands) {
         return BinaryLogicalOperation.of(AND, operands);
     }
 
@@ -200,7 +200,7 @@ public class Operators {
         return BinaryLogicalOperation.of(AND, operands);
     }
 
-    public static BinaryLogicalOperation or(List<BooleanExpression> operands) {
+    public static BinaryLogicalOperation or(List<? extends BooleanExpression> operands) {
         return BinaryLogicalOperation.of(OR, operands);
     }
 
