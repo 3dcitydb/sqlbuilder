@@ -43,7 +43,7 @@ public class Join implements SqlObject {
         this.toColumn = Objects.requireNonNull(toColumn, "The target column must not be null.");
         this.fromColumn = Objects.requireNonNull(fromColumn, "The source column must not be null.");
         Objects.requireNonNull(operator, "The operator type must not be null.");
-        conditions.add(BinaryComparisonOperation.of(fromColumn, operator, toColumn));
+        conditions.add(BinaryComparisonOperation.of(toColumn, operator, fromColumn));
     }
 
     public static Join of(String type, Column toColumn, String operator, Column fromColumn) {
