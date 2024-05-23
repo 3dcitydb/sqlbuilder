@@ -25,6 +25,7 @@ import org.citydb.sqlbuilder.common.SqlVisitor;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -41,6 +42,10 @@ public class DateLiteral extends Literal<Date> implements ScalarExpression {
 
     public static DateLiteral of(java.util.Date value) {
         return of(value != null ? new Date(value.getTime()) : null);
+    }
+
+    public static DateLiteral of(LocalDate value) {
+        return of(value != null ? Date.valueOf(value) : null);
     }
 
     public static DateLiteral of(Instant value) {
