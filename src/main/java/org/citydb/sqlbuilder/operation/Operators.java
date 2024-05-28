@@ -92,6 +92,14 @@ public class Operators {
         return eq(leftOperand, rightOperand, false);
     }
 
+    public static BinaryComparisonOperation ne(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
+        return eq(leftOperand, rightOperand, !negate);
+    }
+
+    public static BinaryComparisonOperation ne(ScalarExpression leftOperand, ScalarExpression rightOperand) {
+        return eq(leftOperand, rightOperand, true);
+    }
+
     public static BinaryComparisonOperation lt(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
         return BinaryComparisonOperation.of(leftOperand,
                 !negate ? LESS_THAN : GREATER_THAN_OR_EQUAL_TO,

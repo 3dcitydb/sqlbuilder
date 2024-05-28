@@ -26,7 +26,7 @@ import org.citydb.sqlbuilder.util.UserProperties;
 
 import java.util.Map;
 
-public class PlaceHolder extends Literal<Object> {
+public class PlaceHolder extends Literal<Object> implements ScalarExpression {
     private UserProperties userProperties;
 
     private PlaceHolder(Object value) {
