@@ -33,7 +33,7 @@ import org.citydb.sqlbuilder.util.GlobalAliasGenerator;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class Table implements SqlObject {
+public class Table implements SqlObject {
     private final String name;
     private final String alias;
     private final String schema;
