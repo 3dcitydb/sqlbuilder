@@ -75,7 +75,7 @@ public interface SqlVisitor {
 
     void visit(OrderBy orderBy);
 
-    void visit(PlaceHolder placeHolder);
+    void visit(Placeholder placeholder);
 
     void visit(PlainText plainText);
 

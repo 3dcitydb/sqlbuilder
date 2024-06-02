@@ -278,7 +278,7 @@ public class SqlBuilder {
         }
 
         @Override
-        public void visit(PlaceHolder placeHolder) {
+        public void visit(Placeholder placeholder) {
             builder.append("?");
         }
 

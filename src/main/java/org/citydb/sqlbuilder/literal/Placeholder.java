@@ -26,31 +26,31 @@ import org.citydb.sqlbuilder.util.UserProperties;
 
 import java.util.Map;
 
-public class PlaceHolder extends Literal<Object> implements ScalarExpression {
+public class Placeholder extends Literal<Object> implements ScalarExpression {
     private UserProperties userProperties;
 
-    private PlaceHolder(Object value) {
+    private Placeholder(Object value) {
         super(value);
     }
 
-    public static PlaceHolder empty() {
-        return new PlaceHolder(null);
+    public static Placeholder empty() {
+        return new Placeholder(null);
     }
 
-    public static PlaceHolder of(Object value) {
-        return new PlaceHolder(value);
+    public static Placeholder of(Object value) {
+        return new Placeholder(value);
     }
 
-    public static PlaceHolder of(Object value, Map<String, Object> properties) {
-        PlaceHolder placeHolder = new PlaceHolder(value);
+    public static Placeholder of(Object value, Map<String, Object> properties) {
+        Placeholder placeholder = new Placeholder(value);
         if (properties != null) {
-            properties.forEach(placeHolder.getUserProperties()::set);
+            properties.forEach(placeholder.getUserProperties()::set);
         }
 
-        return placeHolder;
+        return placeholder;
     }
 
-    public PlaceHolder setValue(Object value) {
+    public Placeholder setValue(Object value) {
         this.value = value;
         return this;
     }

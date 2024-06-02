@@ -38,23 +38,23 @@ import org.citydb.sqlbuilder.update.UpdateValue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceHolderHelper {
+public class PlaceholderHelper {
 
-    private PlaceHolderHelper() {
+    private PlaceholderHelper() {
     }
 
-    public static PlaceHolderHelper newInstance() {
-        return new PlaceHolderHelper();
+    public static PlaceholderHelper newInstance() {
+        return new PlaceholderHelper();
     }
 
-    public List<PlaceHolder> getPlaceHolders(SqlObject object) {
+    public List<Placeholder> getPlaceholders(SqlObject object) {
         Processor processor = new Processor();
         object.accept(processor);
-        return processor.placeHolders;
+        return processor.placeholders;
     }
 
     private static class Processor implements SqlVisitor {
-        private final List<PlaceHolder> placeHolders = new ArrayList<>();
+        private final List<Placeholder> placeholders = new ArrayList<>();
 
         @Override
         public void visit(ArithmeticOperation operation) {
@@ -162,8 +162,8 @@ public class PlaceHolderHelper {
         }
 
         @Override
-        public void visit(PlaceHolder placeHolder) {
-            placeHolders.add(placeHolder);
+        public void visit(Placeholder placeholder) {
+            placeholders.add(placeholder);
         }
 
         @Override

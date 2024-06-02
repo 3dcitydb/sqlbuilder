@@ -23,16 +23,16 @@ package org.citydb.sqlbuilder.common;
 
 import org.citydb.sqlbuilder.SqlBuildOptions;
 import org.citydb.sqlbuilder.SqlBuilder;
-import org.citydb.sqlbuilder.literal.PlaceHolder;
-import org.citydb.sqlbuilder.util.PlaceHolderHelper;
+import org.citydb.sqlbuilder.literal.Placeholder;
+import org.citydb.sqlbuilder.util.PlaceholderHelper;
 
 import java.util.List;
 
 public interface SqlObject {
     void accept(SqlVisitor visitor);
 
-    default List<PlaceHolder> getPlaceHolders() {
-        return PlaceHolderHelper.newInstance().getPlaceHolders(this);
+    default List<Placeholder> getPlaceholders() {
+        return PlaceholderHelper.newInstance().getPlaceholders(this);
     }
 
     default String toSql(SqlBuildOptions options) {
