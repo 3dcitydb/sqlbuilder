@@ -269,4 +269,8 @@ public interface ScalarExpression extends Expression {
     default In in(List<?> values) {
         return Operators.in(this, Literal.ofScalarList(values));
     }
+
+    default Collate collate(String collation) {
+        return Operators.collate(this, collation);
+    }
 }

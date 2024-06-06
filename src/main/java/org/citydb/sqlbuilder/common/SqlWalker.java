@@ -65,6 +65,11 @@ public abstract class SqlWalker implements SqlVisitor {
     }
 
     @Override
+    public void visit(Collate collate) {
+        collate.getExpression().accept(this);
+    }
+
+    @Override
     public void visit(Column column) {
         column.getTable().accept(this);
     }

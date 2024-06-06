@@ -45,6 +45,8 @@ public interface SqlVisitor {
 
     void visit(BooleanLiteral literal);
 
+    void visit(Collate collate);
+
     void visit(Column column);
 
     void visit(CommonTableExpression expression);

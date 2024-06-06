@@ -123,6 +123,15 @@ public class SqlBuilder {
         }
 
         @Override
+        public void visit(Collate collate) {
+            collate.getExpression().accept(this);
+            builder.append(" ")
+                    .append(keyword(collate.getOperator()))
+                    .append(" ")
+                    .append(collate.getCollation());
+        }
+
+        @Override
         public void visit(Column column) {
             builder.append(column.getTable().getAlias())
                     .append(".")
@@ -406,12 +415,11 @@ public class SqlBuilder {
                     });
                 }
 
-                window.getFrame().ifPresent(frame -> {
-                    newlineAndIndent(() -> {
-                        frame.accept(this);
-                        builder.append(" ");
-                    });
-                });
+                window.getFrame().ifPresent(frame ->
+                        newlineAndIndent(() -> {
+                            frame.accept(this);
+                            builder.append(" ");
+                        }));
 
                 newline();
             }

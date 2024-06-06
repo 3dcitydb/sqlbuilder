@@ -85,6 +85,11 @@ public class PlaceholderHelper {
         }
 
         @Override
+        public void visit(Collate collate) {
+            collate.getExpression().accept(this);
+        }
+
+        @Override
         public void visit(Column column) {
             column.getTable().accept(this);
         }

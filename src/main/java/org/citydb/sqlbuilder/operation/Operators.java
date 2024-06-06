@@ -57,6 +57,7 @@ public class Operators {
     public static final String ALL = "all";
     public static final String ANY = "any";
     public static final String SOME = "some";
+    public static final String COLLATE = "collate";
 
     public static ArithmeticOperation plus(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, PLUS, rightOperand);
@@ -218,5 +219,9 @@ public class Operators {
 
     public static Not not(BooleanExpression operand) {
         return Not.of(operand);
+    }
+
+    public static Collate collate(Expression expression, String collation) {
+        return Collate.of(expression, collation);
     }
 }
