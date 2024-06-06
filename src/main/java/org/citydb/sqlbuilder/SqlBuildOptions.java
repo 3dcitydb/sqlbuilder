@@ -27,7 +27,7 @@ public class SqlBuildOptions {
     private String identifierDelimiter;
     private IdentifierCase identifierCase = IdentifierCase.UNCHANGED;
     private KeywordCase keywordCase = KeywordCase.LOWERCASE;
-    private boolean useJdbcEscapeNotation = true;
+    private boolean useJdbcEscapeNotation = false;
     private boolean stripParentheses = true;
 
     public enum IdentifierCase {

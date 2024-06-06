@@ -27,6 +27,7 @@ import org.citydb.sqlbuilder.query.Selection;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,7 +72,7 @@ public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
                 null;
     }
 
-    public static List<ScalarExpression> ofScalarList(List<?> values) {
+    public static List<ScalarExpression> ofScalarList(Collection<?> values) {
         return values != null ?
                 values.stream()
                         .map(Literal::ofScalar)
