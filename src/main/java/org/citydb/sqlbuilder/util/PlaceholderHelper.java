@@ -36,7 +36,9 @@ import org.citydb.sqlbuilder.update.Update;
 import org.citydb.sqlbuilder.update.UpdateValue;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PlaceholderHelper {
 
@@ -50,11 +52,11 @@ public class PlaceholderHelper {
     public List<Placeholder> getPlaceholders(SqlObject object) {
         Processor processor = new Processor();
         object.accept(processor);
-        return processor.placeholders;
+        return new ArrayList<>(processor.placeholders);
     }
 
     private static class Processor implements SqlVisitor {
-        private final List<Placeholder> placeholders = new ArrayList<>();
+        private final Set<Placeholder> placeholders = new LinkedHashSet<>();
 
         @Override
         public void visit(ArithmeticOperation operation) {
@@ -140,8 +142,7 @@ public class PlaceholderHelper {
 
         @Override
         public void visit(Join join) {
-            join.getFromColumn().accept(this);
-            join.getToColumn().accept(this);
+            join.getTable().accept(this);
             join.getConditions().forEach(condition -> condition.accept(this));
         }
 
