@@ -237,9 +237,11 @@ public class SqlBuilder {
         public void visit(Join join) {
             builder.append(join.getType())
                     .append(" ");
-            join.getToColumn().getTable().accept(this);
-            builder.append(keyword(" on "));
-            Operators.and(join.getConditions()).reduce().accept(this);
+            join.getTable().accept(this);
+            if (!join.getConditions().isEmpty()) {
+                builder.append(keyword(" on "));
+                Operators.and(join.getConditions()).reduce().accept(this);
+            }
         }
 
         @Override

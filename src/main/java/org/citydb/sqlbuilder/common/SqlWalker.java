@@ -120,8 +120,7 @@ public abstract class SqlWalker implements SqlVisitor {
 
     @Override
     public void visit(Join join) {
-        join.getFromColumn().accept(this);
-        join.getToColumn().accept(this);
+        join.getTable().accept(this);
         join.getConditions().forEach(condition -> condition.accept(this));
     }
 

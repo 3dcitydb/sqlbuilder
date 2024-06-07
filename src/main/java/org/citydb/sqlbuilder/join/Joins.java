@@ -29,6 +29,7 @@ public class Joins {
     public static final String LEFT_JOIN = "left join";
     public static final String RIGHT_JOIN = "right join";
     public static final String FULL_JOIN = "full join";
+    public static final String CROSS_JOIN = "cross join";
 
     public static Join inner(Table table, String column, String operator, Column fromColumn) {
         return Join.of(INNER_JOIN, table, column, operator, fromColumn);
@@ -44,5 +45,9 @@ public class Joins {
 
     public static Join full(Table table, String column, String operator, Column fromColumn) {
         return Join.of(FULL_JOIN, table, column, operator, fromColumn);
+    }
+
+    public static Join cross(Table table) {
+        return Join.of(CROSS_JOIN, table);
     }
 }

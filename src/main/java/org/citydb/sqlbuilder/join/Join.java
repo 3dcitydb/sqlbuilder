@@ -31,19 +31,33 @@ import org.citydb.sqlbuilder.schema.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Join implements SqlObject {
     private final String type;
+    private final Table table;
     private final Column fromColumn;
     private final Column toColumn;
     private final List<BooleanExpression> conditions = new ArrayList<>();
+
+    private Join(String type, Table table) {
+        this.type = Objects.requireNonNull(type, "The join type must not be null.");
+        this.table = Objects.requireNonNull(table, "The target table must not be null.");
+        fromColumn = null;
+        toColumn = null;
+    }
 
     private Join(String type, Column toColumn, String operator, Column fromColumn) {
         this.type = Objects.requireNonNull(type, "The join type must not be null.");
         this.toColumn = Objects.requireNonNull(toColumn, "The target column must not be null.");
         this.fromColumn = Objects.requireNonNull(fromColumn, "The source column must not be null.");
         Objects.requireNonNull(operator, "The operator type must not be null.");
+        table = toColumn.getTable();
         conditions.add(BinaryComparisonOperation.of(toColumn, operator, fromColumn));
+    }
+
+    public static Join of(String type, Table table) {
+        return new Join(type, table);
     }
 
     public static Join of(String type, Column toColumn, String operator, Column fromColumn) {
@@ -55,20 +69,24 @@ public class Join implements SqlObject {
         return new Join(type, toTable.column(toColumn), operator, fromColumn);
     }
 
-    public Column getFromColumn() {
-        return fromColumn;
-    }
-
-    public Column getToColumn() {
-        return toColumn;
-    }
-
     public String getType() {
         return type;
     }
 
     public boolean hasType(String type) {
         return this.type.equalsIgnoreCase(type);
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public Optional<Column> getFromColumn() {
+        return Optional.ofNullable(fromColumn);
+    }
+
+    public Optional<Column> getToColumn() {
+        return Optional.ofNullable(toColumn);
     }
 
     public List<BooleanExpression> getConditions() {
