@@ -38,17 +38,18 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     private final List<String> hints;
     private final List<CommonTableExpression> with;
     private final List<Selection<?>> select;
+    private final List<Table> from;
     private final List<Join> joins;
     private final List<BooleanExpression> where;
     private boolean withRecursive;
     private boolean distinct;
-    private Table from;
     private String alias;
 
     private Select() {
         hints = new ArrayList<>();
         with = new ArrayList<>();
         select = new ArrayList<>();
+        from = new ArrayList<>();
         joins = new ArrayList<>();
         where = new ArrayList<>();
     }
@@ -58,11 +59,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         hints = new ArrayList<>(other.hints);
         with = new ArrayList<>(other.with);
         select = new ArrayList<>(other.select);
+        from = new ArrayList<>(other.from);
         joins = new ArrayList<>(other.joins);
         where = new ArrayList<>(other.where);
         withRecursive = other.withRecursive;
         distinct = other.distinct;
-        from = other.from;
         alias = null;
     }
 
@@ -144,12 +145,19 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return this;
     }
 
-    public Optional<Table> getFrom() {
-        return Optional.ofNullable(from);
+    public List<Table> getFrom() {
+        return from;
     }
 
-    public Select from(Table from) {
-        this.from = from;
+    public Select from(Select select) {
+        return from(Table.of(select));
+    }
+
+    public Select from(Table... from) {
+        if (from != null) {
+            this.from.addAll(Arrays.asList(from));
+        }
+
         return this;
     }
 

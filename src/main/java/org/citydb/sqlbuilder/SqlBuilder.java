@@ -482,8 +482,13 @@ public class SqlBuilder {
 
             newlineAndAppend(keyword("from "));
             newlineAndIndent(() -> {
-                builder.append(select.getFrom().orElse(Table.of("null")))
-                        .append(" ");
+                if (!select.getFrom().isEmpty()) {
+                    build(select.getFrom(), ", ");
+                } else {
+                    builder.append(Table.of("null"))
+                            .append(" ");
+                }
+
                 if (!select.getJoins().isEmpty()) {
                     newline();
                     build(select.getJoins(), " ");

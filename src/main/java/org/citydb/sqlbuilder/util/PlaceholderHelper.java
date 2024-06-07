@@ -180,7 +180,7 @@ public class PlaceholderHelper {
         public void visit(Select select) {
             select.getWith().forEach(cte -> cte.accept(this));
             select.getSelect().forEach(projection -> projection.accept(this));
-            select.getFrom().ifPresent(from -> from.accept(this));
+            select.getFrom().forEach(from -> from.accept(this));
             select.getJoins().forEach(join -> join.accept(this));
             select.getWhere().forEach(operator -> operator.accept(this));
             collect(select);
