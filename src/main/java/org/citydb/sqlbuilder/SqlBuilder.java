@@ -235,7 +235,7 @@ public class SqlBuilder {
 
         @Override
         public void visit(Join join) {
-            builder.append(join.getType())
+            builder.append(keyword(join.getType()))
                     .append(" ");
             join.getTable().accept(this);
             if (!join.getConditions().isEmpty()) {
@@ -330,6 +330,10 @@ public class SqlBuilder {
 
         @Override
         public void visit(Table table) {
+            if (table.isLateral()) {
+                builder.append(keyword("lateral "));
+            }
+
             table.getQueryExpression().ifPresentOrElse(expression -> expression.accept(this),
                     () -> {
                         table.getSchema().ifPresent(schema ->

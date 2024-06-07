@@ -21,8 +21,10 @@
 
 package org.citydb.sqlbuilder.join;
 
+import org.citydb.sqlbuilder.query.Select;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
+import org.citydb.sqlbuilder.util.AliasGenerator;
 
 public class Joins {
     public static final String INNER_JOIN = "inner join";
@@ -35,19 +37,59 @@ public class Joins {
         return Join.of(INNER_JOIN, table, column, operator, fromColumn);
     }
 
+    public static Join innerLateral(Select select) {
+        return Join.of(INNER_JOIN, Table.lateral(select));
+    }
+
+    public static Join innerLateral(Select select, AliasGenerator aliasGenerator) {
+        return Join.of(INNER_JOIN, Table.lateral(select, aliasGenerator));
+    }
+
     public static Join left(Table table, String column, String operator, Column fromColumn) {
         return Join.of(LEFT_JOIN, table, column, operator, fromColumn);
+    }
+
+    public static Join leftLateral(Select select) {
+        return Join.of(LEFT_JOIN, Table.lateral(select));
+    }
+
+    public static Join leftLateral(Select select, AliasGenerator aliasGenerator) {
+        return Join.of(LEFT_JOIN, Table.lateral(select, aliasGenerator));
     }
 
     public static Join right(Table table, String column, String operator, Column fromColumn) {
         return Join.of(RIGHT_JOIN, table, column, operator, fromColumn);
     }
 
+    public static Join rightLateral(Select select) {
+        return Join.of(RIGHT_JOIN, Table.lateral(select));
+    }
+
+    public static Join rightLateral(Select select, AliasGenerator aliasGenerator) {
+        return Join.of(RIGHT_JOIN, Table.lateral(select, aliasGenerator));
+    }
+
     public static Join full(Table table, String column, String operator, Column fromColumn) {
         return Join.of(FULL_JOIN, table, column, operator, fromColumn);
     }
 
+    public static Join fullLateral(Select select) {
+        return Join.of(FULL_JOIN, Table.lateral(select));
+    }
+
+    public static Join fullLateral(Select select, AliasGenerator aliasGenerator) {
+        return Join.of(FULL_JOIN, Table.lateral(select, aliasGenerator));
+    }
+
     public static Join cross(Table table) {
         return Join.of(CROSS_JOIN, table);
+    }
+
+    public static Join crossLateral(Select select) {
+        return Join.of(CROSS_JOIN, Table.lateral(select));
+    }
+
+    public static Join crossLateral(Select select, AliasGenerator aliasGenerator) {
+        return Join.of(CROSS_JOIN, Table.lateral(select, aliasGenerator));
     }
 }

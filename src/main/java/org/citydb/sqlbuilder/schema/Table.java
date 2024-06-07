@@ -38,34 +38,36 @@ public class Table implements SqlObject {
     private final String alias;
     private final String schema;
     private final QueryExpression queryExpression;
+    private final boolean isLateral;
 
-    private Table(String name, String schema, QueryExpression queryExpression, AliasGenerator aliasGenerator) {
+    private Table(String name, String schema, QueryExpression queryExpression, boolean isLateral, AliasGenerator aliasGenerator) {
         this.name = Objects.requireNonNull(name, "The table name must not be null.");
         this.schema = schema;
         this.queryExpression = queryExpression;
+        this.isLateral = isLateral;
         alias = aliasGenerator != null ?
                 aliasGenerator.next() :
                 GlobalAliasGenerator.getInstance().next();
     }
 
     public static Table of(String name, String schema, AliasGenerator aliasGenerator) {
-        return new Table(name, schema, null, aliasGenerator);
+        return new Table(name, schema, null, false, aliasGenerator);
     }
 
     public static Table of(String name, AliasGenerator aliasGenerator) {
-        return new Table(name, null, null, aliasGenerator);
+        return new Table(name, null, null, false, aliasGenerator);
     }
 
     public static Table of(Select select, AliasGenerator aliasGenerator) {
-        return new Table("", null, select, aliasGenerator);
+        return new Table("", null, select, false, aliasGenerator);
     }
 
     public static Table of(SetOperator setOperator, AliasGenerator aliasGenerator) {
-        return new Table("", null, setOperator, aliasGenerator);
+        return new Table("", null, setOperator, false, aliasGenerator);
     }
 
     public static Table of(CommonTableExpression cte, AliasGenerator aliasGenerator) {
-        return new Table(cte.getName(), null, null, aliasGenerator);
+        return new Table(cte.getName(), null, null, false, aliasGenerator);
     }
 
     public static Table of(String name, String schema) {
@@ -88,6 +90,14 @@ public class Table implements SqlObject {
         return of(cte, GlobalAliasGenerator.getInstance());
     }
 
+    public static Table lateral(Select select, AliasGenerator aliasGenerator) {
+        return new Table("", null, select, true, aliasGenerator);
+    }
+
+    public static Table lateral(Select select) {
+        return lateral(select, GlobalAliasGenerator.getInstance());
+    }
+
     public String getName() {
         return name;
     }
@@ -102,6 +112,10 @@ public class Table implements SqlObject {
 
     public Optional<QueryExpression> getQueryExpression() {
         return Optional.ofNullable(queryExpression);
+    }
+
+    public boolean isLateral() {
+        return isLateral;
     }
 
     public Column column(String name) {

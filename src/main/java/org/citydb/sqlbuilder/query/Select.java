@@ -28,6 +28,7 @@ import org.citydb.sqlbuilder.operation.BinaryComparisonOperation;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
+import org.citydb.sqlbuilder.util.AliasGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,8 +150,12 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return from;
     }
 
-    public Select from(Select select) {
-        return from(Table.of(select));
+    public Select fromLateral(Select select) {
+        return from(Table.lateral(select));
+    }
+
+    public Select fromLateral(Select select, AliasGenerator aliasGenerator) {
+        return from(Table.lateral(select, aliasGenerator));
     }
 
     public Select from(Table... from) {
@@ -177,6 +182,10 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return join(table, Joins.INNER_JOIN);
     }
 
+    public JoinBuilder join(Table table, String type) {
+        return new JoinBuilder(table, type);
+    }
+
     public JoinBuilder leftJoin(Table table) {
         return join(table, Joins.LEFT_JOIN);
     }
@@ -189,8 +198,8 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return join(table, Joins.FULL_JOIN);
     }
 
-    public JoinBuilder join(Table table, String type) {
-        return new JoinBuilder(table, type);
+    public Select crossJoin(Table table) {
+        return join(Joins.cross(table));
     }
 
     public List<BooleanExpression> getWhere() {
