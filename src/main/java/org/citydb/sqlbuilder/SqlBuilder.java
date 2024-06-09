@@ -409,7 +409,7 @@ public class SqlBuilder {
 
                 if (!window.getPartitionBy().isEmpty()) {
                     newlineAndIndent(() -> {
-                        builder.append(keyword("partition "));
+                        builder.append(keyword("partition by "));
                         build(window.getPartitionBy(), ", ");
                     });
                 }
