@@ -37,16 +37,16 @@ import org.citydb.sqlbuilder.util.PlainText;
 public abstract class SqlWalker implements SqlVisitor {
 
     @Override
+    public void visit(ArithmeticOperation operation) {
+        operation.getLeftOperand().accept(this);
+        operation.getRightOperand().accept(this);
+    }
+
+    @Override
     public void visit(Between between) {
         between.getOperand().accept(this);
         between.getLowerBound().accept(this);
         between.getUpperBound().accept(this);
-    }
-
-    @Override
-    public void visit(ArithmeticOperation operation) {
-        operation.getLeftOperand().accept(this);
-        operation.getRightOperand().accept(this);
     }
 
     @Override
@@ -157,6 +157,7 @@ public abstract class SqlWalker implements SqlVisitor {
     public void visit(Select select) {
         select.getWith().forEach(with -> with.accept(this));
         select.getSelect().forEach(selection -> selection.accept(this));
+        select.getFrom().forEach(from -> from.accept(this));
         select.getJoins().forEach(join -> join.accept(this));
         select.getWhere().forEach(where -> where.accept(this));
         visit((QueryStatement<?>) select);
@@ -189,9 +190,9 @@ public abstract class SqlWalker implements SqlVisitor {
     @Override
     public void visit(Update update) {
         update.getWith().forEach(with -> with.accept(this));
+        update.getTable().ifPresent(table -> table.accept(this));
         update.getSet().forEach(set -> set.accept(this));
         update.getWhere().forEach(where -> where.accept(this));
-        update.getTable().ifPresent(table -> table.accept(this));
     }
 
     @Override
