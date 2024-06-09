@@ -263,10 +263,12 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
 
         public Select on(BinaryComparisonOperation operator) {
             if (operator.getLeftOperand() instanceof Column left
-                    && operator.getRightOperand() instanceof Column right
-                    && (left.getTable() == table
-                    || right.getTable() == table)) {
-                joins.add(Join.of(type, right, operator.getOperator(), left));
+                    && operator.getRightOperand() instanceof Column right) {
+                if (left.getTable() == table) {
+                    joins.add(Join.of(type, left, operator.getOperator(), right));
+                } else if (right.getTable() == table) {
+                    joins.add(Join.of(type, right, operator.getOperator(), left));
+                }
             }
 
             return Select.this;

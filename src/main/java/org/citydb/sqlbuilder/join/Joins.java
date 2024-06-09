@@ -37,48 +37,48 @@ public class Joins {
         return Join.of(INNER_JOIN, table, column, operator, fromColumn);
     }
 
-    public static Join innerLateral(Select select) {
-        return Join.of(INNER_JOIN, Table.lateral(select));
+    public static Join innerLateral(Select select, String column, String operator, Column fromColumn) {
+        return inner(Table.lateral(select), column, operator, fromColumn);
     }
 
-    public static Join innerLateral(Select select, AliasGenerator aliasGenerator) {
-        return Join.of(INNER_JOIN, Table.lateral(select, aliasGenerator));
+    public static Join innerLateral(Select select, String column, String operator, Column fromColumn, AliasGenerator aliasGenerator) {
+        return inner(Table.lateral(select, aliasGenerator), column, operator, fromColumn);
     }
 
     public static Join left(Table table, String column, String operator, Column fromColumn) {
         return Join.of(LEFT_JOIN, table, column, operator, fromColumn);
     }
 
-    public static Join leftLateral(Select select) {
-        return Join.of(LEFT_JOIN, Table.lateral(select));
+    public static Join leftLateral(Select select, String column, String operator, Column fromColumn) {
+        return left(Table.lateral(select), column, operator, fromColumn);
     }
 
-    public static Join leftLateral(Select select, AliasGenerator aliasGenerator) {
-        return Join.of(LEFT_JOIN, Table.lateral(select, aliasGenerator));
+    public static Join leftLateral(Select select, String column, String operator, Column fromColumn, AliasGenerator aliasGenerator) {
+        return left(Table.lateral(select, aliasGenerator), column, operator, fromColumn);
     }
 
     public static Join right(Table table, String column, String operator, Column fromColumn) {
         return Join.of(RIGHT_JOIN, table, column, operator, fromColumn);
     }
 
-    public static Join rightLateral(Select select) {
-        return Join.of(RIGHT_JOIN, Table.lateral(select));
+    public static Join rightLateral(Select select, String column, String operator, Column fromColumn) {
+        return right(Table.lateral(select), column, operator, fromColumn);
     }
 
-    public static Join rightLateral(Select select, AliasGenerator aliasGenerator) {
-        return Join.of(RIGHT_JOIN, Table.lateral(select, aliasGenerator));
+    public static Join rightLateral(Select select, String column, String operator, Column fromColumn, AliasGenerator aliasGenerator) {
+        return right(Table.lateral(select, aliasGenerator), column, operator, fromColumn);
     }
 
     public static Join full(Table table, String column, String operator, Column fromColumn) {
         return Join.of(FULL_JOIN, table, column, operator, fromColumn);
     }
 
-    public static Join fullLateral(Select select) {
-        return Join.of(FULL_JOIN, Table.lateral(select));
+    public static Join fullLateral(Select select, String column, String operator, Column fromColumn) {
+        return full(Table.lateral(select), column, operator, fromColumn);
     }
 
-    public static Join fullLateral(Select select, AliasGenerator aliasGenerator) {
-        return Join.of(FULL_JOIN, Table.lateral(select, aliasGenerator));
+    public static Join fullLateral(Select select, String column, String operator, Column fromColumn, AliasGenerator aliasGenerator) {
+        return full(Table.lateral(select, aliasGenerator), column, operator, fromColumn);
     }
 
     public static Join cross(Table table) {
