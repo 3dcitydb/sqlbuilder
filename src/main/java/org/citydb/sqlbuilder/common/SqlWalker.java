@@ -36,14 +36,19 @@ import org.citydb.sqlbuilder.util.PlainText;
 
 public abstract class SqlWalker implements SqlVisitor {
 
+    public void visit(SqlObject object) {
+    }
+
     @Override
     public void visit(ArithmeticOperation operation) {
+        visit((SqlObject) operation);
         operation.getLeftOperand().accept(this);
         operation.getRightOperand().accept(this);
     }
 
     @Override
     public void visit(Between between) {
+        visit((SqlObject) between);
         between.getOperand().accept(this);
         between.getLowerBound().accept(this);
         between.getUpperBound().accept(this);
@@ -51,81 +56,97 @@ public abstract class SqlWalker implements SqlVisitor {
 
     @Override
     public void visit(BinaryComparisonOperation operation) {
+        visit((SqlObject) operation);
         operation.getLeftOperand().accept(this);
         operation.getRightOperand().accept(this);
     }
 
     @Override
     public void visit(BinaryLogicalOperation operation) {
+        visit((SqlObject) operation);
         operation.getOperands().forEach(operand -> operand.accept(this));
     }
 
     @Override
     public void visit(BooleanLiteral literal) {
+        visit((SqlObject) literal);
     }
 
     @Override
     public void visit(Collate collate) {
+        visit((SqlObject) collate);
         collate.getExpression().accept(this);
     }
 
     @Override
     public void visit(Column column) {
+        visit((SqlObject) column);
         column.getTable().accept(this);
     }
 
     @Override
     public void visit(CommonTableExpression expression) {
+        visit((SqlObject) expression);
         expression.getQueryStatement().accept(this);
     }
 
     @Override
     public void visit(DateLiteral literal) {
+        visit((SqlObject) literal);
     }
 
     @Override
     public void visit(DoubleLiteral literal) {
+        visit((SqlObject) literal);
     }
 
     @Override
     public void visit(Exists exists) {
+        visit((SqlObject) exists);
         exists.getOperand().accept(this);
     }
 
     @Override
     public void visit(Frame frame) {
+        visit((SqlObject) frame);
         frame.getStartExpression().ifPresent(literal -> literal.accept(this));
         frame.getEndExpression().ifPresent(literal -> literal.accept(this));
     }
 
     @Override
     public void visit(Function function) {
+        visit((SqlObject) function);
         function.getArguments().forEach(argument -> argument.accept(this));
     }
 
     @Override
     public void visit(In in) {
+        visit((SqlObject) in);
         in.getOperand().accept(this);
         in.getValues().forEach(value -> value.accept(this));
     }
 
     @Override
     public void visit(IntegerLiteral literal) {
+        visit((SqlObject) literal);
     }
 
     @Override
     public void visit(IsNull isNull) {
+        visit((SqlObject) isNull);
         isNull.getOperand().accept(this);
     }
 
     @Override
     public void visit(Join join) {
+        visit((SqlObject) join);
         join.getTable().accept(this);
         join.getConditions().forEach(condition -> condition.accept(this));
     }
 
     @Override
     public void visit(Like like) {
+        visit((SqlObject) like);
         like.getOperand().accept(this);
         like.getPattern().accept(this);
         like.getEscapeCharacter().ifPresent(character -> character.accept(this));
@@ -133,28 +154,34 @@ public abstract class SqlWalker implements SqlVisitor {
 
     @Override
     public void visit(Not not) {
+        visit((SqlObject) not);
         not.getOperand().accept(this);
     }
 
     @Override
     public void visit(NullLiteral literal) {
+        visit((SqlObject) literal);
     }
 
     @Override
     public void visit(OrderBy orderBy) {
+        visit((SqlObject) orderBy);
         orderBy.getColumn().accept(this);
     }
 
     @Override
     public void visit(Placeholder placeholder) {
+        visit((SqlObject) placeholder);
     }
 
     @Override
     public void visit(PlainText plainText) {
+        visit((SqlObject) plainText);
     }
 
     @Override
     public void visit(Select select) {
+        visit((SqlObject) select);
         select.getWith().forEach(with -> with.accept(this));
         select.getSelect().forEach(selection -> selection.accept(this));
         select.getFrom().forEach(from -> from.accept(this));
@@ -165,30 +192,36 @@ public abstract class SqlWalker implements SqlVisitor {
 
     @Override
     public void visit(SetOperator operator) {
+        visit((SqlObject) operator);
         operator.getOperands().forEach(operand -> operand.accept(this));
         visit((QueryStatement<?>) operator);
     }
 
     @Override
     public void visit(SubQueryOperator operator) {
+        visit((SqlObject) operator);
         operator.getOperand().accept(this);
     }
 
     @Override
     public void visit(StringLiteral literal) {
+        visit((SqlObject) literal);
     }
 
     @Override
     public void visit(Table table) {
+        visit((SqlObject) table);
         table.getQueryExpression().ifPresent(expression -> expression.accept(this));
     }
 
     @Override
     public void visit(TimestampLiteral literal) {
+        visit((SqlObject) literal);
     }
 
     @Override
     public void visit(Update update) {
+        visit((SqlObject) update);
         update.getWith().forEach(with -> with.accept(this));
         update.getTable().ifPresent(table -> table.accept(this));
         update.getSet().forEach(set -> set.accept(this));
@@ -197,25 +230,29 @@ public abstract class SqlWalker implements SqlVisitor {
 
     @Override
     public void visit(UpdateValue value) {
+        visit((SqlObject) value);
         value.getColumn().accept(this);
         value.getValue().accept(this);
     }
 
     @Override
     public void visit(WildcardColumn column) {
+        visit((SqlObject) column);
         column.getTable().ifPresent(table -> table.accept(this));
     }
 
     @Override
     public void visit(Window window) {
+        visit((SqlObject) window);
         window.getPartitionBy().forEach(partition -> partition.accept(this));
         window.getOrderBy().forEach(orderBy -> orderBy.accept(this));
         window.getFrame().ifPresent(frame -> frame.accept(this));
-        window.getReference().accept(this);
+        window.getReference().ifPresent(reference -> reference.accept(this));
     }
 
     @Override
     public void visit(WindowFunction function) {
+        visit((SqlObject) function);
         function.getFunction().accept(this);
         function.getWindow().accept(this);
     }

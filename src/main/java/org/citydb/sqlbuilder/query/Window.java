@@ -147,8 +147,8 @@ public class Window implements SqlObject {
         return this;
     }
 
-    public Window getReference() {
-        return reference;
+    public Optional<Window> getReference() {
+        return Optional.ofNullable(reference);
     }
 
     public Window references(Window reference) {

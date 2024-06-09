@@ -22,7 +22,7 @@
 package org.citydb.sqlbuilder.util;
 
 import org.citydb.sqlbuilder.common.SqlObject;
-import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.common.SqlWalker;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.WindowFunction;
 import org.citydb.sqlbuilder.join.Join;
@@ -35,10 +35,7 @@ import org.citydb.sqlbuilder.schema.WildcardColumn;
 import org.citydb.sqlbuilder.update.Update;
 import org.citydb.sqlbuilder.update.UpdateValue;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class PlaceholderHelper {
 
@@ -52,203 +49,251 @@ public class PlaceholderHelper {
     public List<Placeholder> getPlaceholders(SqlObject object) {
         Processor processor = new Processor();
         object.accept(processor);
-        return new ArrayList<>(processor.placeholders);
+        return processor.placeholders;
     }
 
-    private static class Processor implements SqlVisitor {
-        private final Set<Placeholder> placeholders = new LinkedHashSet<>();
+    private static class Processor extends SqlWalker {
+        private final List<Placeholder> placeholders = new ArrayList<>();
+        private final Set<SqlObject> visited = Collections.newSetFromMap(new IdentityHashMap<>());
 
         @Override
         public void visit(ArithmeticOperation operation) {
-            operation.getLeftOperand().accept(this);
-            operation.getRightOperand().accept(this);
+            if (visited.add(operation)) {
+                super.visit(operation);
+            }
         }
 
         @Override
         public void visit(Between between) {
-            between.getOperand().accept(this);
-            between.getLowerBound().accept(this);
-            between.getUpperBound().accept(this);
+            if (visited.add(between)) {
+                super.visit(between);
+            }
         }
 
         @Override
         public void visit(BinaryComparisonOperation operation) {
-            operation.getLeftOperand().accept(this);
-            operation.getRightOperand().accept(this);
+            if (visited.add(operation)) {
+                super.visit(operation);
+            }
         }
 
         @Override
         public void visit(BinaryLogicalOperation operation) {
-            operation.getOperands().forEach(operand -> operand.accept(this));
+            if (visited.add(operation)) {
+                super.visit(operation);
+            }
         }
 
         @Override
         public void visit(BooleanLiteral literal) {
+            if (visited.add(literal)) {
+                super.visit(literal);
+            }
         }
 
         @Override
         public void visit(Collate collate) {
-            collate.getExpression().accept(this);
+            if (visited.add(collate)) {
+                super.visit(collate);
+            }
         }
 
         @Override
         public void visit(Column column) {
-            column.getTable().accept(this);
+            if (visited.add(column)) {
+                super.visit(column);
+            }
         }
 
         @Override
         public void visit(CommonTableExpression expression) {
-            expression.getQueryStatement().accept(this);
+            if (visited.add(expression)) {
+                super.visit(expression);
+            }
         }
 
         @Override
         public void visit(DateLiteral literal) {
+            if (visited.add(literal)) {
+                super.visit(literal);
+            }
         }
 
         @Override
         public void visit(DoubleLiteral literal) {
+            if (visited.add(literal)) {
+                super.visit(literal);
+            }
         }
 
         @Override
         public void visit(Exists exists) {
-            exists.getOperand().accept(this);
+            if (visited.add(exists)) {
+                super.visit(exists);
+            }
         }
 
         @Override
         public void visit(Frame frame) {
-            frame.getStartExpression().ifPresent(expression -> expression.accept(this));
-            frame.getEndExpression().ifPresent(expression -> expression.accept(this));
+            if (visited.add(frame)) {
+                super.visit(frame);
+            }
         }
 
         @Override
         public void visit(Function function) {
-            function.getArguments().forEach(argument -> argument.accept(this));
+            if (visited.add(function)) {
+                super.visit(function);
+            }
         }
 
         @Override
         public void visit(In in) {
-            in.getOperand().accept(this);
-            in.getValues().forEach(value -> value.accept(this));
+            if (visited.add(in)) {
+                super.visit(in);
+            }
         }
 
         @Override
         public void visit(IntegerLiteral literal) {
+            if (visited.add(literal)) {
+                super.visit(literal);
+            }
         }
 
         @Override
         public void visit(IsNull isNull) {
-            isNull.getOperand().accept(this);
+            if (visited.add(isNull)) {
+                super.visit(isNull);
+            }
         }
 
         @Override
         public void visit(Join join) {
-            join.getTable().accept(this);
-            join.getConditions().forEach(condition -> condition.accept(this));
+            if (visited.add(join)) {
+                super.visit(join);
+            }
         }
 
         @Override
         public void visit(Like like) {
-            like.getOperand().accept(this);
-            like.getPattern().accept(this);
-            like.getEscapeCharacter().ifPresent(character -> character.accept(this));
+            if (visited.add(like)) {
+                super.visit(like);
+            }
         }
 
         @Override
         public void visit(Not not) {
-            not.getOperand().accept(this);
+            if (visited.add(not)) {
+                super.visit(not);
+            }
         }
 
         @Override
         public void visit(NullLiteral literal) {
+            if (visited.add(literal)) {
+                super.visit(literal);
+            }
         }
 
         @Override
         public void visit(OrderBy orderBy) {
-            orderBy.getColumn().accept(this);
+            if (visited.add(orderBy)) {
+                super.visit(orderBy);
+            }
         }
 
         @Override
         public void visit(Placeholder placeholder) {
-            placeholders.add(placeholder);
+            if (visited.add(placeholder)) {
+                placeholders.add(placeholder);
+            }
         }
 
         @Override
         public void visit(PlainText plainText) {
+            if (visited.add(plainText)) {
+                super.visit(plainText);
+            }
         }
 
         @Override
         public void visit(Select select) {
-            select.getWith().forEach(cte -> cte.accept(this));
-            select.getSelect().forEach(projection -> projection.accept(this));
-            select.getFrom().forEach(from -> from.accept(this));
-            select.getJoins().forEach(join -> join.accept(this));
-            select.getWhere().forEach(operator -> operator.accept(this));
-            collect(select);
+            if (visited.add(select)) {
+                super.visit(select);
+            }
         }
 
         @Override
         public void visit(SetOperator operator) {
-            operator.getOperands().forEach(operand -> operand.accept(this));
-            collect(operator);
+            if (visited.add(operator)) {
+                super.visit(operator);
+            }
         }
 
         @Override
         public void visit(SubQueryOperator operator) {
-            operator.getOperand().accept(this);
+            if (visited.add(operator)) {
+                super.visit(operator);
+            }
         }
 
         @Override
         public void visit(StringLiteral literal) {
+            if (visited.add(literal)) {
+                super.visit(literal);
+            }
         }
 
         @Override
         public void visit(Table table) {
-            table.getQueryExpression().ifPresent(expression -> expression.accept(this));
+            if (visited.add(table)) {
+                super.visit(table);
+            }
         }
 
         @Override
         public void visit(TimestampLiteral literal) {
+            if (visited.add(literal)) {
+                super.visit(literal);
+            }
         }
 
         @Override
         public void visit(Update update) {
-            update.getWith().forEach(cte -> cte.accept(this));
-            update.getTable().ifPresent(table -> table.accept(this));
-            update.getSet().forEach(value -> value.accept(this));
-            update.getWhere().forEach(operator -> operator.accept(this));
+            if (visited.add(update)) {
+                super.visit(update);
+            }
         }
 
         @Override
         public void visit(UpdateValue value) {
-            value.getColumn().accept(this);
-            value.getValue().accept(this);
+            if (visited.add(value)) {
+                super.visit(value);
+            }
         }
 
         @Override
         public void visit(WildcardColumn column) {
-            column.getTable().ifPresent(table -> table.accept(this));
+            if (visited.add(column)) {
+                super.visit(column);
+            }
         }
 
         @Override
         public void visit(Window window) {
-            window.getPartitionBy().forEach(partitionBy -> partitionBy.accept(this));
-            window.getOrderBy().forEach(orderBy -> orderBy.accept(this));
-            window.getFrame().ifPresent(frame -> frame.accept(this));
+            if (visited.add(window)) {
+                window.getPartitionBy().forEach(partition -> partition.accept(this));
+                window.getOrderBy().forEach(orderBy -> orderBy.accept(this));
+                window.getFrame().ifPresent(frame -> frame.accept(this));
+            }
         }
 
         @Override
         public void visit(WindowFunction function) {
-            function.getFunction().accept(this);
-            function.getWindow().accept(this);
-        }
-
-        private void collect(QueryStatement<?> statement) {
-            statement.getGroupBy().forEach(groupBy -> groupBy.accept(this));
-            statement.getHaving().forEach(having -> having.accept(this));
-            statement.getWindow().forEach(window -> window.accept(this));
-            statement.getOrderBy().forEach(orderBy -> orderBy.accept(this));
-            statement.getOffset().ifPresent(offset -> offset.accept(this));
-            statement.getFetch().ifPresent(fetch -> fetch.accept(this));
+            if (visited.add(function)) {
+                super.visit(function);
+            }
         }
     }
 }
