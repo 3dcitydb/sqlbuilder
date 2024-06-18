@@ -467,11 +467,11 @@ public class SqlBuilder {
                         .append(" */ ");
             }
 
-            if (select.isDistinct()) {
-                builder.append(keyword("distinct "));
-            }
-
             newlineAndIndent(() -> {
+                if (select.isDistinct()) {
+                    builder.append(keyword("distinct "));
+                }
+
                 if (!select.getSelect().isEmpty()) {
                     build(select.getSelect().stream()
                             .map(selection -> (ObjectBuilder) () -> build(selection))
