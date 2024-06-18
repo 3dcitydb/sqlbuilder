@@ -24,8 +24,6 @@ package org.citydb.sqlbuilder.literal;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.util.UserProperties;
 
-import java.util.Map;
-
 public class Placeholder extends Literal<Object> implements ScalarExpression {
     private UserProperties userProperties;
 
@@ -41,13 +39,8 @@ public class Placeholder extends Literal<Object> implements ScalarExpression {
         return new Placeholder(value);
     }
 
-    public static Placeholder of(Object value, Map<String, Object> properties) {
-        Placeholder placeholder = new Placeholder(value);
-        if (properties != null) {
-            properties.forEach(placeholder.getUserProperties()::set);
-        }
-
-        return placeholder;
+    public static Placeholder of(Literal<?> literal) {
+        return of(literal != null ? literal.getValue().orElse(null) : null);
     }
 
     public Placeholder setValue(Object value) {
