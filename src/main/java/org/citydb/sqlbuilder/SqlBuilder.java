@@ -34,6 +34,7 @@ import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.schema.WildcardColumn;
 import org.citydb.sqlbuilder.update.Update;
 import org.citydb.sqlbuilder.update.UpdateValue;
+import org.citydb.sqlbuilder.util.PlaceholderBuilder;
 import org.citydb.sqlbuilder.util.PlainText;
 
 import java.util.Collection;
@@ -42,22 +43,20 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class SqlBuilder {
-    private final SqlBuildOptions options;
 
-    private SqlBuilder(SqlBuildOptions options) {
-        this.options = options;
+    private SqlBuilder() {
     }
 
     public static SqlBuilder newInstance() {
-        return new SqlBuilder(SqlBuildOptions.defaults());
-    }
-
-    public static SqlBuilder of(SqlBuildOptions options) {
-        return new SqlBuilder(options != null ? options : SqlBuildOptions.defaults());
+        return new SqlBuilder();
     }
 
     public String build(SqlObject object) {
-        Processor processor = new Processor();
+        return build(object, SqlBuildOptions.defaults());
+    }
+
+    public String build(SqlObject object, SqlBuildOptions options) {
+        Processor processor = new Processor(options);
         if (object instanceof Select select) {
             processor.build(select);
         } else if (object instanceof SetOperator operator) {
@@ -69,9 +68,16 @@ public class SqlBuilder {
         return processor.builder.toString();
     }
 
-    private class Processor implements SqlVisitor {
+    private static class Processor implements SqlVisitor {
         private final StringBuilder builder = new StringBuilder();
+        private final SqlBuildOptions options;
+        private final PlaceholderBuilder placeholderBuilder;
         private int level;
+
+        Processor(SqlBuildOptions options) {
+            this.options = options != null ? options : SqlBuildOptions.defaults();
+            this.placeholderBuilder = this.options.getPlaceholderBuilder().orElse(null);
+        }
 
         @Override
         public void visit(ArithmeticOperation operation) {
@@ -290,7 +296,9 @@ public class SqlBuilder {
 
         @Override
         public void visit(Placeholder placeholder) {
-            builder.append("?");
+            builder.append(placeholderBuilder != null ?
+                    placeholderBuilder.build(placeholder, options) :
+                    "?");
         }
 
         @Override

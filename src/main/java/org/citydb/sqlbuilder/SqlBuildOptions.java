@@ -21,6 +21,10 @@
 
 package org.citydb.sqlbuilder;
 
+import org.citydb.sqlbuilder.util.PlaceholderBuilder;
+
+import java.util.Optional;
+
 public class SqlBuildOptions {
     private String newline = "\n";
     private String indent;
@@ -29,6 +33,7 @@ public class SqlBuildOptions {
     private KeywordCase keywordCase = KeywordCase.LOWERCASE;
     private boolean useJdbcEscapeNotation = false;
     private boolean stripParentheses = true;
+    private PlaceholderBuilder placeholderBuilder;
 
     public enum IdentifierCase {
         UPPERCASE,
@@ -122,6 +127,15 @@ public class SqlBuildOptions {
 
     public SqlBuildOptions setStripParentheses(boolean stripParentheses) {
         this.stripParentheses = stripParentheses;
+        return this;
+    }
+
+    public Optional<PlaceholderBuilder> getPlaceholderBuilder() {
+        return Optional.ofNullable(placeholderBuilder);
+    }
+
+    public SqlBuildOptions setPlaceholderBuilder(PlaceholderBuilder placeholderBuilder) {
+        this.placeholderBuilder = placeholderBuilder;
         return this;
     }
 }

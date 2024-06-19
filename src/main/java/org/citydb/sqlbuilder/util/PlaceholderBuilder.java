@@ -19,27 +19,12 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.common;
+package org.citydb.sqlbuilder.util;
 
 import org.citydb.sqlbuilder.SqlBuildOptions;
-import org.citydb.sqlbuilder.SqlBuilder;
 import org.citydb.sqlbuilder.literal.Placeholder;
-import org.citydb.sqlbuilder.util.PlaceholderHelper;
 
-import java.util.List;
-
-public interface SqlObject {
-    void accept(SqlVisitor visitor);
-
-    default List<Placeholder> getPlaceholders() {
-        return PlaceholderHelper.newInstance().getPlaceholders(this);
-    }
-
-    default String toSql(SqlBuildOptions options) {
-        return SqlBuilder.newInstance().build(this, options);
-    }
-
-    default String toSql() {
-        return toSql(SqlBuildOptions.defaults());
-    }
+@FunctionalInterface
+public interface PlaceholderBuilder {
+    String build(Placeholder placeholder, SqlBuildOptions options);
 }
