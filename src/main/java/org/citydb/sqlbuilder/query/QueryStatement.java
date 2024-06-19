@@ -71,6 +71,11 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Que
         return self();
     }
 
+    public T removeGroupBy() {
+        groupBy.clear();
+        return self();
+    }
+
     public List<Expression> getHaving() {
         return having;
     }
@@ -91,6 +96,11 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Que
         return self();
     }
 
+    public T removeHaving() {
+        having.clear();
+        return self();
+    }
+
     public List<Window> getWindow() {
         return window;
     }
@@ -108,6 +118,11 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Que
         return self();
     }
 
+    public T removeWindow() {
+        window.clear();
+        return self();
+    }
+
     public List<OrderBy> getOrderBy() {
         return orderBy;
     }
@@ -122,6 +137,11 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Que
 
     public T orderBy(Column column) {
         orderBy.add(OrderBy.of(column));
+        return self();
+    }
+
+    public T removeOrderBy() {
+        orderBy.clear();
         return self();
     }
 
@@ -147,6 +167,11 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Que
         return self();
     }
 
+    public T removeOffset() {
+        offset = null;
+        return self();
+    }
+
     public Optional<Literal<?>> getFetch() {
         return Optional.ofNullable(fetch);
     }
@@ -157,6 +182,11 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Que
 
     public T fetch(Literal<?> fetch) {
         this.fetch = fetch;
+        return self();
+    }
+
+    public T removeFetch() {
+        fetch = null;
         return self();
     }
 

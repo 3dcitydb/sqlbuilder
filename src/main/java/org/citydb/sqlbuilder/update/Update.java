@@ -78,6 +78,10 @@ public class Update implements SqlObject {
         return with;
     }
 
+    public boolean isWithRecursive() {
+        return withRecursive;
+    }
+
     public Update with(String name, QueryStatement<?> statement) {
         return with(CommonTableExpression.of(name, statement));
     }
@@ -103,8 +107,9 @@ public class Update implements SqlObject {
         return this;
     }
 
-    public boolean isWithRecursive() {
-        return withRecursive;
+    public Update removeWith() {
+        with.clear();
+        return this;
     }
 
     public List<UpdateValue> getSet() {
@@ -123,6 +128,11 @@ public class Update implements SqlObject {
         return new UpdateValueBuilder(column);
     }
 
+    public Update removeSet() {
+        set.clear();
+        return this;
+    }
+
     public List<BooleanExpression> getWhere() {
         return where;
     }
@@ -132,6 +142,11 @@ public class Update implements SqlObject {
             where.addAll(Arrays.asList(operators));
         }
 
+        return this;
+    }
+
+    public Update removeWhere() {
+        where.clear();
         return this;
     }
 

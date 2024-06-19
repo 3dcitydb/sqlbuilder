@@ -101,8 +101,17 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return this;
     }
 
+    public Select removeHints() {
+        hints.clear();
+        return this;
+    }
+
     public List<CommonTableExpression> getWith() {
         return with;
+    }
+
+    public boolean isWithRecursive() {
+        return withRecursive;
     }
 
     public Select with(String name, QueryStatement<?> statement) {
@@ -130,8 +139,9 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return this;
     }
 
-    public boolean isWithRecursive() {
-        return withRecursive;
+    public Select removeWith() {
+        with.clear();
+        return this;
     }
 
     public List<Selection<?>> getSelect() {
@@ -143,6 +153,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
             select.addAll(Arrays.asList(selections));
         }
 
+        return this;
+    }
+
+    public Select removeSelect() {
+        select.clear();
         return this;
     }
 
@@ -163,6 +178,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
             this.from.addAll(Arrays.asList(from));
         }
 
+        return this;
+    }
+
+    public Select removeFrom() {
+        from.clear();
         return this;
     }
 
@@ -202,6 +222,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
         return join(Joins.cross(table));
     }
 
+    public Select removeJoins() {
+        joins.clear();
+        return this;
+    }
+
     public List<BooleanExpression> getWhere() {
         return where;
     }
@@ -211,6 +236,11 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
             where.addAll(Arrays.asList(operators));
         }
 
+        return this;
+    }
+
+    public Select removeWhere() {
+        where.clear();
         return this;
     }
 
