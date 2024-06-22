@@ -422,7 +422,7 @@ public class SqlBuilder {
 
                 if (!window.getOrderBy().isEmpty()) {
                     newlineAndIndent(() -> {
-                        builder.append("order by ");
+                        builder.append(keyword("order by "));
                         build(window.getOrderBy(), ", ");
                     });
                 }

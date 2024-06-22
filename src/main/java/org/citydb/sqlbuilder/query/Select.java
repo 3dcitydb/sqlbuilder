@@ -149,8 +149,12 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
     }
 
     public Select select(Selection<?>... selections) {
-        if (selections != null) {
-            select.addAll(Arrays.asList(selections));
+        return selections != null ? select(Arrays.asList(selections)) : this;
+    }
+
+    public Select select(List<? extends Selection<?>> selections) {
+        if (selections != null && !selections.isEmpty()) {
+            select.addAll(selections);
         }
 
         return this;
