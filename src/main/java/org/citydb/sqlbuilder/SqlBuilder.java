@@ -408,9 +408,9 @@ public class SqlBuilder {
         public void visit(Window window) {
             builder.append("(");
             if (window.isReferenceOnly()) {
-                window.getReference().ifPresent(reference -> builder.append(reference.getName()));
+                window.getReference().ifPresent(builder::append);
             } else if (!window.isEmpty()) {
-                window.getReference().ifPresent(reference -> builder.append(reference.getName())
+                window.getReference().ifPresent(reference -> builder.append(reference)
                         .append(" "));
 
                 if (!window.getPartitionBy().isEmpty()) {
@@ -445,7 +445,7 @@ public class SqlBuilder {
             builder.append(keyword(" over "));
 
             if (function.getWindow().isReferenceOnly()) {
-                function.getWindow().getReference().ifPresent(reference -> builder.append(reference.getName()));
+                function.getWindow().getReference().ifPresent(builder::append);
             } else {
                 function.getWindow().accept(this);
             }

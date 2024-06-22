@@ -283,9 +283,7 @@ public class PlaceholderHelper {
         @Override
         public void visit(Window window) {
             if (visited.add(window)) {
-                window.getPartitionBy().forEach(partition -> partition.accept(this));
-                window.getOrderBy().forEach(orderBy -> orderBy.accept(this));
-                window.getFrame().ifPresent(frame -> frame.accept(this));
+                super.visit(window);
             }
         }
 

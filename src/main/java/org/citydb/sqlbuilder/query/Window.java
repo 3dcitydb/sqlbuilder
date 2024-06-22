@@ -39,9 +39,9 @@ public class Window implements SqlObject {
     private final List<OrderBy> orderBy;
     private String name;
     private Frame frame;
-    private Window reference;
+    private String reference;
 
-    private Window(String name, List<? extends Expression> partitionBy, List<OrderBy> orderBy, Frame frame, Window reference) {
+    private Window(String name, List<? extends Expression> partitionBy, List<OrderBy> orderBy, Frame frame, String reference) {
         this.name = name;
         this.partitionBy = partitionBy != null ? new ArrayList<>(partitionBy) : new ArrayList<>();
         this.orderBy = orderBy != null ? orderBy : new ArrayList<>();
@@ -53,7 +53,7 @@ public class Window implements SqlObject {
         return new Window(null, null, null, null, null);
     }
 
-    public static Window of(String name, List<? extends Expression> partitionBy, List<OrderBy> orderBy, Frame frame, Window reference) {
+    public static Window of(String name, List<? extends Expression> partitionBy, List<OrderBy> orderBy, Frame frame, String reference) {
         return new Window(name, partitionBy, orderBy, frame, reference);
     }
 
@@ -147,11 +147,15 @@ public class Window implements SqlObject {
         return this;
     }
 
-    public Optional<Window> getReference() {
+    public Optional<String> getReference() {
         return Optional.ofNullable(reference);
     }
 
     public Window references(Window reference) {
+        return references(reference.name);
+    }
+
+    public Window references(String reference) {
         this.reference = reference;
         return this;
     }
@@ -251,7 +255,6 @@ public class Window implements SqlObject {
         public FrameBetweenBuilder betweenUnboundedPreceding() {
             return new FrameBetweenBuilder(units, Frame.UNBOUNDED_PRECEDING, null);
         }
-
     }
 
     public class FrameBetweenBuilder {

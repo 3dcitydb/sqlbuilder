@@ -247,7 +247,6 @@ public abstract class SqlWalker implements SqlVisitor {
         window.getPartitionBy().forEach(partition -> partition.accept(this));
         window.getOrderBy().forEach(orderBy -> orderBy.accept(this));
         window.getFrame().ifPresent(frame -> frame.accept(this));
-        window.getReference().ifPresent(reference -> reference.accept(this));
     }
 
     @Override
