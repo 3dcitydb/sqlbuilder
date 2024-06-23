@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.util;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
@@ -29,7 +30,7 @@ import org.citydb.sqlbuilder.schema.ColumnExpression;
 import java.util.Objects;
 import java.util.Optional;
 
-public class PlainText implements ColumnExpression, Selection<PlainText>, QueryExpression {
+public class PlainText implements BooleanExpression, ColumnExpression, Selection<PlainText>, QueryExpression {
     private final String sql;
     private String alias;
 
