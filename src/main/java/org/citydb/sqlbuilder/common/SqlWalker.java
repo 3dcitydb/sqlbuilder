@@ -87,7 +87,7 @@ public abstract class SqlWalker implements SqlVisitor {
     @Override
     public void visit(CommonTableExpression expression) {
         visit((SqlObject) expression);
-        expression.getQueryStatement().accept(this);
+        expression.getQueryExpression().accept(this);
     }
 
     @Override

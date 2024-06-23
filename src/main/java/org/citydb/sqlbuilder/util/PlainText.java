@@ -30,7 +30,7 @@ import org.citydb.sqlbuilder.schema.ColumnExpression;
 import java.util.Objects;
 import java.util.Optional;
 
-public class PlainText implements BooleanExpression, ColumnExpression, Selection<PlainText>, QueryExpression {
+public class PlainText implements BooleanExpression, ColumnExpression, QueryExpression, Selection<PlainText> {
     private final String sql;
     private String alias;
 

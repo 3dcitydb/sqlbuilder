@@ -156,7 +156,7 @@ public class SqlBuilder {
             }
 
             builder.append(keyword(" as "));
-            expression.getQueryStatement().accept(this);
+            expression.getQueryExpression().accept(this);
         }
 
         @Override

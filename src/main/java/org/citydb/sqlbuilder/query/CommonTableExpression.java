@@ -28,29 +28,29 @@ import java.util.*;
 
 public class CommonTableExpression implements SqlObject {
     private final String name;
-    private final QueryStatement<?> queryStatement;
+    private final QueryExpression expression;
     private final List<String> columns;
 
-    private CommonTableExpression(String name, QueryStatement<?> queryStatement, List<String> columns) {
+    private CommonTableExpression(String name, QueryExpression expression, List<String> columns) {
         this.name = Objects.requireNonNull(name, "The name must not be null.");
-        this.queryStatement = Objects.requireNonNull(queryStatement, "The query statement must not be null.");
+        this.expression = Objects.requireNonNull(expression, "The query expression must not be null.");
         this.columns = columns;
     }
 
-    public static CommonTableExpression of(String name, QueryStatement<?> queryStatement, String... columns) {
-        return of(name, queryStatement, columns != null ? new ArrayList<>(Arrays.asList(columns)) : null);
+    public static CommonTableExpression of(String name, QueryExpression expression, String... columns) {
+        return of(name, expression, columns != null ? new ArrayList<>(Arrays.asList(columns)) : null);
     }
 
-    public static CommonTableExpression of(String name, QueryStatement<?> queryStatement, List<String> columns) {
-        return new CommonTableExpression(name, queryStatement, columns);
+    public static CommonTableExpression of(String name, QueryExpression expression, List<String> columns) {
+        return new CommonTableExpression(name, expression, columns);
     }
 
     public String getName() {
         return name;
     }
 
-    public QueryStatement<?> getQueryStatement() {
-        return queryStatement;
+    public QueryExpression getQueryExpression() {
+        return expression;
     }
 
     public List<String> getColumns() {
