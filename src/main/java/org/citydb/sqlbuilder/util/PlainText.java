@@ -21,29 +21,39 @@
 
 package org.citydb.sqlbuilder.util;
 
+import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class PlainText implements BooleanExpression, ColumnExpression, QueryExpression, Selection<PlainText> {
     private final String sql;
+    private final List<SqlObject> tokens;
     private String alias;
 
-    private PlainText(String sql) {
+    private PlainText(String sql, List<SqlObject> tokens) {
         this.sql = Objects.requireNonNull(sql, "The plain SQL text must not be null.");
+        this.tokens = tokens;
     }
 
     public static PlainText of(String sql) {
-        return new PlainText(sql);
+        return new PlainText(sql, null);
+    }
+
+    public static PlainText of(String sql, SqlObject... tokens) {
+        return new PlainText(sql, tokens != null ? Arrays.asList(tokens) : null);
     }
 
     public String getSql() {
         return sql;
+    }
+
+    public List<SqlObject> getTokens() {
+        return tokens != null ? tokens : Collections.emptyList();
     }
 
     @Override
