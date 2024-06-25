@@ -555,7 +555,7 @@ public class SqlBuilder {
                 builder.append(keyword("fetch "))
                         .append(keyword(statement.getOffset().map(offset -> "next ").orElse("first ")));
                 fetch.accept(this);
-                builder.append(" rows only ");
+                builder.append(keyword(" rows only "));
             });
         }
 
