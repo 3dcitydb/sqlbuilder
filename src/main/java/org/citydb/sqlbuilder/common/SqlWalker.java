@@ -166,7 +166,7 @@ public abstract class SqlWalker implements SqlVisitor {
     @Override
     public void visit(OrderBy orderBy) {
         visit((SqlObject) orderBy);
-        orderBy.getColumn().accept(this);
+        orderBy.getSortExpression().accept(this);
     }
 
     @Override

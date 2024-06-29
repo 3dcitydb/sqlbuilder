@@ -283,7 +283,7 @@ public class SqlBuilder {
 
         @Override
         public void visit(OrderBy orderBy) {
-            orderBy.getColumn().accept(this);
+            orderBy.getSortExpression().accept(this);
             if (!OrderBy.ASCENDING.equalsIgnoreCase(orderBy.getSortOrder())) {
                 builder.append(" ")
                         .append(keyword(orderBy.getSortOrder()));

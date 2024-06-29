@@ -23,7 +23,6 @@ package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.schema.Column;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -34,30 +33,30 @@ public class OrderBy implements SqlObject {
     public static final String ASCENDING = "asc";
     public static final String DESCENDING = "desc";
 
-    private final Column column;
+    private final Selection<?> sortExpression;
     private final String sortOrder;
     private String nullOrder;
 
-    private OrderBy(Column column, String sortOrder, String nullOrder) {
-        this.column = Objects.requireNonNull(column, "The column must not be null.");
+    private OrderBy(Selection<?> sortExpression, String sortOrder, String nullOrder) {
+        this.sortExpression = Objects.requireNonNull(sortExpression, "The sort expression must not be null.");
         this.sortOrder = sortOrder != null ? sortOrder : ASCENDING;
         this.nullOrder = nullOrder;
     }
 
-    public static OrderBy of(Column column, String sortOrder, String nullOrder) {
-        return new OrderBy(column, sortOrder, nullOrder);
+    public static OrderBy of(Selection<?> sortExpression, String sortOrder, String nullOrder) {
+        return new OrderBy(sortExpression, sortOrder, nullOrder);
     }
 
-    public static OrderBy of(Column column, String sortOrder) {
-        return new OrderBy(column, sortOrder, null);
+    public static OrderBy of(Selection<?> sortExpression, String sortOrder) {
+        return new OrderBy(sortExpression, sortOrder, null);
     }
 
-    public static OrderBy of(Column column) {
-        return new OrderBy(column, ASCENDING, null);
+    public static OrderBy of(Selection<?> sortExpression) {
+        return new OrderBy(sortExpression, ASCENDING, null);
     }
 
-    public Column getColumn() {
-        return column;
+    public Selection<?> getSortExpression() {
+        return sortExpression;
     }
 
     public String getSortOrder() {
