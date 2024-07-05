@@ -304,8 +304,12 @@ public class SqlBuilder {
         @Override
         public void visit(PlainText plainText) {
             String sql = plainText.getSql();
-            for (SqlObject token : plainText.getTokens()) {
-                sql = sql.replaceFirst("\\{}", token.toSql(options));
+            for (Object token : plainText.getTokens()) {
+                String replacement = token instanceof SqlObject sqlObject ?
+                        sqlObject.toSql(options) :
+                        String.valueOf(token);
+
+                sql = sql.replaceFirst("\\{}", replacement);
             }
 
             builder.append(sql);

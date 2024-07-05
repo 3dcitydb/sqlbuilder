@@ -177,7 +177,10 @@ public abstract class SqlWalker implements SqlVisitor {
     @Override
     public void visit(PlainText plainText) {
         visit((SqlObject) plainText);
-        plainText.getTokens().forEach(token -> token.accept(this));
+        plainText.getTokens().stream()
+                .filter(SqlObject.class::isInstance)
+                .map(SqlObject.class::cast)
+                .forEach(token -> token.accept(this));
     }
 
     @Override
