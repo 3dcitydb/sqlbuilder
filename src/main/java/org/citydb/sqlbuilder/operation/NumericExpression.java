@@ -47,9 +47,7 @@ public interface NumericExpression extends ScalarExpression {
     }
 
     default ArithmeticOperation append(String operator, Object operand) {
-        ScalarExpression rightOperand = operand instanceof ScalarExpression expression ?
-                expression :
-                Literal.ofScalar(operand);
+        ScalarExpression rightOperand = Literal.ofScalar(operand);
         return this instanceof ArithmeticOperation operation ?
                 operation.fluentAppend(operator, rightOperand) :
                 ArithmeticOperation.of(this, operator, rightOperand);

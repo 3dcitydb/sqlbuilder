@@ -73,6 +73,16 @@ public abstract class SqlWalker implements SqlVisitor {
     }
 
     @Override
+    public void visit(Case expression) {
+        visit((SqlObject) expression);
+        expression.getConditions().forEach((when, then) -> {
+            when.accept(this);
+            then.accept(this);
+        });
+        expression.getElse().ifPresent(otherwise -> otherwise.accept(this));
+    }
+
+    @Override
     public void visit(Collate collate) {
         visit((SqlObject) collate);
         collate.getExpression().accept(this);

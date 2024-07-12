@@ -92,6 +92,13 @@ public class PlaceholderHelper {
         }
 
         @Override
+        public void visit(Case expression) {
+            if (visited.add(expression)) {
+                super.visit(expression);
+            }
+        }
+
+        @Override
         public void visit(Collate collate) {
             if (visited.add(collate)) {
                 super.visit(collate);

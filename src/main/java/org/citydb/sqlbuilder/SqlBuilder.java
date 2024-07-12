@@ -129,6 +129,28 @@ public class SqlBuilder {
         }
 
         @Override
+        public void visit(Case expression) {
+            builder.append(keyword("case "));
+            expression.getConditions().forEach((when, then) -> {
+                newlineAndIndent(() -> {
+                    builder.append(keyword("when "));
+                    when.accept(this);
+                    builder.append(keyword(" then "));
+                    then.accept(this);
+                    builder.append(" ");
+                });
+            });
+
+            newlineAndIndent(() -> expression.getElse().ifPresent(otherwise -> {
+                builder.append(keyword("else "));
+                otherwise.accept(this);
+                builder.append(" ");
+            }));
+
+            newlineAndAppend(keyword("end"));
+        }
+
+        @Override
         public void visit(Collate collate) {
             collate.getExpression().accept(this);
             builder.append(" ")
@@ -499,20 +521,16 @@ public class SqlBuilder {
                 }
             });
 
-            newlineAndAppend(keyword("from "));
-            newlineAndIndent(() -> {
-                if (!select.getFrom().isEmpty()) {
+            if (!select.getFrom().isEmpty()) {
+                newlineAndAppend(keyword("from "));
+                newlineAndIndent(() -> {
                     build(select.getFrom(), ", ");
-                } else {
-                    builder.append(Table.of("null"))
-                            .append(" ");
-                }
-
-                if (!select.getJoins().isEmpty()) {
-                    newline();
-                    build(select.getJoins(), " ");
-                }
-            });
+                    if (!select.getJoins().isEmpty()) {
+                        newline();
+                        build(select.getJoins(), " ");
+                    }
+                });
+            }
 
             if (!select.getWhere().isEmpty()) {
                 BinaryLogicalOperation where = Operators.and(select.getWhere()).reduce();
