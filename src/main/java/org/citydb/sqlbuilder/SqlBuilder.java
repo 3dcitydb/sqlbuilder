@@ -34,6 +34,8 @@ import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.schema.WildcardColumn;
 import org.citydb.sqlbuilder.update.Update;
 import org.citydb.sqlbuilder.update.UpdateValue;
+import org.citydb.sqlbuilder.util.AliasGenerator;
+import org.citydb.sqlbuilder.util.DefaultAliasGenerator;
 import org.citydb.sqlbuilder.util.PlaceholderBuilder;
 import org.citydb.sqlbuilder.util.PlainText;
 
@@ -71,11 +73,13 @@ public class SqlBuilder {
     private static class Processor implements SqlVisitor {
         private final StringBuilder builder = new StringBuilder();
         private final SqlBuildOptions options;
+        private final AliasGenerator aliasGenerator;
         private final PlaceholderBuilder placeholderBuilder;
         private int level;
 
         Processor(SqlBuildOptions options) {
             this.options = options != null ? options : SqlBuildOptions.defaults();
+            this.aliasGenerator = this.options.getAliasGenerator().orElse(DefaultAliasGenerator.newInstance());
             this.placeholderBuilder = this.options.getPlaceholderBuilder().orElse(null);
         }
 
@@ -131,15 +135,14 @@ public class SqlBuilder {
         @Override
         public void visit(Case expression) {
             builder.append(keyword("case "));
-            expression.getConditions().forEach((when, then) -> {
-                newlineAndIndent(() -> {
-                    builder.append(keyword("when "));
-                    when.accept(this);
-                    builder.append(keyword(" then "));
-                    then.accept(this);
-                    builder.append(" ");
-                });
-            });
+            expression.getConditions().forEach((when, then) ->
+                    newlineAndIndent(() -> {
+                        builder.append(keyword("when "));
+                        when.accept(this);
+                        builder.append(keyword(" then "));
+                        then.accept(this);
+                        builder.append(" ");
+                    }));
 
             newlineAndIndent(() -> expression.getElse().ifPresent(otherwise -> {
                 builder.append(keyword("else "));
@@ -161,7 +164,7 @@ public class SqlBuilder {
 
         @Override
         public void visit(Column column) {
-            builder.append(column.getTable().getAlias())
+            builder.append(column.getTable().getOrCreateAlias(aliasGenerator))
                     .append(".")
                     .append(identifier(column.getName()));
         }
@@ -381,7 +384,7 @@ public class SqlBuilder {
                         builder.append(identifier(table.getName()));
                     });
             builder.append(" ")
-                    .append(table.getAlias());
+                    .append(table.getOrCreateAlias(aliasGenerator));
         }
 
         @Override
@@ -431,7 +434,7 @@ public class SqlBuilder {
         @Override
         public void visit(WildcardColumn column) {
             builder.append(column.getTable()
-                    .map(table -> table.getAlias() + ".*")
+                    .map(table -> table.getOrCreateAlias(aliasGenerator) + ".*")
                     .orElse("*"));
         }
 
@@ -555,7 +558,8 @@ public class SqlBuilder {
             if (!statement.getWindow().isEmpty()) {
                 newlineAndAppend(keyword("window "));
                 newlineAndIndent(() ->
-                        build(statement.getWindow(), ", ", (window, i) -> window.getName() + keyword(" as ")));
+                        build(statement.getWindow(), ", ", (window, i) ->
+                                window.getOrCreateName(aliasGenerator) + keyword(" as ")));
             }
 
             if (!statement.getOrderBy().isEmpty()) {

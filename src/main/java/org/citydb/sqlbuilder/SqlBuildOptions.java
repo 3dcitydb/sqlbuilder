@@ -21,6 +21,7 @@
 
 package org.citydb.sqlbuilder;
 
+import org.citydb.sqlbuilder.util.AliasGenerator;
 import org.citydb.sqlbuilder.util.PlaceholderBuilder;
 
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class SqlBuildOptions {
     private KeywordCase keywordCase = KeywordCase.LOWERCASE;
     private boolean useJdbcEscapeNotation = false;
     private boolean stripParentheses = true;
+    private AliasGenerator aliasGenerator;
     private PlaceholderBuilder placeholderBuilder;
 
     public enum IdentifierCase {
@@ -127,6 +129,15 @@ public class SqlBuildOptions {
 
     public SqlBuildOptions setStripParentheses(boolean stripParentheses) {
         this.stripParentheses = stripParentheses;
+        return this;
+    }
+
+    public Optional<AliasGenerator> getAliasGenerator() {
+        return Optional.ofNullable(aliasGenerator);
+    }
+
+    public SqlBuildOptions setAliasGenerator(AliasGenerator aliasGenerator) {
+        this.aliasGenerator = aliasGenerator;
         return this;
     }
 

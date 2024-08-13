@@ -28,7 +28,6 @@ import org.citydb.sqlbuilder.operation.BinaryComparisonOperation;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
-import org.citydb.sqlbuilder.util.AliasGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -171,10 +170,6 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
 
     public Select fromLateral(Select select) {
         return from(Table.lateral(select));
-    }
-
-    public Select fromLateral(Select select, AliasGenerator aliasGenerator) {
-        return from(Table.lateral(select, aliasGenerator));
     }
 
     public Select from(Table... from) {

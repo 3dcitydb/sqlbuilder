@@ -27,7 +27,6 @@ import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.util.AliasGenerator;
-import org.citydb.sqlbuilder.util.GlobalAliasGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,24 +80,24 @@ public class Window implements SqlObject {
         return newInstance().references(window);
     }
 
-    public String getName() {
+    public Optional<String> getName() {
+        return Optional.ofNullable(name);
+    }
+
+    public String getOrCreateName(AliasGenerator aliasGenerator) {
         if (name == null) {
-            name(GlobalAliasGenerator.getInstance());
+            name = aliasGenerator.next();
         }
 
         return name;
     }
 
-    public Window name(String name) {
-        if (name != null && !name.isEmpty()) {
-            this.name = name;
-        }
-
-        return this;
+    public Window name(AliasGenerator generator) {
+        return name(generator.next());
     }
 
-    public Window name(AliasGenerator generator) {
-        this.name = generator.next();
+    public Window name(String name) {
+        this.name = name;
         return this;
     }
 

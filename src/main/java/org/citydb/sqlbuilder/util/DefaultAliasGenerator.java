@@ -22,40 +22,51 @@
 package org.citydb.sqlbuilder.util;
 
 public class DefaultAliasGenerator implements AliasGenerator {
+    private final Object lock = new Object();
     private char character = 'a' - 1;
     private int counter = 0;
 
     private DefaultAliasGenerator() {
     }
 
+    private DefaultAliasGenerator(DefaultAliasGenerator generator) {
+        this.character = generator.character;
+        this.counter = generator.counter;
+    }
+
     public static DefaultAliasGenerator newInstance() {
         return new DefaultAliasGenerator();
     }
 
+    public static DefaultAliasGenerator of(DefaultAliasGenerator generator) {
+        return new DefaultAliasGenerator(generator);
+    }
+
     @Override
     public String current() {
-        String alias = String.valueOf(character < 'a' ? 'a' : character);
-        return counter > 0 ? alias + counter : alias;
+        synchronized (lock) {
+            String alias = String.valueOf(character < 'a' ? 'a' : character);
+            return counter > 0 ? alias + counter : alias;
+        }
     }
 
     @Override
     public String next() {
-        if (++character > 'z') {
-            character = 'a';
-            counter++;
-        }
+        synchronized (lock) {
+            if (++character > 'z') {
+                character = 'a';
+                counter++;
+            }
 
-        return current();
+            return current();
+        }
     }
 
     @Override
     public void reset() {
-        character = 'a' - 1;
-        counter = 0;
-    }
-
-    public void copyFrom(DefaultAliasGenerator other) {
-        character = other.character;
-        counter = other.counter;
+        synchronized (lock) {
+            character = 'a' - 1;
+            counter = 0;
+        }
     }
 }

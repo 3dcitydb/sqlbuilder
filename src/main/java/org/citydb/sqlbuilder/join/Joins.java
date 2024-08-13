@@ -24,7 +24,6 @@ package org.citydb.sqlbuilder.join;
 import org.citydb.sqlbuilder.query.Select;
 import org.citydb.sqlbuilder.schema.Column;
 import org.citydb.sqlbuilder.schema.Table;
-import org.citydb.sqlbuilder.util.AliasGenerator;
 
 public class Joins {
     public static final String INNER_JOIN = "inner join";
@@ -41,20 +40,12 @@ public class Joins {
         return inner(Table.lateral(select), column, operator, fromColumn);
     }
 
-    public static Join innerLateral(Select select, String column, String operator, Column fromColumn, AliasGenerator aliasGenerator) {
-        return inner(Table.lateral(select, aliasGenerator), column, operator, fromColumn);
-    }
-
     public static Join left(Table table, String column, String operator, Column fromColumn) {
         return Join.of(LEFT_JOIN, table, column, operator, fromColumn);
     }
 
     public static Join leftLateral(Select select, String column, String operator, Column fromColumn) {
         return left(Table.lateral(select), column, operator, fromColumn);
-    }
-
-    public static Join leftLateral(Select select, String column, String operator, Column fromColumn, AliasGenerator aliasGenerator) {
-        return left(Table.lateral(select, aliasGenerator), column, operator, fromColumn);
     }
 
     public static Join right(Table table, String column, String operator, Column fromColumn) {
@@ -65,10 +56,6 @@ public class Joins {
         return right(Table.lateral(select), column, operator, fromColumn);
     }
 
-    public static Join rightLateral(Select select, String column, String operator, Column fromColumn, AliasGenerator aliasGenerator) {
-        return right(Table.lateral(select, aliasGenerator), column, operator, fromColumn);
-    }
-
     public static Join full(Table table, String column, String operator, Column fromColumn) {
         return Join.of(FULL_JOIN, table, column, operator, fromColumn);
     }
@@ -77,19 +64,11 @@ public class Joins {
         return full(Table.lateral(select), column, operator, fromColumn);
     }
 
-    public static Join fullLateral(Select select, String column, String operator, Column fromColumn, AliasGenerator aliasGenerator) {
-        return full(Table.lateral(select, aliasGenerator), column, operator, fromColumn);
-    }
-
     public static Join cross(Table table) {
         return Join.of(CROSS_JOIN, table);
     }
 
     public static Join crossLateral(Select select) {
         return Join.of(CROSS_JOIN, Table.lateral(select));
-    }
-
-    public static Join crossLateral(Select select, AliasGenerator aliasGenerator) {
-        return Join.of(CROSS_JOIN, Table.lateral(select, aliasGenerator));
     }
 }

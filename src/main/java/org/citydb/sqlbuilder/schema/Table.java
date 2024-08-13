@@ -28,74 +28,46 @@ import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Select;
 import org.citydb.sqlbuilder.query.SetOperator;
 import org.citydb.sqlbuilder.util.AliasGenerator;
-import org.citydb.sqlbuilder.util.GlobalAliasGenerator;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Table implements SqlObject {
     private final String name;
-    private final String alias;
     private final String schema;
     private final QueryExpression queryExpression;
     private final boolean isLateral;
+    private String alias;
 
-    private Table(String name, String schema, QueryExpression queryExpression, boolean isLateral, AliasGenerator aliasGenerator) {
+    private Table(String name, String schema, QueryExpression queryExpression, boolean isLateral) {
         this.name = Objects.requireNonNull(name, "The table name must not be null.");
         this.schema = schema;
         this.queryExpression = queryExpression;
         this.isLateral = isLateral;
-        alias = aliasGenerator != null ?
-                aliasGenerator.next() :
-                GlobalAliasGenerator.getInstance().next();
-    }
-
-    public static Table of(String name, String schema, AliasGenerator aliasGenerator) {
-        return new Table(name, schema, null, false, aliasGenerator);
-    }
-
-    public static Table of(String name, AliasGenerator aliasGenerator) {
-        return new Table(name, null, null, false, aliasGenerator);
-    }
-
-    public static Table of(Select select, AliasGenerator aliasGenerator) {
-        return new Table("", null, select, false, aliasGenerator);
-    }
-
-    public static Table of(SetOperator setOperator, AliasGenerator aliasGenerator) {
-        return new Table("", null, setOperator, false, aliasGenerator);
-    }
-
-    public static Table of(CommonTableExpression cte, AliasGenerator aliasGenerator) {
-        return new Table(cte.getName(), null, null, false, aliasGenerator);
     }
 
     public static Table of(String name, String schema) {
-        return of(name, schema, GlobalAliasGenerator.getInstance());
+        return new Table(name, schema, null, false);
     }
 
     public static Table of(String name) {
-        return of(name, GlobalAliasGenerator.getInstance());
+        return new Table(name, null, null, false);
     }
 
     public static Table of(Select select) {
-        return of(select, GlobalAliasGenerator.getInstance());
+        return new Table("", null, select, false);
     }
 
     public static Table of(SetOperator setOperator) {
-        return of(setOperator, GlobalAliasGenerator.getInstance());
+        return new Table("", null, setOperator, false);
     }
 
     public static Table of(CommonTableExpression cte) {
-        return of(cte, GlobalAliasGenerator.getInstance());
-    }
-
-    public static Table lateral(Select select, AliasGenerator aliasGenerator) {
-        return new Table("", null, select, true, aliasGenerator);
+        return new Table(cte.getName(), null, null, false);
     }
 
     public static Table lateral(Select select) {
-        return lateral(select, GlobalAliasGenerator.getInstance());
+        return new Table("", null, select, true);
     }
 
     public String getName() {
@@ -106,8 +78,25 @@ public class Table implements SqlObject {
         return Optional.ofNullable(schema);
     }
 
-    public String getAlias() {
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
+    }
+
+    public String getOrCreateAlias(AliasGenerator aliasGenerator) {
+        if (alias == null) {
+            alias = aliasGenerator.next();
+        }
+
         return alias;
+    }
+
+    public Table alias(AliasGenerator generator) {
+        return alias(generator.next());
+    }
+
+    public Table alias(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     public Optional<QueryExpression> getQueryExpression() {
