@@ -91,7 +91,6 @@ public abstract class SqlWalker implements SqlVisitor {
     @Override
     public void visit(Column column) {
         visit((SqlObject) column);
-        column.getTable().accept(this);
     }
 
     @Override
