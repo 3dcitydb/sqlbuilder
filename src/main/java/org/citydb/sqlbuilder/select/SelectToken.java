@@ -36,5 +36,6 @@ import java.util.Set;
 
 public interface SelectToken {
     void getInvolvedTables(Set<Table> tables);
+
     void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders);
 }

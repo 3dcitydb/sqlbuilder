@@ -30,6 +30,8 @@ package org.citydb.sqlbuilder.schema;
 
 public interface AliasGenerator {
     String currentAlias();
+
     String nextAlias();
+
     void reset();
 }

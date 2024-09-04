@@ -37,36 +37,36 @@ import java.util.List;
 import java.util.Set;
 
 public class HavingToken implements SelectToken {
-	private final Expression expression;
+    private final Expression expression;
 
-	public HavingToken(Expression expression) {
-		this.expression = expression;
-	}
+    public HavingToken(Expression expression) {
+        this.expression = expression;
+    }
 
-	public Expression getExpression() {
-		return expression;
-	}
+    public Expression getExpression() {
+        return expression;
+    }
 
-	@Override
-	public void getInvolvedTables(Set<Table> tables) {
-		if (expression instanceof ProjectionToken)
-			((ProjectionToken) expression).getInvolvedTables(tables);
-		else if (expression instanceof PredicateToken)
-			((PredicateToken) expression).getInvolvedTables(tables);
-	}
+    @Override
+    public void getInvolvedTables(Set<Table> tables) {
+        if (expression instanceof ProjectionToken)
+            ((ProjectionToken) expression).getInvolvedTables(tables);
+        else if (expression instanceof PredicateToken)
+            ((PredicateToken) expression).getInvolvedTables(tables);
+    }
 
-	@Override
-	public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
-		if (expression instanceof PredicateToken)
-			((PredicateToken) expression).getInvolvedPlaceHolders(placeHolders);
-		else if (expression instanceof ProjectionToken)
-			((ProjectionToken) expression).getInvolvedPlaceHolders(placeHolders);
-		else if (expression instanceof SubQueryExpression)
-			((SubQueryExpression) expression).getInvolvedPlaceHolders(placeHolders);
-	}
+    @Override
+    public void getInvolvedPlaceHolders(List<PlaceHolder<?>> placeHolders) {
+        if (expression instanceof PredicateToken)
+            ((PredicateToken) expression).getInvolvedPlaceHolders(placeHolders);
+        else if (expression instanceof ProjectionToken)
+            ((ProjectionToken) expression).getInvolvedPlaceHolders(placeHolders);
+        else if (expression instanceof SubQueryExpression)
+            ((SubQueryExpression) expression).getInvolvedPlaceHolders(placeHolders);
+    }
 
-	@Override
-	public String toString() {
-		return expression.toString();
-	}
+    @Override
+    public String toString() {
+        return expression.toString();
+    }
 }

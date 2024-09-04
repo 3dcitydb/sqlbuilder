@@ -36,5 +36,6 @@ import java.util.Set;
 
 public interface SQLStatement extends Printable {
     Set<Table> getInvolvedTables();
+
     List<PlaceHolder<?>> getInvolvedPlaceHolders();
 }
