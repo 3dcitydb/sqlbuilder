@@ -39,9 +39,7 @@ import org.citydb.sqlbuilder.util.DefaultAliasGenerator;
 import org.citydb.sqlbuilder.util.PlaceholderBuilder;
 import org.citydb.sqlbuilder.util.PlainText;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SqlBuilder {
@@ -75,6 +73,7 @@ public class SqlBuilder {
         private final SqlBuildOptions options;
         private final AliasGenerator aliasGenerator;
         private final PlaceholderBuilder placeholderBuilder;
+        private final Map<Table, String> tableAliases = new IdentityHashMap<>();
         private int level;
 
         Processor(SqlBuildOptions options) {
@@ -164,7 +163,7 @@ public class SqlBuilder {
 
         @Override
         public void visit(Column column) {
-            builder.append(column.getTable().getOrCreateAlias(aliasGenerator))
+            builder.append(getOrCreateAlias(column.getTable()))
                     .append(".")
                     .append(identifier(column.getName()));
         }
@@ -384,7 +383,7 @@ public class SqlBuilder {
                         builder.append(identifier(table.getName()));
                     });
             builder.append(" ")
-                    .append(table.getOrCreateAlias(aliasGenerator));
+                    .append(getOrCreateAlias(table));
         }
 
         @Override
@@ -434,7 +433,7 @@ public class SqlBuilder {
         @Override
         public void visit(WildcardColumn column) {
             builder.append(column.getTable()
-                    .map(table -> table.getOrCreateAlias(aliasGenerator) + ".*")
+                    .map(table -> getOrCreateAlias(table) + ".*")
                     .orElse("*"));
         }
 
@@ -695,6 +694,10 @@ public class SqlBuilder {
             newline();
             action.run();
             level--;
+        }
+
+        private String getOrCreateAlias(Table table) {
+            return table.getAlias().orElse(tableAliases.computeIfAbsent(table, k -> aliasGenerator.next()));
         }
     }
 

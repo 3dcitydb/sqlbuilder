@@ -27,7 +27,6 @@ import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Select;
 import org.citydb.sqlbuilder.query.SetOperator;
-import org.citydb.sqlbuilder.util.AliasGenerator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,18 +79,6 @@ public class Table implements SqlObject {
 
     public Optional<String> getAlias() {
         return Optional.ofNullable(alias);
-    }
-
-    public String getOrCreateAlias(AliasGenerator aliasGenerator) {
-        if (alias == null) {
-            alias = aliasGenerator.next();
-        }
-
-        return alias;
-    }
-
-    public Table alias(AliasGenerator generator) {
-        return alias(generator.next());
     }
 
     public Table alias(String alias) {
