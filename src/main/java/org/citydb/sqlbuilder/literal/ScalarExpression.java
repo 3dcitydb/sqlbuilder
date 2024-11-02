@@ -25,6 +25,7 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.operation.*;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ScalarExpression extends Expression {
@@ -229,7 +230,7 @@ public interface ScalarExpression extends Expression {
         return Operators.in(this, Literal.ofScalarList(values));
     }
 
-    default In in(List<?> values) {
+    default In in(Collection<?> values) {
         return Operators.in(this, Literal.ofScalarList(values));
     }
 
