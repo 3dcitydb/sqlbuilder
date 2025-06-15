@@ -3,9 +3,9 @@ plugins {
     id 'maven-publish'
 }
 
-group 'org.citydb'
-version '3.0.3'
-description 'Dynamic SQL builder for the 3D City Database'
+group = 'org.citydb'
+version = '3.0.3'
+description = 'Dynamic SQL builder for the 3D City Database'
 
 ext {
     date = new Date()
@@ -31,7 +31,7 @@ javadoc {
     options {
         title = "$project.name $project.version"
         header = title
-        overview "resources/javadoc/overview.html"
+        overview = "resources/javadoc/overview.html"
         bottom = file("resources/javadoc/bottom.html").text.replaceAll("@date@", "${date.format('yyyy')}")
         addStringOption('doctitle', project.name + ' - ' + project.version)
         addStringOption('Xdoclint:none', '-quiet')
@@ -50,19 +50,6 @@ jar {
 }
 
 publishing {
-    repositories {
-        maven {
-            url project.hasProperty('gitLab_maven_url') ? project.property('gitLab_maven_url') : System.getenv('GITLAB_MAVEN_URL')
-            name 'gitlab-maven'
-            credentials(HttpHeaderCredentials) {
-                name = 'Private-Token'
-                value = project.hasProperty('gitLab_private_token') ? project.property('gitLab_private_token') : System.getenv('GITLAB_PRIVATE_TOKEN')
-            }
-            authentication {
-                header(HttpHeaderAuthentication)
-            }
-        }
-    }
     publications {
         mavenJava(MavenPublication) {
             from components.java
@@ -74,6 +61,23 @@ publishing {
                     url = 'https://github.com/3dcitydb/sqlbuilder'
                     connection = 'scm:git:https://github.com/3dcitydb/sqlbuilder.git'
                 }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = project.hasProperty('gitLab_maven_url') ?
+                    project.property('gitLab_maven_url') :
+                    System.getenv('GITLAB_MAVEN_URL')
+            name = 'gitlab-maven'
+            credentials(HttpHeaderCredentials) {
+                name = 'Private-Token'
+                value = project.hasProperty('gitLab_private_token') ?
+                        project.property('gitLab_private_token') :
+                        System.getenv('GITLAB_PRIVATE_TOKEN')
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
             }
         }
     }
