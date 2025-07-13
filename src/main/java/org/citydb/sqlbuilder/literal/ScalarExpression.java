@@ -26,9 +26,12 @@ import org.citydb.sqlbuilder.operation.*;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface ScalarExpression extends Expression {
+
+    default ScalarExpression castAs(String targetType) {
+        return Operators.cast(this, targetType);
+    }
 
     default ScalarExpression concat(Object operand) {
         return Operators.concat(this, Literal.ofScalar(operand));

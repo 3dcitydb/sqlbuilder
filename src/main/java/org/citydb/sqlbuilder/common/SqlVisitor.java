@@ -21,6 +21,7 @@
 
 package org.citydb.sqlbuilder.common;
 
+import org.citydb.sqlbuilder.function.Cast;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.WindowFunction;
 import org.citydb.sqlbuilder.join.Join;
@@ -46,6 +47,8 @@ public interface SqlVisitor {
     void visit(BooleanLiteral literal);
 
     void visit(Case expression);
+
+    void visit(Cast cast);
 
     void visit(Collate collate);
 

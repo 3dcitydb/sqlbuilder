@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.function.Cast;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.literal.StringLiteral;
 import org.citydb.sqlbuilder.query.QueryExpression;
@@ -77,6 +78,10 @@ public class Operators {
 
     public static ArithmeticOperation modulo(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, MODULO, rightOperand);
+    }
+
+    public static ScalarExpression cast(ScalarExpression operand, String targetType) {
+        return Cast.of(operand, targetType);
     }
 
     public static ScalarExpression concat(ScalarExpression leftOperand, ScalarExpression rightOperand) {

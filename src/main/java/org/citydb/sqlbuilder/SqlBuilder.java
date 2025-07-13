@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder;
 
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.function.Cast;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.WindowFunction;
 import org.citydb.sqlbuilder.join.Join;
@@ -150,6 +151,16 @@ public class SqlBuilder {
             }));
 
             newlineAndAppend(keyword("end"));
+        }
+
+        @Override
+        public void visit(Cast cast) {
+            builder.append(keyword("cast"))
+                    .append(" (");
+            cast.getExpression().accept(this);
+            builder.append(keyword(" as "))
+                    .append(cast.getTargetType())
+                    .append(")");
         }
 
         @Override
