@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Select;
@@ -63,6 +64,10 @@ public class Table implements SqlObject {
 
     public static Table of(CommonTableExpression cte) {
         return new Table(cte.getName(), null, null, false);
+    }
+
+    public static Table of(Function function) {
+        return new Table("", null, function, false);
     }
 
     public static Table lateral(Select select) {
