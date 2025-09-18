@@ -239,8 +239,12 @@ public class SqlBuilder {
 
         @Override
         public void visit(Function function) {
+            function.getSchema().ifPresent(schema ->
+                    builder.append(schema)
+                            .append("."));
             builder.append(keyword(function.getName()))
                     .append("(");
+
             if (!function.getQualifiers().isEmpty()) {
                 builder.append(function.getQualifiers().stream()
                                 .map(this::keyword)

@@ -24,16 +24,18 @@ package org.citydb.sqlbuilder.function;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
+import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.query.Window;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
 
 import java.util.*;
 
-public class Function implements BooleanExpression, ColumnExpression, Selection<Function> {
+public class Function implements BooleanExpression, ColumnExpression, Selection<Function>, QueryExpression {
     private final String name;
     private final List<Expression> arguments;
     private final List<String> qualifiers = new ArrayList<>();
+    private String schema;
     private String alias;
 
     protected Function(String name, String alias, List<? extends Expression> arguments) {
@@ -68,6 +70,15 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
 
     public Function qualifier(String qualifier) {
         qualifiers.add(qualifier);
+        return this;
+    }
+
+    public Optional<String> getSchema() {
+        return Optional.ofNullable(schema);
+    }
+
+    public Function setSchema(String schema) {
+        this.schema = schema;
         return this;
     }
 
