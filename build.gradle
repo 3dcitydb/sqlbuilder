@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'org.citydb'
-version = '3.0.5'
+version = '3.0.6'
 description = 'Dynamic SQL builder for the 3D City Database'
 
 ext {
