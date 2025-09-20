@@ -74,13 +74,22 @@ public class SqlBuilder {
         private final SqlBuildOptions options;
         private final AliasGenerator aliasGenerator;
         private final PlaceholderBuilder placeholderBuilder;
-        private final Map<Table, String> tableAliases = new IdentityHashMap<>();
+        private final Map<Table, String> tableAliases;
         private int level;
 
         Processor(SqlBuildOptions options) {
             this.options = options != null ? options : SqlBuildOptions.defaults();
             this.aliasGenerator = this.options.getAliasGenerator().orElse(DefaultAliasGenerator.newInstance());
             this.placeholderBuilder = this.options.getPlaceholderBuilder().orElse(null);
+            tableAliases = new IdentityHashMap<>();
+        }
+
+        Processor(Processor other) {
+            options = other.options;
+            aliasGenerator = other.aliasGenerator;
+            placeholderBuilder = other.placeholderBuilder;
+            tableAliases = other.tableAliases;
+            level = other.level;
         }
 
         @Override
@@ -345,7 +354,7 @@ public class SqlBuilder {
             String sql = plainText.getSql();
             for (Object token : plainText.getTokens()) {
                 String replacement = token instanceof SqlObject sqlObject ?
-                        sqlObject.toSql(options) :
+                        toSql(sqlObject) :
                         String.valueOf(token);
 
                 sql = sql.replaceFirst("\\{}", replacement);
@@ -713,6 +722,12 @@ public class SqlBuilder {
 
         private String getOrCreateAlias(Table table) {
             return table.getAlias().orElse(tableAliases.computeIfAbsent(table, k -> aliasGenerator.next()));
+        }
+
+        private String toSql(SqlObject sqlObject) {
+            Processor processor = new Processor(this);
+            sqlObject.accept(processor);
+            return processor.builder.toString();
         }
     }
 
