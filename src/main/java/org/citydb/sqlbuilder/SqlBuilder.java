@@ -380,8 +380,9 @@ public class SqlBuilder {
         @Override
         public void visit(SubQueryOperator operator) {
             builder.append(keyword(operator.getOperator()))
-                    .append(" ");
+                    .append(" (");
             operator.getOperand().accept(this);
+            builder.append(")");
         }
 
         @Override
