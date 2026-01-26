@@ -21,10 +21,9 @@
 
 package org.citydb.sqlbuilder.update;
 
-import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.Expressions;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.Literal;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.query.CommonTableExpression;
 import org.citydb.sqlbuilder.query.QueryStatement;
@@ -168,9 +167,7 @@ public class Update implements SqlObject {
         }
 
         public Update value(Object value) {
-            set.add(UpdateValue.of(column, value instanceof Expression expression ?
-                    expression :
-                    Literal.ofScalar(value)));
+            set.add(UpdateValue.of(column, Expressions.as(value)));
             return Update.this;
         }
     }

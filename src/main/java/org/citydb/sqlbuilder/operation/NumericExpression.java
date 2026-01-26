@@ -21,7 +21,7 @@
 
 package org.citydb.sqlbuilder.operation;
 
-import org.citydb.sqlbuilder.literal.Literal;
+import org.citydb.sqlbuilder.common.Expressions;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
 
 public interface NumericExpression extends ScalarExpression {
@@ -47,7 +47,7 @@ public interface NumericExpression extends ScalarExpression {
     }
 
     default ArithmeticOperation append(String operator, Object operand) {
-        ScalarExpression rightOperand = Literal.ofScalar(operand);
+        ScalarExpression rightOperand = Expressions.require(operand, ScalarExpression.class);
         return this instanceof ArithmeticOperation operation ?
                 operation.fluentAppend(operator, rightOperand) :
                 ArithmeticOperation.of(this, operator, rightOperand);

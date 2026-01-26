@@ -25,11 +25,8 @@ import org.citydb.sqlbuilder.query.Selection;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class Literal<T> implements ScalarExpression, Selection<Literal<T>> {
     protected T value;
@@ -39,10 +36,8 @@ public abstract class Literal<T> implements ScalarExpression, Selection<Literal<
         this.value = value;
     }
 
-    public static ScalarExpression ofScalar(Object value) {
-        if (value instanceof ScalarExpression expression) {
-            return expression;
-        } else if (value instanceof String literal) {
+    public static Literal<?> of(Object value) {
+        if (value instanceof String literal) {
             return StringLiteral.of(literal);
         } else if (value instanceof Double literal) {
             return DoubleLiteral.of(literal);
@@ -58,25 +53,13 @@ public abstract class Literal<T> implements ScalarExpression, Selection<Literal<
             return BooleanLiteral.of(literal);
         } else if (value instanceof Date literal) {
             return DateLiteral.of(literal);
+        } else if (value instanceof LocalDate literal) {
+            return DateLiteral.of(literal);
         } else if (value instanceof Timestamp literal) {
             return TimestampLiteral.of(literal);
         } else {
             return NullLiteral.getInstance();
         }
-    }
-
-    public static List<ScalarExpression> ofScalarList(Object... values) {
-        return values != null ?
-                ofScalarList(Arrays.asList(values)) :
-                null;
-    }
-
-    public static List<ScalarExpression> ofScalarList(Collection<?> values) {
-        return values != null ?
-                values.stream()
-                        .map(Literal::ofScalar)
-                        .collect(Collectors.toList()) :
-                null;
     }
 
     public Optional<T> getValue() {

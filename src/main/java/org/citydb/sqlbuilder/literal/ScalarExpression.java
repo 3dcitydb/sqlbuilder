@@ -22,9 +22,11 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.Expressions;
 import org.citydb.sqlbuilder.operation.*;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public interface ScalarExpression extends Expression {
@@ -34,11 +36,11 @@ public interface ScalarExpression extends Expression {
     }
 
     default ScalarExpression concat(Object operand) {
-        return Operators.concat(this, Literal.ofScalar(operand));
+        return Operators.concat(this, Expressions.require(operand, ScalarExpression.class));
     }
 
     default BinaryComparisonOperation eq(Object operand) {
-        return Operators.eq(this, Literal.ofScalar(operand));
+        return Operators.eq(this, Expressions.require(operand, ScalarExpression.class));
     }
 
     default BinaryComparisonOperation eqAll(QueryExpression expression) {
@@ -54,7 +56,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation ne(Object operand) {
-        return Operators.eq(this, Literal.ofScalar(operand), true);
+        return Operators.eq(this, Expressions.require(operand, ScalarExpression.class), true);
     }
 
     default BinaryComparisonOperation neAll(QueryExpression expression) {
@@ -70,7 +72,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation lt(Object operand) {
-        return Operators.lt(this, Literal.ofScalar(operand));
+        return Operators.lt(this, Expressions.require(operand, ScalarExpression.class));
     }
 
     default BinaryComparisonOperation ltAll(QueryExpression expression) {
@@ -86,7 +88,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation nl(Object operand) {
-        return Operators.lt(this, Literal.ofScalar(operand), true);
+        return Operators.lt(this, Expressions.require(operand, ScalarExpression.class), true);
     }
 
     default BinaryComparisonOperation nlAll(QueryExpression expression) {
@@ -102,7 +104,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation le(Object operand) {
-        return Operators.le(this, Literal.ofScalar(operand));
+        return Operators.le(this, Expressions.require(operand, ScalarExpression.class));
     }
 
     default BinaryComparisonOperation leAll(QueryExpression expression) {
@@ -118,7 +120,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation nle(Object operand) {
-        return Operators.le(this, Literal.ofScalar(operand), true);
+        return Operators.le(this, Expressions.require(operand, ScalarExpression.class), true);
     }
 
     default BinaryComparisonOperation nleAll(QueryExpression expression) {
@@ -134,7 +136,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation gt(Object operand) {
-        return Operators.gt(this, Literal.ofScalar(operand));
+        return Operators.gt(this, Expressions.require(operand, ScalarExpression.class));
     }
 
     default BinaryComparisonOperation gtAll(QueryExpression expression) {
@@ -150,7 +152,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation ng(Object operand) {
-        return Operators.gt(this, Literal.ofScalar(operand), true);
+        return Operators.gt(this, Expressions.require(operand, ScalarExpression.class), true);
     }
 
     default BinaryComparisonOperation ngAll(QueryExpression expression) {
@@ -166,7 +168,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation ge(Object operand) {
-        return Operators.ge(this, Literal.ofScalar(operand));
+        return Operators.ge(this, Expressions.require(operand, ScalarExpression.class));
     }
 
     default BinaryComparisonOperation geAll(QueryExpression expression) {
@@ -182,7 +184,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default BinaryComparisonOperation nge(Object operand) {
-        return Operators.ge(this, Literal.ofScalar(operand), true);
+        return Operators.ge(this, Expressions.require(operand, ScalarExpression.class), true);
     }
 
     default BinaryComparisonOperation ngeAll(QueryExpression expression) {
@@ -206,35 +208,43 @@ public interface ScalarExpression extends Expression {
     }
 
     default Like like(Object pattern) {
-        return Operators.like(this, Literal.ofScalar(pattern));
+        return Operators.like(this, Expressions.require(pattern, ScalarExpression.class));
     }
 
     default Like like(Object pattern, String escapeCharacter) {
-        return Operators.like(this, Literal.ofScalar(pattern), StringLiteral.of(escapeCharacter));
+        return Operators.like(this, Expressions.require(pattern, ScalarExpression.class),
+                StringLiteral.of(escapeCharacter));
     }
 
     default Like notLike(Object pattern) {
-        return Operators.like(this, Literal.ofScalar(pattern), null, true);
+        return Operators.like(this, Expressions.require(pattern, ScalarExpression.class), null, true);
     }
 
     default Like notLike(Object pattern, String escapeCharacter) {
-        return Operators.like(this, Literal.ofScalar(pattern), StringLiteral.of(escapeCharacter), true);
+        return Operators.like(this, Expressions.require(pattern, ScalarExpression.class),
+                StringLiteral.of(escapeCharacter), true);
     }
 
     default Between between(Object lowerBound, Object upperBound) {
-        return Operators.between(this, Literal.ofScalar(lowerBound), Literal.ofScalar(upperBound));
+        return Operators.between(this, Expressions.require(lowerBound, ScalarExpression.class),
+                Expressions.require(upperBound, ScalarExpression.class));
     }
 
     default Between notBetween(Object lowerBound, Object upperBound) {
-        return Operators.between(this, Literal.ofScalar(lowerBound), Literal.ofScalar(upperBound), true);
+        return Operators.between(this, Expressions.require(lowerBound, ScalarExpression.class),
+                Expressions.require(upperBound, ScalarExpression.class), true);
     }
 
     default In in(Object... values) {
-        return Operators.in(this, Literal.ofScalarList(values));
+        return Operators.in(this, Arrays.stream(values)
+                .map(value -> Expressions.require(value, ScalarExpression.class))
+                .toList());
     }
 
     default In in(Collection<?> values) {
-        return Operators.in(this, Literal.ofScalarList(values));
+        return Operators.in(this, values.stream()
+                .map(value -> Expressions.require(value, ScalarExpression.class))
+                .toList());
     }
 
     default Collate collate(String collation) {

@@ -40,15 +40,15 @@ public class TimestampLiteral extends Literal<Timestamp> {
         return new TimestampLiteral(value);
     }
 
+    public static TimestampLiteral of(Date value) {
+        return of(value != null ? value.toInstant() : null);
+    }
+
     public static TimestampLiteral of(Instant value) {
         return of(value != null ? Timestamp.from(value) : null);
     }
 
     public static TimestampLiteral of(OffsetDateTime value) {
-        return of(value != null ? value.toInstant() : null);
-    }
-
-    public static TimestampLiteral of(Date value) {
         return of(value != null ? value.toInstant() : null);
     }
 
