@@ -27,6 +27,7 @@ import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.literal.StringLiteral;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
+import java.util.Collection;
 import java.util.List;
 
 public class Operators {
@@ -193,6 +194,18 @@ public class Operators {
 
     public static In in(Expression leftOperand, QueryExpression rightOperand) {
         return In.of(leftOperand, rightOperand, false);
+    }
+
+    public static In in(Expression leftOperand, Collection<?> values, boolean negate) {
+        return In.of(leftOperand, values, negate);
+    }
+
+    public static In in(Expression leftOperand, Collection<?> values) {
+        return In.of(leftOperand, values);
+    }
+
+    public static In in(Expression leftOperand, Object... values) {
+        return In.of(leftOperand, values);
     }
 
     public static BinaryLogicalOperation and(List<? extends BooleanExpression> operands) {

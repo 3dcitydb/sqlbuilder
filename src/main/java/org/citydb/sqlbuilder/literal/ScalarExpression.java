@@ -239,11 +239,11 @@ public interface ScalarExpression extends Expression {
     }
 
     default In in(Object... values) {
-        return Operators.in(this, LiteralList.of(values));
+        return Operators.in(this, values);
     }
 
     default In in(Collection<?> values) {
-        return Operators.in(this, LiteralList.of(values));
+        return Operators.in(this, values);
     }
 
     default In notIn(QueryExpression queryExpression) {
@@ -251,11 +251,11 @@ public interface ScalarExpression extends Expression {
     }
 
     default In notIn(Object... values) {
-        return Operators.in(this, LiteralList.of(values), true);
+        return Operators.in(this, values, true);
     }
 
     default In notIn(Collection<?> values) {
-        return Operators.in(this, LiteralList.of(values), true);
+        return Operators.in(this, values, true);
     }
 
     default Collate collate(String collation) {

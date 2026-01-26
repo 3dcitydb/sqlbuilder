@@ -23,8 +23,11 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.literal.LiteralList;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,6 +49,18 @@ public class In implements ComparisonOperation {
 
     public static In of(Expression leftOperand, QueryExpression rightOperand) {
         return new In(leftOperand, rightOperand, false);
+    }
+
+    public static In of(Expression leftOperand, Collection<?> values, boolean negate) {
+        return new In(leftOperand, LiteralList.of(values), negate);
+    }
+
+    public static In of(Expression leftOperand, Collection<?> values) {
+        return new In(leftOperand, LiteralList.of(values), false);
+    }
+
+    public static In of(Expression leftOperand, Object... values) {
+        return new In(leftOperand, LiteralList.of(Arrays.asList(values)), false);
     }
 
     public Expression getLeftOperand() {

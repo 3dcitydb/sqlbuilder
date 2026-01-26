@@ -24,10 +24,7 @@ package org.citydb.sqlbuilder.literal;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LiteralList implements QueryExpression {
@@ -41,7 +38,7 @@ public class LiteralList implements QueryExpression {
         return new LiteralList(new ArrayList<>());
     }
 
-    public static LiteralList of(List<?> values) {
+    public static LiteralList of(Collection<?> values) {
         return values != null ?
                 new LiteralList(values.stream()
                         .map(Literal::of)
