@@ -40,8 +40,8 @@ public class Placeholder extends Literal<Object> implements QueryExpression {
         return new Placeholder(value);
     }
 
-    public static Placeholder of(Literal<?> literal) {
-        return of(literal != null ? literal.getValue().orElse(null) : null);
+    public static Placeholder of(Literal<?> value) {
+        return of(value != null ? value.getValue().orElse(null) : null);
     }
 
     public Placeholder setValue(Object value) {
