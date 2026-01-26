@@ -71,11 +71,11 @@ public class Operators {
         return ArithmeticOperation.of(leftOperand, MINUS, rightOperand);
     }
 
-    public static ArithmeticOperation multiplyBy(ScalarExpression leftOperand, ScalarExpression rightOperand) {
+    public static ArithmeticOperation multiply(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, MULTIPLY, rightOperand);
     }
 
-    public static ArithmeticOperation divideBy(ScalarExpression leftOperand, ScalarExpression rightOperand) {
+    public static ArithmeticOperation divide(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, DIVIDE, rightOperand);
     }
 

@@ -34,11 +34,11 @@ public interface NumericExpression extends ScalarExpression {
         return append(Operators.MINUS, operand);
     }
 
-    default ArithmeticOperation multiplyBy(Object operand) {
+    default ArithmeticOperation multiply(Object operand) {
         return append(Operators.MULTIPLY, operand);
     }
 
-    default ArithmeticOperation divideBy(Object operand) {
+    default ArithmeticOperation divide(Object operand) {
         return append(Operators.DIVIDE, operand);
     }
 
