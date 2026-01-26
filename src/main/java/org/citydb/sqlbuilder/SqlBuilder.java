@@ -267,11 +267,11 @@ public class SqlBuilder {
 
         @Override
         public void visit(In in) {
-            in.getOperand().accept(this);
+            in.getLeftOperand().accept(this);
             builder.append(" ")
                     .append(keyword(in.getOperator()))
                     .append(" (");
-            build(in.getValues(), ", ", false);
+            in.getRightOperand().accept(this);
             builder.append(")");
         }
 
@@ -315,6 +315,11 @@ public class SqlBuilder {
                             .append(escapeCharacter);
                 }
             });
+        }
+
+        @Override
+        public void visit(LiteralList literalList) {
+            build(literalList.getLiterals(), ", ", false);
         }
 
         @Override

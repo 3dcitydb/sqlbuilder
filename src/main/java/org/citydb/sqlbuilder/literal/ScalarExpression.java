@@ -26,7 +26,6 @@ import org.citydb.sqlbuilder.common.Expressions;
 import org.citydb.sqlbuilder.operation.*;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 public interface ScalarExpression extends Expression {
@@ -235,16 +234,28 @@ public interface ScalarExpression extends Expression {
                 Expressions.require(upperBound, ScalarExpression.class), true);
     }
 
+    default In in(QueryExpression queryExpression) {
+        return Operators.in(this, queryExpression);
+    }
+
     default In in(Object... values) {
-        return Operators.in(this, Arrays.stream(values)
-                .map(value -> Expressions.require(value, ScalarExpression.class))
-                .toList());
+        return Operators.in(this, LiteralList.of(values));
     }
 
     default In in(Collection<?> values) {
-        return Operators.in(this, values.stream()
-                .map(value -> Expressions.require(value, ScalarExpression.class))
-                .toList());
+        return Operators.in(this, LiteralList.of(values));
+    }
+
+    default In notIn(QueryExpression queryExpression) {
+        return Operators.in(this, queryExpression, true);
+    }
+
+    default In notIn(Object... values) {
+        return Operators.in(this, LiteralList.of(values), true);
+    }
+
+    default In notIn(Collection<?> values) {
+        return Operators.in(this, LiteralList.of(values), true);
     }
 
     default Collate collate(String collation) {

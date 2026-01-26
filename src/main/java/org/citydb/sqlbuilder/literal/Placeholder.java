@@ -22,9 +22,10 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.util.UserProperties;
 
-public class Placeholder extends Literal<Object> {
+public class Placeholder extends Literal<Object> implements QueryExpression {
     private UserProperties userProperties;
 
     private Placeholder(Object value) {

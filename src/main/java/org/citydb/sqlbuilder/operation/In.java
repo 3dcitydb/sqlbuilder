@@ -23,54 +23,37 @@ package org.citydb.sqlbuilder.operation;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.ScalarExpression;
+import org.citydb.sqlbuilder.query.QueryExpression;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 
 public class In implements ComparisonOperation {
-    private final Expression operand;
-    private final List<ScalarExpression> values;
+    private final Expression leftOperand;
+    private final QueryExpression rightOperand;
     private boolean negate;
     private String alias;
 
-    private In(Expression operand, List<? extends ScalarExpression> values, boolean negate) {
-        this.operand = Objects.requireNonNull(operand, "The operand must not be null.");
-        this.values = new ArrayList<>(Objects.requireNonNull(values, "The values list must not be null."));
+    private In(Expression leftOperand, QueryExpression rightOperand, boolean negate) {
+        this.leftOperand = Objects.requireNonNull(leftOperand, "The left operand must not be null.");
+        this.rightOperand = Objects.requireNonNull(rightOperand, "The right operand must not be null.");
         this.negate = negate;
     }
 
-    public static In of(Expression operand, List<? extends ScalarExpression> values, boolean negate) {
-        return new In(operand, values, negate);
+    public static In of(Expression leftOperand, QueryExpression rightOperand, boolean negate) {
+        return new In(leftOperand, rightOperand, negate);
     }
 
-    public static In of(Expression operand, List<? extends ScalarExpression> values) {
-        return new In(operand, values, false);
+    public static In of(Expression leftOperand, QueryExpression rightOperand) {
+        return new In(leftOperand, rightOperand, false);
     }
 
-    public static In of(Expression operand, ScalarExpression... values) {
-        return new In(operand, Arrays.asList(values), false);
+    public Expression getLeftOperand() {
+        return leftOperand;
     }
 
-    public Expression getOperand() {
-        return operand;
-    }
-
-    public List<ScalarExpression> getValues() {
-        return values;
-    }
-
-    public In add(List<? extends ScalarExpression> values) {
-        if (values != null && !values.isEmpty()) {
-            values.stream()
-                    .filter(Objects::nonNull)
-                    .forEach(this.values::add);
-        }
-
-        return this;
-    }
-
-    public In add(ScalarExpression... values) {
-        return add(Arrays.asList(values));
+    public QueryExpression getRightOperand() {
+        return rightOperand;
     }
 
     public boolean isNegate() {

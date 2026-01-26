@@ -76,6 +76,8 @@ public interface SqlVisitor {
 
     void visit(Like like);
 
+    void visit(LiteralList literalList);
+
     void visit(Not not);
 
     void visit(NullLiteral literal);

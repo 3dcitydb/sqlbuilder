@@ -138,8 +138,8 @@ public abstract class SqlWalker implements SqlVisitor {
     @Override
     public void visit(In in) {
         visit((SqlObject) in);
-        in.getOperand().accept(this);
-        in.getValues().forEach(value -> value.accept(this));
+        in.getLeftOperand().accept(this);
+        in.getRightOperand().accept(this);
     }
 
     @Override
@@ -166,6 +166,12 @@ public abstract class SqlWalker implements SqlVisitor {
         like.getOperand().accept(this);
         like.getPattern().accept(this);
         like.getEscapeCharacter().ifPresent(character -> character.accept(this));
+    }
+
+    @Override
+    public void visit(LiteralList literalList) {
+        visit((SqlObject) literalList);
+        literalList.getLiterals().forEach(literal -> literal.accept(this));
     }
 
     @Override
