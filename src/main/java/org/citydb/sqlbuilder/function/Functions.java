@@ -51,6 +51,9 @@ public class Functions {
     public static final String RANK = "rank";
     public static final String ROW_NUMBER = "row_number";
 
+    private Functions() {
+    }
+
     public static Function avg(Expression argument) {
         return Function.of(AVG, argument);
     }

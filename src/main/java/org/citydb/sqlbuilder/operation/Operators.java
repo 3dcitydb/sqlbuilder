@@ -60,6 +60,9 @@ public class Operators {
     public static final String SOME = "some";
     public static final String COLLATE = "collate";
 
+    private Operators() {
+    }
+
     public static ArithmeticOperation plus(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, PLUS, rightOperand);
     }

@@ -28,6 +28,9 @@ public class Sets {
     public static final String UNION = "union";
     public static final String UNION_ALL = "union all";
 
+    private Sets() {
+    }
+
     public static SetOperator intersect(List<Select> operands) {
         return SetOperator.of(INTERSECT, operands);
     }
