@@ -44,7 +44,7 @@ public class PlainText implements BooleanExpression, ColumnExpression, QueryExpr
     }
 
     public static PlainText of(String sql, Object... tokens) {
-        return new PlainText(sql, tokens != null ? Arrays.asList(tokens) : null);
+        return new PlainText(sql, Arrays.asList(tokens));
     }
 
     public String getSql() {

@@ -49,7 +49,7 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
     }
 
     public static Function of(String name, String alias, Expression... arguments) {
-        return new Function(name, alias, arguments != null ? Arrays.asList(arguments) : null);
+        return new Function(name, alias, Arrays.asList(arguments));
     }
 
     public static Function of(String name, List<? extends Expression> arguments) {
@@ -108,7 +108,7 @@ public class Function implements BooleanExpression, ColumnExpression, Selection<
     }
 
     public Function add(Expression... arguments) {
-        return arguments != null ? add(Arrays.asList(arguments)) : this;
+        return add(Arrays.asList(arguments));
     }
 
     public WindowFunction over() {

@@ -46,7 +46,7 @@ public class BinaryLogicalOperation implements LogicalOperation {
     }
 
     public static BinaryLogicalOperation of(String operator, BooleanExpression... operands) {
-        return new BinaryLogicalOperation(operator, operands != null ? Arrays.asList(operands) : null);
+        return new BinaryLogicalOperation(operator, Arrays.asList(operands));
     }
 
     public static BinaryLogicalOperation of(BooleanExpression leftOperand, String operator, BooleanExpression rightOperand) {
@@ -71,7 +71,7 @@ public class BinaryLogicalOperation implements LogicalOperation {
     }
 
     public BinaryLogicalOperation add(BooleanExpression... operands) {
-        return operands != null ? add(Arrays.asList(operands)) : this;
+        return add(Arrays.asList(operands));
     }
 
     public BinaryLogicalOperation add(List<? extends BooleanExpression> operands) {

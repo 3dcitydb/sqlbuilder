@@ -48,7 +48,7 @@ public class In implements ComparisonOperation {
     }
 
     public static In of(Expression operand, ScalarExpression... values) {
-        return new In(operand, values != null ? Arrays.asList(values) : null, false);
+        return new In(operand, Arrays.asList(values), false);
     }
 
     public Expression getOperand() {
@@ -70,7 +70,7 @@ public class In implements ComparisonOperation {
     }
 
     public In add(ScalarExpression... values) {
-        return values != null ? add(Arrays.asList(values)) : this;
+        return add(Arrays.asList(values));
     }
 
     public boolean isNegate() {

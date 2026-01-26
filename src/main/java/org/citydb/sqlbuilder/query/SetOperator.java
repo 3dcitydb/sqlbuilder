@@ -45,9 +45,7 @@ public class SetOperator extends QueryStatement<SetOperator> {
     }
 
     public static SetOperator of(String type, Select... operands) {
-        return new SetOperator(type, operands != null ?
-                new ArrayList<>(Arrays.asList(operands)) :
-                null);
+        return new SetOperator(type, new ArrayList<>(Arrays.asList(operands)));
     }
 
     public String getType() {
@@ -63,7 +61,7 @@ public class SetOperator extends QueryStatement<SetOperator> {
     }
 
     public SetOperator add(Select... operands) {
-        return operands != null ? add(Arrays.asList(operands)) : this;
+        return add(Arrays.asList(operands));
     }
 
     public SetOperator add(List<Select> operands) {

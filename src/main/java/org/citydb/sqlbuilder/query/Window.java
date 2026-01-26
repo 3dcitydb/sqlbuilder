@@ -69,7 +69,7 @@ public class Window implements SqlObject {
     }
 
     public static Window of(Expression... partitionBy) {
-        return of(partitionBy != null ? Arrays.asList(partitionBy) : null);
+        return of(Arrays.asList(partitionBy));
     }
 
     public static Window empty() {
@@ -114,7 +114,7 @@ public class Window implements SqlObject {
     }
 
     public Window partitionBy(Expression... expressions) {
-        return partitionBy(expressions != null ? Arrays.asList(expressions) : null);
+        return partitionBy(Arrays.asList(expressions));
     }
 
     public List<OrderBy> getOrderBy() {

@@ -108,9 +108,7 @@ public class Table implements SqlObject {
     }
 
     public List<Column> columns(String... columns) {
-        return columns != null ?
-                columns(Arrays.asList(columns)) :
-                Collections.emptyList();
+        return columns(Arrays.asList(columns));
     }
 
     public List<Column> columns(List<String> columns) {
