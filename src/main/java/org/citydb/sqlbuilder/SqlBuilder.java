@@ -270,9 +270,15 @@ public class SqlBuilder {
             in.getLeftOperand().accept(this);
             builder.append(" ")
                     .append(keyword(in.getOperator()))
-                    .append(" (");
-            in.getRightOperand().accept(this);
-            builder.append(")");
+                    .append(" ");
+
+            if (in.getRightOperand() instanceof QueryStatement<?> statement) {
+                statement.accept(this);
+            } else {
+                builder.append("(");
+                in.getRightOperand().accept(this);
+                builder.append(")");
+            }
         }
 
         @Override
@@ -385,9 +391,15 @@ public class SqlBuilder {
         @Override
         public void visit(SubQueryOperator operator) {
             builder.append(keyword(operator.getOperator()))
-                    .append(" (");
-            operator.getOperand().accept(this);
-            builder.append(")");
+                    .append(" ");
+
+            if (operator.getOperand() instanceof QueryStatement<?> statement) {
+                statement.accept(this);
+            } else {
+                builder.append("(");
+                operator.getOperand().accept(this);
+                builder.append(")");
+            }
         }
 
         @Override
