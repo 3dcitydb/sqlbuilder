@@ -92,9 +92,7 @@ public class Operators {
     }
 
     public static BinaryComparisonOperation eq(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
-        return BinaryComparisonOperation.of(leftOperand,
-                !negate ? EQUAL_TO : NOT_EQUAL_TO,
-                rightOperand);
+        return compare(leftOperand, rightOperand, negate, EQUAL_TO, NOT_EQUAL_TO);
     }
 
     public static BinaryComparisonOperation eq(ScalarExpression leftOperand, ScalarExpression rightOperand) {
@@ -110,9 +108,7 @@ public class Operators {
     }
 
     public static BinaryComparisonOperation lt(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
-        return BinaryComparisonOperation.of(leftOperand,
-                !negate ? LESS_THAN : GREATER_THAN_OR_EQUAL_TO,
-                rightOperand);
+        return compare(leftOperand, rightOperand, negate, LESS_THAN, GREATER_THAN_OR_EQUAL_TO);
     }
 
     public static BinaryComparisonOperation lt(ScalarExpression leftOperand, ScalarExpression rightOperand) {
@@ -120,9 +116,7 @@ public class Operators {
     }
 
     public static BinaryComparisonOperation le(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
-        return BinaryComparisonOperation.of(leftOperand,
-                !negate ? LESS_THAN_OR_EQUAL_TO : GREATER_THAN,
-                rightOperand);
+        return compare(leftOperand, rightOperand, negate, LESS_THAN_OR_EQUAL_TO, GREATER_THAN);
     }
 
     public static BinaryComparisonOperation le(ScalarExpression leftOperand, ScalarExpression rightOperand) {
@@ -130,9 +124,7 @@ public class Operators {
     }
 
     public static BinaryComparisonOperation gt(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
-        return BinaryComparisonOperation.of(leftOperand,
-                !negate ? GREATER_THAN : LESS_THAN_OR_EQUAL_TO,
-                rightOperand);
+        return compare(leftOperand, rightOperand, negate, GREATER_THAN, LESS_THAN_OR_EQUAL_TO);
     }
 
     public static BinaryComparisonOperation gt(ScalarExpression leftOperand, ScalarExpression rightOperand) {
@@ -140,9 +132,7 @@ public class Operators {
     }
 
     public static BinaryComparisonOperation ge(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate) {
-        return BinaryComparisonOperation.of(leftOperand,
-                !negate ? GREATER_THAN_OR_EQUAL_TO : LESS_THAN,
-                rightOperand);
+        return compare(leftOperand, rightOperand, negate, GREATER_THAN_OR_EQUAL_TO, LESS_THAN);
     }
 
     public static BinaryComparisonOperation ge(ScalarExpression leftOperand, ScalarExpression rightOperand) {
@@ -231,5 +221,9 @@ public class Operators {
 
     public static Collate collate(Expression expression, String collation) {
         return Collate.of(expression, collation);
+    }
+
+    private static BinaryComparisonOperation compare(ScalarExpression leftOperand, ScalarExpression rightOperand, boolean negate, String operation, String negatedOperation) {
+        return BinaryComparisonOperation.of(leftOperand, !negate ? operation : negatedOperation, rightOperand);
     }
 }
