@@ -21,7 +21,6 @@
 
 package org.citydb.sqlbuilder.literal;
 
-import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.query.Selection;
 
 import java.sql.Date;
@@ -32,9 +31,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
+public abstract class Literal<T> implements ScalarExpression, Selection<Literal<T>> {
     protected T value;
-    private String alias;
+    protected String alias;
 
     protected Literal(T value) {
         this.value = value;
@@ -87,12 +86,6 @@ public abstract class Literal<T> implements Expression, Selection<Literal<T>> {
     @Override
     public Optional<String> getAlias() {
         return Optional.ofNullable(alias);
-    }
-
-    @Override
-    public Literal<T> as(String alias) {
-        this.alias = alias;
-        return this;
     }
 
     @Override

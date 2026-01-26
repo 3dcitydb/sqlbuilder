@@ -23,7 +23,7 @@ package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
 
-public class NullLiteral extends Literal<Void> implements ScalarExpression {
+public class NullLiteral extends Literal<Void> {
     private static final NullLiteral instance = new NullLiteral();
 
     private NullLiteral() {
@@ -32,6 +32,12 @@ public class NullLiteral extends Literal<Void> implements ScalarExpression {
 
     public static NullLiteral getInstance() {
         return instance;
+    }
+
+    @Override
+    public NullLiteral as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override

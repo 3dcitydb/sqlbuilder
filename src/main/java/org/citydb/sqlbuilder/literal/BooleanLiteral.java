@@ -24,7 +24,7 @@ package org.citydb.sqlbuilder.literal;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 
-public class BooleanLiteral extends Literal<Boolean> implements BooleanExpression, ScalarExpression {
+public class BooleanLiteral extends Literal<Boolean> implements BooleanExpression {
     public static final BooleanLiteral TRUE = new BooleanLiteral(true);
     public static final BooleanLiteral FALSE = new BooleanLiteral(false);
 
@@ -42,6 +42,12 @@ public class BooleanLiteral extends Literal<Boolean> implements BooleanExpressio
 
     public static BooleanLiteral of(Boolean value) {
         return value != null ? of(value.booleanValue()) : new BooleanLiteral(null);
+    }
+
+    @Override
+    public BooleanLiteral as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override

@@ -30,7 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class TimestampLiteral extends Literal<Timestamp> implements ScalarExpression {
+public class TimestampLiteral extends Literal<Timestamp> {
 
     private TimestampLiteral(Timestamp value) {
         super(value);
@@ -58,6 +58,12 @@ public class TimestampLiteral extends Literal<Timestamp> implements ScalarExpres
 
     public static TimestampLiteral of(GregorianCalendar value) {
         return of(value != null ? value.toInstant() : null);
+    }
+
+    @Override
+    public TimestampLiteral as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override

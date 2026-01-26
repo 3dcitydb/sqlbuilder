@@ -23,7 +23,7 @@ package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
 
-public class StringLiteral extends Literal<String> implements ScalarExpression {
+public class StringLiteral extends Literal<String> {
 
     private StringLiteral(String value) {
         super(value);
@@ -31,6 +31,12 @@ public class StringLiteral extends Literal<String> implements ScalarExpression {
 
     public static StringLiteral of(String value) {
         return new StringLiteral(value);
+    }
+
+    @Override
+    public StringLiteral as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override

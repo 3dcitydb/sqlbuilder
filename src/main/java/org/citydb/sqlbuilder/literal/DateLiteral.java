@@ -30,7 +30,7 @@ import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class DateLiteral extends Literal<Date> implements ScalarExpression {
+public class DateLiteral extends Literal<Date> {
 
     private DateLiteral(Date value) {
         super(value);
@@ -62,6 +62,12 @@ public class DateLiteral extends Literal<Date> implements ScalarExpression {
 
     public static DateLiteral of(GregorianCalendar value) {
         return of(value != null ? value.toInstant() : null);
+    }
+
+    @Override
+    public DateLiteral as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override

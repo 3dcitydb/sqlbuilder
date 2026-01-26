@@ -47,6 +47,12 @@ public class DoubleLiteral extends Literal<Double> implements NumericExpression 
     }
 
     @Override
+    public DoubleLiteral as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
     public void accept(SqlVisitor visitor) {
         visitor.visit(this);
     }

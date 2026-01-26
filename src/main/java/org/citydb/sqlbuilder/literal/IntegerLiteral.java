@@ -47,6 +47,12 @@ public class IntegerLiteral extends Literal<Long> implements NumericExpression {
     }
 
     @Override
+    public IntegerLiteral as(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    @Override
     public void accept(SqlVisitor visitor) {
         visitor.visit(this);
     }

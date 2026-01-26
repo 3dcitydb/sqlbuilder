@@ -24,7 +24,7 @@ package org.citydb.sqlbuilder.literal;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.util.UserProperties;
 
-public class Placeholder extends Literal<Object> implements ScalarExpression {
+public class Placeholder extends Literal<Object> {
     private UserProperties userProperties;
 
     private Placeholder(Object value) {
@@ -58,6 +58,12 @@ public class Placeholder extends Literal<Object> implements ScalarExpression {
         }
 
         return userProperties;
+    }
+
+    @Override
+    public Placeholder as(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     @Override
