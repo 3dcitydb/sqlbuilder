@@ -2,7 +2,7 @@
  * sqlbuilder - Dynamic SQL builder for the 3D City Database
  * https://www.3dcitydb.org/
  *
- * Copyright 2022-2024
+ * Copyright 2022-2026
  * virtualcitysystems GmbH, Germany
  * https://vc.systems/
  *

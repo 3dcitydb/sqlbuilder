@@ -1,5 +1,5 @@
 /*
- * citydb-tool - Command-line tool for the 3D City Database
+ * sqlbuilder - Dynamic SQL builder for the 3D City Database
  * https://www.3dcitydb.org/
  *
  * Copyright 2022-2026
