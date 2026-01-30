@@ -23,6 +23,7 @@ package org.citydb.sqlbuilder.query;
 
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.schema.Table;
 
 import java.util.*;
 
@@ -30,11 +31,13 @@ public class CommonTableExpression implements SqlObject {
     private final String name;
     private final QueryExpression expression;
     private final List<String> columns;
+    private final Table table;
 
     private CommonTableExpression(String name, QueryExpression expression, List<String> columns) {
         this.name = Objects.requireNonNull(name, "The name must not be null.");
         this.expression = Objects.requireNonNull(expression, "The query expression must not be null.");
         this.columns = columns;
+        table = Table.of(name);
     }
 
     public static CommonTableExpression of(String name, QueryExpression expression, String... columns) {
@@ -55,6 +58,10 @@ public class CommonTableExpression implements SqlObject {
 
     public List<String> getColumns() {
         return columns != null ? columns : Collections.emptyList();
+    }
+
+    public Table asTable() {
+        return table;
     }
 
     @Override
