@@ -29,22 +29,22 @@ import org.citydb.sqlbuilder.schema.ColumnExpression;
 
 import java.util.*;
 
-public class PlainText implements BooleanExpression, ColumnExpression, QueryExpression, Selection<PlainText> {
+public class PlainSql implements BooleanExpression, ColumnExpression, QueryExpression, Selection<PlainSql> {
     private final String sql;
     private final List<Object> tokens;
     private String alias;
 
-    private PlainText(String sql, List<Object> tokens) {
+    private PlainSql(String sql, List<Object> tokens) {
         this.sql = Objects.requireNonNull(sql, "The plain SQL text must not be null.");
         this.tokens = tokens;
     }
 
-    public static PlainText of(String sql) {
-        return new PlainText(sql, null);
+    public static PlainSql of(String sql) {
+        return new PlainSql(sql, null);
     }
 
-    public static PlainText of(String sql, Object... tokens) {
-        return new PlainText(sql, Arrays.asList(tokens));
+    public static PlainSql of(String sql, Object... tokens) {
+        return new PlainSql(sql, Arrays.asList(tokens));
     }
 
     public String getSql() {
@@ -61,7 +61,7 @@ public class PlainText implements BooleanExpression, ColumnExpression, QueryExpr
     }
 
     @Override
-    public PlainText as(String alias) {
+    public PlainSql as(String alias) {
         this.alias = alias;
         return this;
     }

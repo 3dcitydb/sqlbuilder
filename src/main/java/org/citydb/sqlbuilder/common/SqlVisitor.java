@@ -33,7 +33,7 @@ import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.schema.WildcardColumn;
 import org.citydb.sqlbuilder.update.Update;
 import org.citydb.sqlbuilder.update.UpdateValue;
-import org.citydb.sqlbuilder.util.PlainText;
+import org.citydb.sqlbuilder.util.PlainSql;
 
 public interface SqlVisitor {
     void visit(ArithmeticOperation operation);
@@ -86,7 +86,7 @@ public interface SqlVisitor {
 
     void visit(Placeholder placeholder);
 
-    void visit(PlainText plainText);
+    void visit(PlainSql plainSql);
 
     void visit(Select select);
 

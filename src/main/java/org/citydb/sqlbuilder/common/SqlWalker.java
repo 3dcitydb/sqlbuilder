@@ -33,7 +33,7 @@ import org.citydb.sqlbuilder.schema.Table;
 import org.citydb.sqlbuilder.schema.WildcardColumn;
 import org.citydb.sqlbuilder.update.Update;
 import org.citydb.sqlbuilder.update.UpdateValue;
-import org.citydb.sqlbuilder.util.PlainText;
+import org.citydb.sqlbuilder.util.PlainSql;
 
 public abstract class SqlWalker implements SqlVisitor {
 
@@ -197,9 +197,9 @@ public abstract class SqlWalker implements SqlVisitor {
     }
 
     @Override
-    public void visit(PlainText plainText) {
-        visit((SqlObject) plainText);
-        plainText.getTokens().stream()
+    public void visit(PlainSql plainSql) {
+        visit((SqlObject) plainSql);
+        plainSql.getTokens().stream()
                 .filter(SqlObject.class::isInstance)
                 .map(SqlObject.class::cast)
                 .forEach(token -> token.accept(this));

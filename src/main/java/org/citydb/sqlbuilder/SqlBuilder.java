@@ -38,7 +38,7 @@ import org.citydb.sqlbuilder.update.UpdateValue;
 import org.citydb.sqlbuilder.util.AliasGenerator;
 import org.citydb.sqlbuilder.util.DefaultAliasGenerator;
 import org.citydb.sqlbuilder.util.PlaceholderBuilder;
-import org.citydb.sqlbuilder.util.PlainText;
+import org.citydb.sqlbuilder.util.PlainSql;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -361,9 +361,9 @@ public class SqlBuilder {
         }
 
         @Override
-        public void visit(PlainText plainText) {
-            String sql = plainText.getSql();
-            for (Object token : plainText.getTokens()) {
+        public void visit(PlainSql plainSql) {
+            String sql = plainSql.getSql();
+            for (Object token : plainSql.getTokens()) {
                 String replacement = token instanceof SqlObject sqlObject ?
                         toSql(sqlObject) :
                         String.valueOf(token);
