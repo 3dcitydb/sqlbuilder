@@ -22,14 +22,13 @@
 package org.citydb.sqlbuilder.util;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
 import org.citydb.sqlbuilder.query.Selection;
 import org.citydb.sqlbuilder.schema.ColumnExpression;
 
 import java.util.*;
 
-public class PlainSql implements BooleanExpression, ColumnExpression, QueryExpression, Selection<PlainSql> {
+public class PlainSql implements ColumnExpression, QueryExpression, Selection<PlainSql> {
     private final String sql;
     private final List<Object> tokens;
     private String alias;

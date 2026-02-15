@@ -25,9 +25,10 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.Functions;
 import org.citydb.sqlbuilder.literal.Literal;
+import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.operation.NumericExpression;
 
-public interface ColumnExpression extends NumericExpression {
+public interface ColumnExpression extends NumericExpression, BooleanExpression {
 
     default Function avg() {
         return Functions.avg(this);
