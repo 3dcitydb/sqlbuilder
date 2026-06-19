@@ -23,6 +23,8 @@ package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.Expressions;
+import org.citydb.sqlbuilder.function.Function;
+import org.citydb.sqlbuilder.function.Functions;
 import org.citydb.sqlbuilder.operation.*;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
@@ -260,5 +262,81 @@ public interface ScalarExpression extends Expression {
 
     default Collate collate(String collation) {
         return Operators.collate(this, collation);
+    }
+
+    default Function avg() {
+        return Functions.avg(this);
+    }
+
+    default Function count() {
+        return Functions.count(this);
+    }
+
+    default Function max() {
+        return Functions.max(this);
+    }
+
+    default Function min() {
+        return Functions.min(this);
+    }
+
+    default Function sum() {
+        return Functions.sum(this);
+    }
+
+    default Function length() {
+        return Functions.length(this);
+    }
+
+    default Function upper() {
+        return Functions.upper(this);
+    }
+
+    default Function lower() {
+        return Functions.lower(this);
+    }
+
+    default Function trim() {
+        return Functions.trim(this);
+    }
+
+    default Function concatFunc(Object argument) {
+        return Functions.concat(this, argument);
+    }
+
+    default Function firstValue() {
+        return Functions.firstValue(this);
+    }
+
+    default Function lastValue() {
+        return Functions.lastValue(this);
+    }
+
+    default Function lag() {
+        return Functions.lag(this);
+    }
+
+    default Function lag(Literal<?> offset) {
+        return Functions.lag(this, offset);
+    }
+
+    default Function lag(Literal<?> offset, Expression defaultValue) {
+        return Functions.lag(this, offset, defaultValue);
+    }
+
+    default Function lead() {
+        return Functions.lead(this);
+    }
+
+    default Function lead(Literal<?> offset) {
+        return Functions.lead(this, offset);
+    }
+
+    default Function lead(Literal<?> offset, Expression defaultValue) {
+        return Functions.lead(this, offset, defaultValue);
+    }
+
+    default Function nthValue(Literal<?> offset) {
+        return Functions.nthValue(this, offset);
     }
 }

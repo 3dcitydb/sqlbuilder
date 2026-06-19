@@ -24,14 +24,13 @@ package org.citydb.sqlbuilder.operation;
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.query.Selection;
-import org.citydb.sqlbuilder.schema.ColumnExpression;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Case implements ColumnExpression, Selection<Case> {
+public class Case implements Selection<Case> {
     private final Map<BooleanExpression, Expression> conditions;
     private Expression otherwise;
     private String alias;

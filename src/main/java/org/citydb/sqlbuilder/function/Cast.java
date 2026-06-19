@@ -23,13 +23,13 @@ package org.citydb.sqlbuilder.function;
 
 import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.query.Selection;
-import org.citydb.sqlbuilder.schema.ColumnExpression;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class Cast implements ColumnExpression, Selection<Cast> {
+public class Cast implements ScalarExpression, Selection<Cast> {
     private final Expression expression;
     private final String targetType;
     private String alias;
