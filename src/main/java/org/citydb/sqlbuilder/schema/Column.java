@@ -23,13 +23,15 @@ package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.literal.ScalarExpression;
+import org.citydb.sqlbuilder.operation.BooleanExpression;
+import org.citydb.sqlbuilder.operation.NumericExpression;
 import org.citydb.sqlbuilder.query.OrderBy;
 import org.citydb.sqlbuilder.query.Selection;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class Column implements ScalarExpression, Selection<Column> {
+public class Column implements NumericExpression, BooleanExpression, Selection<Column> {
     public static final WildcardColumn WILDCARD = WildcardColumn.newInstance();
 
     private final Table table;

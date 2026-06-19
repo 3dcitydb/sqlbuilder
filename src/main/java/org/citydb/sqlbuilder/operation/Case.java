@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Case implements Selection<Case> {
+public class Case implements NumericExpression, BooleanExpression, Selection<Case> {
     private final Map<BooleanExpression, Expression> conditions;
     private Expression otherwise;
     private String alias;

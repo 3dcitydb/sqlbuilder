@@ -86,13 +86,13 @@ The most powerful aspect of SqlBuilder is its robust type system, which mirrors 
          ▼                                     ▼
 [BooleanExpression]                    [ScalarExpression]
  (Logical Predicates)                  (Value-producing expressions)
- - eq(), gt(), isNull()                - Columns, literals, functions
- - and(), or(), not()                  ┌──────────────┴──────────────┐
+                                       ┌──────────────┴──────────────┐
                                        ▼                             ▼
                               (QueryExpression)             [NumericExpression]
                                - Subqueries                  - plus(), minus()
-                               - PlainSql, Function          - multiply(), divide()
 ```
+
+*Hinweis: Einige vielseitige AST-Klassen (z. B. `Column`, `Function`, `Cast`, `Case` und `PlainSql`) implementieren sowohl `NumericExpression` als auch `BooleanExpression`. Dadurch wird eine hohe Flexibilität gewährleistet, sodass sie je nach SQL-Kontext sowohl für logische Prädikate als auch für arithmetische Berechnungen verwendet werden können.*
 
 ### Roles / Responsibilities of Key Interfaces
 
@@ -100,11 +100,11 @@ The most powerful aspect of SqlBuilder is its robust type system, which mirrors 
 | :--- | :--- | :--- | :--- |
 | **`SqlObject`** | Root of the syntax tree. Any node that can render itself into SQL. | All SQL AST nodes | Visitor traversals |
 | **`Expression`** | Represents any valid operand or sub-expression in SQL. | `Column`, `Literal`, operations | AST clauses, assignments |
-| **`ScalarExpression`** | Represents expressions evaluating to a **single scalar or row value**. Provides comparison methods (`eq()`, `lt()`, `between()`, `like()`, `isNull()`) and **fluent function shortcuts** (`avg()`, `upper()`, `lag()`, etc.). | `Column`, `Literal`, `Function`, arithmetic operations | `SELECT`, `GROUP BY`, comparison operands |
-| **`NumericExpression`** | Represents **numeric** values, adding support for math operators (`plus()`, `minus()`, `multiply()`, `divide()`, `modulo()`). | `ArithmeticOperation`, numbers | Math formulas, ranges |
-| **`BooleanExpression`** | Represents logical truths (**predicates**). Provides logical chaining (`and()`, `or()`, `not()`). | `BinaryComparisonOperation`, logical operations, `IsNull` | `WHERE`, `HAVING`, `ON` (Join) |
-| **`QueryExpression`** | Represents sub-statements or groupings acting as table sources or scalar lists. | `Select`, `SetOperator`, `PlainSql`, `LiteralList` | Subqueries, `FROM` derived tables |
-| **`Selection<?>`** | Any projection or expression in a `SELECT` clause that can be aliased (`.as("alias")`). | `Column`, `Literal`, `Case`, `Function`, `PlainSql` | `SELECT` projection, `ORDER BY` target |
+| **`ScalarExpression`** | Represents expressions evaluating to a **single scalar or row value**. Provides comparison methods (`eq()`, `lt()`, `between()`, `like()`, `isNull()`) and **fluent function shortcuts** (`avg()`, `upper()`, `lag()`, etc.). | `Column`, `Literal`, `Function`, `Cast`, `Case`, `PlainSql`, arithmetic operations | `SELECT`, `GROUP BY`, comparison operands |
+| **`NumericExpression`** | Represents **numeric** values, adding support for math operators (`plus()`, `minus()`, `multiply()`, `divide()`, `modulo()`). | `ArithmeticOperation`, `Column`, `Cast`, `Case`, `Function`, `PlainSql`, numbers | Math formulas, ranges |
+| **`BooleanExpression`** | Represents logical truths (**predicates**). Provides logical chaining (`and()`, `or()`, `not()`). | `BinaryComparisonOperation`, logical operations, `IsNull`, `Column`, `Cast`, `Case`, `Function`, `PlainSql` | `WHERE`, `HAVING`, `ON` (Join) |
+| **`QueryExpression`** | Represents sub-statements or groupings acting as table sources or scalar lists. | `Select`, `SetOperator`, `PlainSql`, `LiteralList`, `Function` | Subqueries, `FROM` derived tables |
+| **`Selection<?>`** | Any projection or expression in a `SELECT` clause that can be aliased (`.as("alias")`). | `Column`, `Literal`, `Case`, `Cast`, `Function`, `PlainSql` | `SELECT` projection, `ORDER BY` target |
 
 ### How Compile-Time Constraints Work
 
