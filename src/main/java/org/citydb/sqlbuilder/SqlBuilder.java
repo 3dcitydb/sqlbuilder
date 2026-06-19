@@ -714,7 +714,7 @@ public class SqlBuilder {
                 };
 
                 return options.isSetIdentifierDelimiter() ?
-                        options.isSetIdentifierDelimiter() + identifier + options.isSetIdentifierDelimiter() :
+                        options.getIdentifierDelimiter() + identifier + options.getIdentifierDelimiter() :
                         identifier;
             } else {
                 return "";
