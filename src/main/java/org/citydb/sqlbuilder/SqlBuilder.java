@@ -41,6 +41,7 @@ import org.citydb.sqlbuilder.util.PlaceholderBuilder;
 import org.citydb.sqlbuilder.util.PlainSql;
 
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class SqlBuilder {
@@ -367,7 +368,7 @@ public class SqlBuilder {
                         toSql(sqlObject) :
                         String.valueOf(token);
 
-                sql = sql.replaceFirst("\\{}", replacement);
+                sql = sql.replaceFirst("\\{}", Matcher.quoteReplacement(replacement));
             }
 
             builder.append(sql);
