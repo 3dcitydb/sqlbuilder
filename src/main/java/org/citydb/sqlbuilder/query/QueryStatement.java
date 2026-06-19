@@ -25,6 +25,7 @@ import org.citydb.sqlbuilder.common.Expression;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.literal.IntegerLiteral;
 import org.citydb.sqlbuilder.literal.Literal;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.operation.Operation;
 import org.citydb.sqlbuilder.schema.Column;
 
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class QueryStatement<T extends QueryStatement<?>> implements QueryExpression {
-    protected final List<Column> groupBy;
+    protected final List<ScalarExpression> groupBy;
     protected final List<Expression> having;
     protected final List<Window> window;
     protected final List<OrderBy> orderBy;
@@ -59,13 +60,13 @@ public abstract class QueryStatement<T extends QueryStatement<?>> implements Que
         fetch = other.fetch;
     }
 
-    public List<Column> getGroupBy() {
+    public List<ScalarExpression> getGroupBy() {
         return groupBy;
     }
 
-    public T groupBy(Column... columns) {
-        if (columns != null) {
-            groupBy.addAll(Arrays.asList(columns));
+    public T groupBy(ScalarExpression... expressions) {
+        if (expressions != null) {
+            groupBy.addAll(Arrays.asList(expressions));
         }
 
         return self();
