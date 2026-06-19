@@ -450,8 +450,10 @@ public class SqlBuilder {
             }
 
             builder.append(keyword("update "));
-            newlineAndIndent(() -> builder.append(update.getTable().orElse(Table.of("null")))
-                    .append(" "));
+            newlineAndIndent(() -> {
+                update.getTable().orElse(Table.of("null")).accept(this);
+                builder.append(" ");
+            });
 
             if (!update.getSet().isEmpty()) {
                 newlineAndAppend(keyword("set "));
