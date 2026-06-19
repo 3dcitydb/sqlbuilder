@@ -239,7 +239,6 @@ public class SqlBuilder {
                 builder.append(keyword(" and "));
                 frame.getEndExpression().ifPresent(expression -> {
                     expression.accept(this);
-                    builder.append(expression);
                     builder.append(" ");
                 });
                 builder.append(keyword(end));
