@@ -1,5 +1,6 @@
-# sqlbuilder
-Dynamic SQL builder for the 3D City Database
+# SqlBuilder
+
+A lightweight, type-safe, and dynamic SQL builder for Java.
 
 ```sql
 select
@@ -28,3 +29,8 @@ Select select = Select.newInstance()
 System.out.println(
   select.toSql(SqlBuildOptions.defaults().setIndent("  ")));
 ```
+
+## Developer Guide
+
+For a  guide on how to integrate and use **SqlBuilder** in your own Java projects, along with architecture details
+and core design concepts, please refer to the [Developer Guide](DEVELOPER-GUIDE.md).
