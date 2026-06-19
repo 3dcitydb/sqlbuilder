@@ -33,7 +33,6 @@ public class SqlBuildOptions {
     private IdentifierCase identifierCase = IdentifierCase.UNCHANGED;
     private KeywordCase keywordCase = KeywordCase.LOWERCASE;
     private boolean useJdbcEscapeNotation = false;
-    private boolean stripParentheses = true;
     private AliasGenerator aliasGenerator;
     private PlaceholderBuilder placeholderBuilder;
 
@@ -120,15 +119,6 @@ public class SqlBuildOptions {
 
     public SqlBuildOptions setUseJdbcEscapeNotation(boolean useJdbcEscapeNotation) {
         this.useJdbcEscapeNotation = useJdbcEscapeNotation;
-        return this;
-    }
-
-    public boolean isStripParentheses() {
-        return stripParentheses;
-    }
-
-    public SqlBuildOptions setStripParentheses(boolean stripParentheses) {
-        this.stripParentheses = stripParentheses;
         return this;
     }
 
