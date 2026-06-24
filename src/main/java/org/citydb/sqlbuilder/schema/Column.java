@@ -22,7 +22,6 @@
 package org.citydb.sqlbuilder.schema;
 
 import org.citydb.sqlbuilder.common.SqlVisitor;
-import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.operation.BooleanExpression;
 import org.citydb.sqlbuilder.operation.NumericExpression;
 import org.citydb.sqlbuilder.query.OrderBy;
