@@ -110,8 +110,8 @@ The most powerful aspect of SqlBuilder is its robust type system, which mirrors 
 
 The class and interface hierarchy enforces correct SQL structure at compile-time rather than runtime. Below are key examples of how these constraints prevent invalid SQL patterns:
 
-1. **Invalid Grouping Prevented:**
-   The `groupBy(...)` clause accepts only `ScalarExpression...`. Attempting to group directly by logical conditions (e.g. `select.groupBy(column.eq(5))`) will trigger a Java compile-time error, since condition operators are typed as `BooleanExpression` rather than `ScalarExpression`.
+1. **Flexible Grouping Expressions:**
+   The `groupBy(...)` clause accepts `Expression...`, allowing scalar expressions and other expression types. The caller is responsible for ensuring that the supplied expressions are valid for the target database.
 2. **Type-Safe Filtering:**
    The `.where()` method requires `BooleanExpression...`. You cannot pass raw math formulas or bare values that do not resolve to logical predicates.
 3. **Restricted Math Operators:**
@@ -167,7 +167,7 @@ Select select = Select.newInstance()
 
 ### D. Grouping & Aggregating (`groupBy()`, `having()`)
 
-Due to SqlBuilder's precise typing, the `groupBy` clause is restricted to `ScalarExpression...` to deny logical predicates. You can group by simple columns or compound scalar expressions:
+The `groupBy` clause accepts `Expression...`, so you can group by simple columns or compound expressions:
 
 ```java
 Table employee = Table.of("employee");
