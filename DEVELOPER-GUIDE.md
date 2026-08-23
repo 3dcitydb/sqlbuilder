@@ -92,7 +92,7 @@ The most powerful aspect of SqlBuilder is its robust type system, which mirrors 
                                - Subqueries                  - plus(), minus()
 ```
 
-*Hinweis: Einige vielseitige AST-Klassen (z. B. `Column`, `Function`, `Cast`, `Case` und `PlainSql`) implementieren sowohl `NumericExpression` als auch `BooleanExpression`. Dadurch wird eine hohe Flexibilität gewährleistet, sodass sie je nach SQL-Kontext sowohl für logische Prädikate als auch für arithmetische Berechnungen verwendet werden können.*
+*Note: Several versatile AST classes (e.g., `Column`, `Function`, `Cast`, `Case`, and `PlainSql`) implement both `NumericExpression` and `BooleanExpression`. This provides great flexibility, allowing them to be used for both logical predicates and arithmetic calculations depending on the SQL context.*
 
 ### Roles / Responsibilities of Key Interfaces
 
