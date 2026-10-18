@@ -46,6 +46,10 @@ public interface NumericExpression extends ScalarExpression {
         return append(Operators.MODULO, operand);
     }
 
+    default Negate negate() {
+        return Operators.negate(this);
+    }
+
     default ArithmeticOperation append(String operator, Object operand) {
         ScalarExpression rightOperand = Expressions.require(operand, ScalarExpression.class);
         return this instanceof ArithmeticOperation operation ?

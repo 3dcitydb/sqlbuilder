@@ -329,6 +329,13 @@ public class SqlBuilder {
         }
 
         @Override
+        public void visit(Negate negate) {
+            builder.append("-(");
+            negate.getOperand().accept(this);
+            builder.append(")");
+        }
+
+        @Override
         public void visit(Not not) {
             builder.append(keyword(not.getOperator()))
                     .append(" ");

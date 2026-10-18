@@ -5,6 +5,7 @@ import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.*;
 import org.citydb.sqlbuilder.operation.ArithmeticOperation;
 import org.citydb.sqlbuilder.operation.Case;
+import org.citydb.sqlbuilder.operation.Negate;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.query.*;
 import org.citydb.sqlbuilder.schema.Column;
@@ -85,6 +86,44 @@ public class SqlBuilderTest {
         // Testing lag with offset
         String lagSql = table.column("salary").lag(IntegerLiteral.of(2)).toSql();
         assertEquals("lag(a.salary, 2)", lagSql);
+    }
+
+    @Test
+    public void testNegate() {
+        Table table = Table.of("my_table").alias("a");
+
+        assertEquals("-(a.salary)", Operators.negate(table.column("salary")).toSql());
+        assertEquals("-(a.salary)", table.column("salary").negate().toSql());
+    }
+
+    @Test
+    public void testNegatePreservesArithmeticPrecedence() {
+        Table table = Table.of("my_table").alias("a");
+
+        assertEquals("(-(a.salary) + 100)", table.column("salary").negate().plus(100).toSql());
+        assertEquals("-((a.salary + 100))", table.column("salary").plus(100).negate().toSql());
+    }
+
+    @Test
+    public void testNegateAsSelection() {
+        Table table = Table.of("my_table").alias("a");
+        Select select = Select.newInstance()
+                .select(table.column("salary").negate().as("negative_salary"))
+                .from(table);
+
+        String sql = select.toSql().replace("\r\n", "\n").replace("\n", " ");
+        assertTrue(sql.contains("select -(a.salary) as negative_salary"));
+    }
+
+    @Test
+    public void testNegateTraversesPlaceholders() {
+        Table table = Table.of("my_table").alias("a");
+        Placeholder placeholder = Placeholder.empty();
+
+        Negate negate = table.column("salary").plus(placeholder).negate();
+
+        assertEquals(1, negate.getPlaceholders().size());
+        assertSame(placeholder, negate.getPlaceholders().get(0));
     }
 
     @Test
@@ -190,9 +229,3 @@ public class SqlBuilderTest {
         assertNotNull(join);
     }
 }
-
-
-
-
-
-
