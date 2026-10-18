@@ -80,6 +80,10 @@ public class Operators {
         return ArithmeticOperation.of(leftOperand, DIVIDE, rightOperand);
     }
 
+    public static Negate negate(NumericExpression operand) {
+        return Negate.of(operand);
+    }
+
     public static ArithmeticOperation modulo(ScalarExpression leftOperand, ScalarExpression rightOperand) {
         return ArithmeticOperation.of(leftOperand, MODULO, rightOperand);
     }

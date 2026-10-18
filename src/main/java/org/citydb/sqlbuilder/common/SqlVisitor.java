@@ -78,6 +78,8 @@ public interface SqlVisitor {
 
     void visit(LiteralList literalList);
 
+    void visit(Negate negate);
+
     void visit(Not not);
 
     void visit(NullLiteral literal);

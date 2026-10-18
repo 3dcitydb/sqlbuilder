@@ -175,6 +175,12 @@ public abstract class SqlWalker implements SqlVisitor {
     }
 
     @Override
+    public void visit(Negate negate) {
+        visit((SqlObject) negate);
+        negate.getOperand().accept(this);
+    }
+
+    @Override
     public void visit(Not not) {
         visit((SqlObject) not);
         not.getOperand().accept(this);

@@ -61,6 +61,7 @@ Here is a comparison showing the equivalence of both styles:
 | Feature | Fluent Chain Style (Compact) | Static Factory Style / AST (Modular) | Typical Classes / Helpers |
 | :--- | :--- | :--- | :--- |
 | **Comparisons** | `author.column("id").eq(42)` | `BinaryComparisonOperation.of(author.column("id"), "=", IntegerLiteral.of(42))` | `BinaryComparisonOperation`, `Operators` |
+| **Unary Negation** | `employee.column("salary").negate()` | `Negate.of(employee.column("salary"))` | `Negate`, `Operators` |
 | **String Functions** | `author.column("name").lower()` | `Functions.lower(author.column("name"))` | `Functions`, `Function` |
 | **Range Checks** | `author.column("year").between(1900, 1950)` | `Between.of(author.column("year"), IntegerLiteral.of(1900), IntegerLiteral.of(1950))` | `Between` |
 | **Null Comparisons** | `author.column("name").isNull()` | `IsNull.of(author.column("name"))` | `IsNull` |
@@ -89,7 +90,7 @@ The most powerful aspect of SqlBuilder is its robust type system, which mirrors 
                                        ┌──────────────┴──────────────┐
                                        ▼                             ▼
                               (QueryExpression)             [NumericExpression]
-                               - Subqueries                  - plus(), minus()
+                               - Subqueries                  - negate(), plus(), minus()
 ```
 
 *Note: Several versatile AST classes (e.g., `Column`, `Function`, `Cast`, `Case`, and `PlainSql`) implement both `NumericExpression` and `BooleanExpression`. This provides great flexibility, allowing them to be used for both logical predicates and arithmetic calculations depending on the SQL context.*
@@ -101,7 +102,7 @@ The most powerful aspect of SqlBuilder is its robust type system, which mirrors 
 | **`SqlObject`** | Root of the syntax tree. Any node that can render itself into SQL. | All SQL AST nodes | Visitor traversals |
 | **`Expression`** | Represents any valid operand or sub-expression in SQL. | `Column`, `Literal`, operations | AST clauses, assignments |
 | **`ScalarExpression`** | Represents expressions evaluating to a **single scalar or row value**. Provides comparison methods (`eq()`, `lt()`, `between()`, `like()`, `isNull()`) and **fluent function shortcuts** (`avg()`, `upper()`, `lag()`, etc.). | `Column`, `Literal`, `Function`, `Cast`, `Case`, `PlainSql`, arithmetic operations | `SELECT`, `GROUP BY`, comparison operands |
-| **`NumericExpression`** | Represents **numeric** values, adding support for math operators (`plus()`, `minus()`, `multiply()`, `divide()`, `modulo()`). | `ArithmeticOperation`, `Column`, `Cast`, `Case`, `Function`, `PlainSql`, numbers | Math formulas, ranges |
+| **`NumericExpression`** | Represents **numeric** values, adding support for unary negation (`negate()`) and math operators (`plus()`, `minus()`, `multiply()`, `divide()`, `modulo()`). | `ArithmeticOperation`, `Negate`, `Column`, `Cast`, `Case`, `Function`, `PlainSql`, numbers | Math formulas, ranges |
 | **`BooleanExpression`** | Represents logical truths (**predicates**). Provides logical chaining (`and()`, `or()`, `not()`). | `BinaryComparisonOperation`, logical operations, `IsNull`, `Column`, `Cast`, `Case`, `Function`, `PlainSql` | `WHERE`, `HAVING`, `ON` (Join) |
 | **`QueryExpression`** | Represents sub-statements or groupings acting as table sources or scalar lists. | `Select`, `SetOperator`, `PlainSql`, `LiteralList`, `Function` | Subqueries, `FROM` derived tables |
 | **`Selection<?>`** | Any projection or expression in a `SELECT` clause that can be aliased (`.as("alias")`). | `Column`, `Literal`, `Case`, `Cast`, `Function`, `PlainSql` | `SELECT` projection, `ORDER BY` target |
@@ -116,6 +117,21 @@ The class and interface hierarchy enforces correct SQL structure at compile-time
    The `.where()` method requires `BooleanExpression...`. You cannot pass raw math formulas or bare values that do not resolve to logical predicates.
 3. **Restricted Math Operators:**
    Mathematical chain operations like `.plus()` or `.multiply()` are restricted to `NumericExpression` implementations, guaranteeing you won't accidentally add values to non-numeric types.
+
+### Numeric Expressions
+
+Numeric expressions support both binary arithmetic and unary negation:
+
+```java
+Table employee = Table.of("employee").alias("e");
+
+Select select = Select.newInstance()
+    .select(employee.column("salary").negate().as("negative_salary"))
+    .from(employee);
+```
+
+This produces `-(e.salary)`. The equivalent static factory form is
+`Operators.negate(employee.column("salary"))` or `Negate.of(employee.column("salary"))`.
 
 ---
 
