@@ -160,6 +160,10 @@ public class Operators {
         return exists(operand, false);
     }
 
+    public static LogicalOperation notExists(QueryExpression operand) {
+        return exists(operand, true);
+    }
+
     public static SubQueryOperator all(QueryExpression operand) {
         return SubQueryOperator.all(operand);
     }
