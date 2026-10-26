@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'org.citydb'
-version = '3.2.0'
+version = '3.2.1'
 description = 'A lightweight, type-safe, and dynamic SQL builder for Java'
 
 ext {
