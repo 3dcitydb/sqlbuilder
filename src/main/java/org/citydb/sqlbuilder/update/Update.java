@@ -108,6 +108,7 @@ public class Update implements SqlObject {
 
     public Update removeWith() {
         with.clear();
+        withRecursive = false;
         return this;
     }
 

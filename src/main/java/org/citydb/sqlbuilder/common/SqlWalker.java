@@ -24,6 +24,7 @@ package org.citydb.sqlbuilder.common;
 import org.citydb.sqlbuilder.function.Cast;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.WindowFunction;
+import org.citydb.sqlbuilder.insert.Insert;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.literal.*;
 import org.citydb.sqlbuilder.operation.*;
@@ -123,6 +124,12 @@ public abstract class SqlWalker implements SqlVisitor {
     }
 
     @Override
+    public void visit(ExpressionList expressionList) {
+        visit((SqlObject) expressionList);
+        expressionList.getExpressions().forEach(expression -> expression.accept(this));
+    }
+
+    @Override
     public void visit(Frame frame) {
         visit((SqlObject) frame);
         frame.getStartExpression().ifPresent(literal -> literal.accept(this));
@@ -140,6 +147,15 @@ public abstract class SqlWalker implements SqlVisitor {
         visit((SqlObject) in);
         in.getLeftOperand().accept(this);
         in.getRightOperand().accept(this);
+    }
+
+    @Override
+    public void visit(Insert insert) {
+        visit((SqlObject) insert);
+        insert.getWith().forEach(with -> with.accept(this));
+        insert.getTable().ifPresent(table -> table.accept(this));
+        insert.getValues().forEach(row -> row.forEach(value -> value.accept(this)));
+        insert.getQuery().ifPresent(query -> query.accept(this));
     }
 
     @Override
@@ -166,12 +182,6 @@ public abstract class SqlWalker implements SqlVisitor {
         like.getOperand().accept(this);
         like.getPattern().accept(this);
         like.getEscapeCharacter().ifPresent(character -> character.accept(this));
-    }
-
-    @Override
-    public void visit(LiteralList literalList) {
-        visit((SqlObject) literalList);
-        literalList.getLiterals().forEach(literal -> literal.accept(this));
     }
 
     @Override

@@ -22,6 +22,7 @@
 package org.citydb.sqlbuilder.literal;
 
 import org.citydb.sqlbuilder.common.Expression;
+import org.citydb.sqlbuilder.common.ExpressionList;
 import org.citydb.sqlbuilder.common.Expressions;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.Functions;
@@ -253,7 +254,7 @@ public interface ScalarExpression extends Expression {
     }
 
     default In notIn(Object... values) {
-        return Operators.in(this, values, true);
+        return Operators.in(this, ExpressionList.of(values), true);
     }
 
     default In notIn(Collection<?> values) {

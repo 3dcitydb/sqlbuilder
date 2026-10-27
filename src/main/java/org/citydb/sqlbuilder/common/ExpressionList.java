@@ -19,51 +19,51 @@
  * limitations under the License.
  */
 
-package org.citydb.sqlbuilder.literal;
+package org.citydb.sqlbuilder.common;
 
-import org.citydb.sqlbuilder.common.SqlVisitor;
+import org.citydb.sqlbuilder.literal.ScalarExpression;
 import org.citydb.sqlbuilder.query.QueryExpression;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class LiteralList implements QueryExpression {
-    private final List<Literal<?>> literals;
+public class ExpressionList implements QueryExpression {
+    private final List<ScalarExpression> expressions;
 
-    private LiteralList(List<Literal<?>> literals) {
-        this.literals = Objects.requireNonNull(literals, "The list of literals must not be null.");
+    private ExpressionList(List<ScalarExpression> expressions) {
+        this.expressions = Objects.requireNonNull(expressions, "The list of expressions must not be null.");
     }
 
-    public static LiteralList empty() {
-        return new LiteralList(new ArrayList<>());
+    public static ExpressionList empty() {
+        return new ExpressionList(new ArrayList<>());
     }
 
-    public static LiteralList of(Collection<?> values) {
+    public static ExpressionList of(Collection<?> values) {
         return values != null ?
-                new LiteralList(values.stream()
-                        .map(Literal::of)
+                new ExpressionList(values.stream()
+                        .map(value -> Expressions.require(value, ScalarExpression.class))
                         .collect(Collectors.toCollection(ArrayList::new))) :
                 empty();
     }
 
-    public static LiteralList of(Object... values) {
-        return of(Arrays.asList(values));
+    public static ExpressionList of(Object... values) {
+        return values != null ? of(Arrays.asList(values)) : empty();
     }
 
-    public List<Literal<?>> getLiterals() {
-        return literals;
+    public List<ScalarExpression> getExpressions() {
+        return expressions;
     }
 
-    public LiteralList add(Literal<?> literal) {
-        if (literal != null) {
-            literals.add(literal);
+    public ExpressionList add(ScalarExpression expression) {
+        if (expression != null) {
+            expressions.add(expression);
         }
 
         return this;
     }
 
     public boolean isEmpty() {
-        return literals.isEmpty();
+        return expressions.isEmpty();
     }
 
     @Override

@@ -24,6 +24,7 @@ package org.citydb.sqlbuilder.common;
 import org.citydb.sqlbuilder.function.Cast;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.WindowFunction;
+import org.citydb.sqlbuilder.insert.Insert;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.literal.*;
 import org.citydb.sqlbuilder.operation.*;
@@ -62,11 +63,15 @@ public interface SqlVisitor {
 
     void visit(Exists exists);
 
+    void visit(ExpressionList expressionList);
+
     void visit(Frame frame);
 
     void visit(Function function);
 
     void visit(In in);
+
+    void visit(Insert insert);
 
     void visit(IntegerLiteral literal);
 
@@ -75,8 +80,6 @@ public interface SqlVisitor {
     void visit(Join join);
 
     void visit(Like like);
-
-    void visit(LiteralList literalList);
 
     void visit(Negate negate);
 

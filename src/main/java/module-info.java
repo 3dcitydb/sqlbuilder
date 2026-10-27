@@ -4,6 +4,7 @@ module org.citydb.sqlbuilder {
     exports org.citydb.sqlbuilder;
     exports org.citydb.sqlbuilder.common;
     exports org.citydb.sqlbuilder.function;
+    exports org.citydb.sqlbuilder.insert;
     exports org.citydb.sqlbuilder.join;
     exports org.citydb.sqlbuilder.literal;
     exports org.citydb.sqlbuilder.operation;

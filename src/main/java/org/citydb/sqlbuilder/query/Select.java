@@ -140,6 +140,7 @@ public class Select extends QueryStatement<Select> implements Selection<Select> 
 
     public Select removeWith() {
         with.clear();
+        withRecursive = false;
         return this;
     }
 

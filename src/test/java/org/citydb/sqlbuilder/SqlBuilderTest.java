@@ -1,10 +1,12 @@
 package org.citydb.sqlbuilder;
 
+import org.citydb.sqlbuilder.insert.Insert;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.join.Joins;
 import org.citydb.sqlbuilder.literal.*;
 import org.citydb.sqlbuilder.operation.ArithmeticOperation;
 import org.citydb.sqlbuilder.operation.Case;
+import org.citydb.sqlbuilder.operation.In;
 import org.citydb.sqlbuilder.operation.Negate;
 import org.citydb.sqlbuilder.operation.Operators;
 import org.citydb.sqlbuilder.query.*;
@@ -57,6 +59,182 @@ public class SqlBuilderTest {
         System.out.println("Update SQL: " + sql);
         // Verify that custom options are properly inherited inside update statements
         assertEquals("update MY_TABLE a set ID = 1 ", sql);
+    }
+
+    @Test
+    public void testInsertValues() {
+        Table table = Table.of("my_table", "my_schema");
+        Insert insert = Insert.into(table)
+                .columns(table.column("id"), table.column("name"))
+                .values(1, "first")
+                .values(2, "second");
+        String sql = insert.toSql();
+        System.out.println("Insert values SQL: " + sql);
+        // Verify that the target table is rendered without an alias and columns are unqualified
+        assertEquals("insert into my_schema.my_table (id, name) values (1, 'first'), (2, 'second') ", sql);
+    }
+
+    @Test
+    public void testInsertValuesWithPlaceholders() {
+        Insert insert = Insert.into(Table.of("my_table"))
+                .columns("id", "name")
+                .values(Placeholder.empty(), Placeholder.empty());
+        assertEquals("insert into my_table (id, name) values (?, ?) ", insert.toSql());
+        assertEquals(2, insert.getPlaceholders().size());
+    }
+
+    @Test
+    public void testInsertQuery() {
+        Table source = Table.of("source");
+        Placeholder placeholder = Placeholder.of(10);
+        Select select = Select.newInstance()
+                .select(source.column("id"))
+                .from(source)
+                .where(source.column("value").gt(placeholder))
+                .orderBy(OrderBy.of(source.column("id")))
+                .fetch(5);
+        Insert insert = Insert.into(Table.of("target")).columns("id").query(select);
+        String sql = insert.toSql().replace("\r\n", "\n").replace("\n", " ");
+        System.out.println("Insert query SQL: " + sql);
+        // Verify that the query is rendered without enclosing parentheses and its placeholders are collected
+        assertEquals("insert into target (id) select a.id from source a where a.value > ? order by a.id fetch first 5 rows only ", sql);
+        assertEquals(1, insert.getPlaceholders().size());
+        assertSame(placeholder, insert.getPlaceholders().get(0));
+    }
+
+    @Test
+    public void testInsertWithOptions() {
+        Insert insert = Insert.into(Table.of("my_table")).columns("id").values(1);
+        SqlBuildOptions options = SqlBuildOptions.defaults()
+                .setIdentifierCase(SqlBuildOptions.IdentifierCase.UPPERCASE)
+                .setKeywordCase(SqlBuildOptions.KeywordCase.UPPERCASE);
+        String sql = SqlBuilder.newInstance().build(insert, options);
+        System.out.println("Insert with options SQL: " + sql);
+        assertEquals("INSERT INTO MY_TABLE (ID) VALUES (1) ", sql);
+    }
+
+    @Test
+    public void testInsertCopy() {
+        Insert insert = Insert.into(Table.of("my_table")).columns("id").values(1);
+        Insert copy = Insert.of(insert).values(2);
+        assertEquals(1, insert.getValues().size());
+        assertEquals(2, copy.getValues().size());
+    }
+
+    @Test
+    public void testInsertValuesAndQueryReplaceEachOther() {
+        Table source = Table.of("source");
+        Select select = Select.newInstance().select(source.column("id")).from(source);
+
+        // a query replaces all previously added rows
+        Insert insert = Insert.into(Table.of("target")).columns("id").values(1).values(2).query(select);
+        assertTrue(insert.getValues().isEmpty());
+        assertTrue(insert.toSql().startsWith("insert into target (id) select"));
+
+        // values replace a previously set query
+        insert.values(3);
+        assertTrue(insert.getQuery().isEmpty());
+        assertEquals("insert into target (id) values (3) ", insert.toSql());
+
+        // query(null) removes the query without touching the values
+        assertEquals(1, insert.query(null).getValues().size());
+    }
+
+    @Test
+    public void testRemoveWithResetsRecursive() {
+        Table source = Table.of("source");
+        Select cte = Select.newInstance().select(source.column("id")).from(source);
+
+        Select select = Select.newInstance().withRecursive("r", cte).removeWith().with("c", cte);
+        assertFalse(select.isWithRecursive());
+        assertTrue(select.toSql().startsWith("with c"));
+
+        Update update = Update.newInstance().withRecursive("r", cte).removeWith().with("c", cte);
+        assertFalse(update.isWithRecursive());
+        assertTrue(update.toSql().startsWith("with c"));
+
+        Insert insert = Insert.into(Table.of("target")).withRecursive("r", cte).removeWith().with("c", cte);
+        assertFalse(insert.isWithRecursive());
+        assertTrue(insert.toSql().startsWith("with c"));
+    }
+
+    @Test
+    public void testInsertIgnoresEmptyRow() {
+        Insert insert = Insert.into(Table.of("my_table")).columns("id").values().values((Object[]) null);
+        assertTrue(insert.getValues().isEmpty());
+    }
+
+    @Test
+    public void testUnsupportedLiteralTypesAreRejected() {
+        Table table = Table.of("my_table").alias("t");
+        java.util.UUID uuid = java.util.UUID.randomUUID();
+
+        // Values that cannot be converted must fail instead of silently becoming null
+        assertThrows(IllegalArgumentException.class, () -> Literal.of(uuid));
+        assertThrows(IllegalArgumentException.class, () -> table.column("id").eq(uuid));
+        assertThrows(IllegalArgumentException.class, () -> table.column("id").in(1, uuid));
+        assertThrows(IllegalArgumentException.class, () -> Insert.into(table).values(uuid));
+        assertThrows(IllegalArgumentException.class, () -> Update.newInstance().table(table)
+                .set(table.column("id")).value(uuid));
+    }
+
+    @Test
+    public void testInWithExpressions() {
+        Table table = Table.of("my_table").alias("t");
+        Placeholder placeholder = Placeholder.of(3);
+        In in = table.column("id").in(1, table.column("other_id"), placeholder, table.column("value").plus(1));
+
+        assertEquals("t.id in (1, t.other_id, ?, (t.value + 1))", in.toSql());
+        assertEquals(1, in.getPlaceholders().size());
+        assertSame(placeholder, in.getPlaceholders().get(0));
+        assertEquals("t.id not in ('a', 'b')", table.column("id").notIn(java.util.List.of("a", "b")).toSql());
+    }
+
+    @Test
+    public void testNotInWithVarargs() {
+        Table table = Table.of("my_table").alias("t");
+
+        assertEquals("t.id not in ('a', 'b')", table.column("id").notIn("a", "b").toSql());
+        assertEquals("t.id not in (1, t.other_id)", table.column("id").notIn(1, table.column("other_id")).toSql());
+    }
+
+    @Test
+    public void testSchemaRenderedAsIdentifier() {
+        SqlBuildOptions options = SqlBuildOptions.defaults()
+                .setIdentifierCase(SqlBuildOptions.IdentifierCase.UPPERCASE)
+                .setIdentifierDelimiter("\"");
+        Table table = Table.of("my_table", "my_schema").alias("t");
+
+        Select select = Select.newInstance().select(table.column("id")).from(table);
+        assertEquals("select t.\"ID\" from \"MY_SCHEMA\".\"MY_TABLE\" t ",
+                SqlBuilder.newInstance().build(select, options));
+
+        Insert insert = Insert.into(Table.of("my_table", "my_schema")).columns("id").values(1);
+        assertEquals("insert into \"MY_SCHEMA\".\"MY_TABLE\" (\"ID\") values (1) ",
+                SqlBuilder.newInstance().build(insert, options));
+
+        org.citydb.sqlbuilder.function.Function function = org.citydb.sqlbuilder.function.Function.of("my_function")
+                .setSchema("my_schema");
+        assertEquals("\"MY_SCHEMA\".my_function()", SqlBuilder.newInstance().build(function, options));
+
+        // default options leave the schema unchanged
+        assertEquals("select t.id from my_schema.my_table t ", select.toSql());
+    }
+
+    @Test
+    public void testNullAndTemporalLiterals() {
+        Table table = Table.of("my_table").alias("t");
+
+        assertEquals("null", Literal.of(null).toSql());
+        assertEquals("insert into my_table (id) values (null) ",
+                Insert.into(Table.of("my_table")).columns("id").values((Object) null).toSql());
+
+        java.time.Instant instant = java.time.Instant.ofEpochMilli(1718697600000L);
+        String expected = TimestampLiteral.of(instant).toSql();
+        assertEquals(expected, Literal.of(instant).toSql());
+        assertEquals(expected, Literal.of(java.util.Date.from(instant)).toSql());
+        assertEquals(expected, Literal.of(instant.atOffset(java.time.ZoneOffset.UTC)).toSql());
+        assertEquals("t.created = " + expected, table.column("created").eq(instant).toSql());
     }
 
     @Test

@@ -25,7 +25,10 @@ import org.citydb.sqlbuilder.query.Selection;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.Calendar;
 import java.util.Optional;
 
 public abstract class Literal<T> implements ScalarExpression, Selection<Literal<T>> {
@@ -59,9 +62,20 @@ public abstract class Literal<T> implements ScalarExpression, Selection<Literal<
             return DateLiteral.of(literal);
         } else if (value instanceof Timestamp literal) {
             return TimestampLiteral.of(literal);
-        } else {
+        } else if (value instanceof java.util.Date literal) {
+            return TimestampLiteral.of(literal);
+        } else if (value instanceof Instant literal) {
+            return TimestampLiteral.of(literal);
+        } else if (value instanceof OffsetDateTime literal) {
+            return TimestampLiteral.of(literal);
+        } else if (value instanceof Calendar literal) {
+            return TimestampLiteral.of(literal);
+        } else if (value == null) {
             return NullLiteral.getInstance();
         }
+
+        throw new IllegalArgumentException("Cannot convert a value of type " + value.getClass().getName() +
+                " to a literal.");
     }
 
     public Optional<T> getValue() {

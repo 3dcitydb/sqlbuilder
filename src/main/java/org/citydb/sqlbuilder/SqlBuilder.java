@@ -21,11 +21,13 @@
 
 package org.citydb.sqlbuilder;
 
+import org.citydb.sqlbuilder.common.ExpressionList;
 import org.citydb.sqlbuilder.common.SqlObject;
 import org.citydb.sqlbuilder.common.SqlVisitor;
 import org.citydb.sqlbuilder.function.Cast;
 import org.citydb.sqlbuilder.function.Function;
 import org.citydb.sqlbuilder.function.WindowFunction;
+import org.citydb.sqlbuilder.insert.Insert;
 import org.citydb.sqlbuilder.join.Join;
 import org.citydb.sqlbuilder.literal.*;
 import org.citydb.sqlbuilder.operation.*;
@@ -226,6 +228,11 @@ public class SqlBuilder {
         }
 
         @Override
+        public void visit(ExpressionList expressionList) {
+            build(expressionList.getExpressions(), ", ", false);
+        }
+
+        @Override
         public void visit(Frame frame) {
             builder.append(keyword(frame.getUnits()))
                     .append(" ");
@@ -249,7 +256,7 @@ public class SqlBuilder {
         @Override
         public void visit(Function function) {
             function.getSchema().ifPresent(schema ->
-                    builder.append(schema)
+                    builder.append(identifier(schema))
                             .append("."));
             builder.append(keyword(function.getName()))
                     .append("(");
@@ -279,6 +286,61 @@ public class SqlBuilder {
                 in.getRightOperand().accept(this);
                 builder.append(")");
             }
+        }
+
+        @Override
+        public void visit(Insert insert) {
+            if (!insert.getWith().isEmpty()) {
+                builder.append(keyword("with "));
+                if (insert.isWithRecursive()) {
+                    builder.append(keyword("recursive "));
+                }
+
+                build(insert.getWith(), ", ");
+                newline();
+            }
+
+            builder.append(keyword("insert into "));
+            newlineAndIndent(() -> {
+                insert.getTable().ifPresentOrElse(table -> {
+                    table.getSchema().ifPresent(schema ->
+                            builder.append(identifier(schema))
+                                    .append("."));
+                    builder.append(identifier(table.getName()));
+                }, () -> builder.append("null"));
+
+                if (!insert.getColumns().isEmpty()) {
+                    builder.append(" (")
+                            .append(insert.getColumns().stream()
+                                    .map(this::identifier)
+                                    .collect(Collectors.joining(", ")))
+                            .append(")");
+                }
+
+                builder.append(" ");
+            });
+
+            if (!insert.getValues().isEmpty()) {
+                newlineAndAppend(keyword("values "));
+                newlineAndIndent(() -> build(insert.getValues().stream()
+                        .map(row -> (ObjectBuilder) () -> {
+                            builder.append("(");
+                            build(row, ", ", false);
+                            builder.append(")");
+                        })
+                        .toList(), ", "));
+            }
+
+            insert.getQuery().ifPresent(query -> {
+                newline();
+                if (query instanceof Select select) {
+                    build(select);
+                } else if (query instanceof SetOperator operator) {
+                    build(operator);
+                } else {
+                    query.accept(this);
+                }
+            });
         }
 
         @Override
@@ -321,11 +383,6 @@ public class SqlBuilder {
                             .append(escapeCharacter);
                 }
             });
-        }
-
-        @Override
-        public void visit(LiteralList literalList) {
-            build(literalList.getLiterals(), ", ", false);
         }
 
         @Override
@@ -427,7 +484,7 @@ public class SqlBuilder {
             table.getQueryExpression().ifPresentOrElse(expression -> expression.accept(this),
                     () -> {
                         table.getSchema().ifPresent(schema ->
-                                builder.append(schema)
+                                builder.append(identifier(schema))
                                         .append("."));
                         builder.append(identifier(table.getName()));
                     });
