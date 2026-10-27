@@ -1,16 +1,10 @@
 # SqlBuilder Developer Guide
 
-This guide is designed for developers who want to use the **SqlBuilder** library to generate dynamic and type-safe SQL queries in Java.
-
-SqlBuilder is a lightweight, flexible, and type-safe Object Abstract Syntax Tree (AST) optimized for relational database structures. It supports building complex SQL statements (especially `SELECT` and `UPDATE`) programmatically.
+**SqlBuilder** is a lightweight library for building SQL statements in Java. Statements are trees of Java objects (an abstract syntax tree, AST) that render themselves as SQL. It supports `SELECT`, `INSERT` and `UPDATE` statements.
 
 ---
 
 ## 1. Quick Start
-
-With its fluent API, SqlBuilder allows you to formulate SQL queries intuitively using Java objects to represent tables, columns, and operations.
-
-### Simple Select Example
 
 ```java
 import org.citydb.sqlbuilder.SqlBuilder;
@@ -18,11 +12,9 @@ import org.citydb.sqlbuilder.SqlBuildOptions;
 import org.citydb.sqlbuilder.query.Select;
 import org.citydb.sqlbuilder.schema.Table;
 
-// Define table structures
 Table author = Table.of("author");
 Table book = Table.of("book");
 
-// Assemble the SELECT query
 Select select = Select.newInstance()
     .select(author.column("first_name"), book.column("title"))
     .from(author)
@@ -31,149 +23,144 @@ Select select = Select.newInstance()
         .and(author.column("first_name").eq("Paulo")))
     .orderBy(book.column("title"));
 
-// Generate SQL (with formatting options)
 SqlBuildOptions options = SqlBuildOptions.defaults()
     .setIndent("  ")
     .setKeywordCase(SqlBuildOptions.KeywordCase.UPPERCASE);
 
 String sql = SqlBuilder.newInstance().build(select, options);
-System.out.println(sql);
 ```
 
-#### Generated SQL:
+Generated SQL:
+
 ```sql
-SELECT a.first_name, b.title
-FROM author a
-JOIN book b ON a.id = b.author_id
-WHERE (a.year_of_birth > 1920 AND a.first_name = 'Paulo')
-ORDER BY b.title
+SELECT
+  a.first_name,
+  b.title
+FROM
+  author a
+  INNER JOIN book b ON b.author_id = a.id
+WHERE
+  a.year_of_birth > 1920
+  AND a.first_name = 'Paulo'
+ORDER BY
+  b.title
 ```
+
+Tables without an explicit alias get generated aliases (`a`, `b`, …) in the order they are rendered. Use `Table.of("author").alias("au")` to choose an alias yourself. If you set aliases explicitly, set them on all tables of a statement so they cannot clash with generated ones.
 
 ### Fluent API vs. Static Factory Methods
 
-SqlBuilder is designed with a "dual-API" philosophy, offering two equally powerful paradigms to construct query objects based on your specific use case:
+Every construct can be built in two equivalent ways: with fluent method chains, which are compact, or with static `of(...)` factories, which suit code that assembles statements dynamically. Both styles can be mixed.
 
-1. **Fluent Chain Style:** Highly convenient and compact for rapid query building with IDE auto-completion. Method chains are executed from left to right.
-2. **Static Factory Method Style:** Highly modular and declarative. Ideal if your code dynamically or recursively builds query AST trees (e.g., when converting a custom JSON query structure into SqlBuilder elements). Here, you instantiate raw AST nodes directly using static `of()` constructors.
-
-Here is a comparison showing the equivalence of both styles:
-
-| Feature | Fluent Chain Style (Compact) | Static Factory Style / AST (Modular) | Typical Classes / Helpers |
-| :--- | :--- | :--- | :--- |
-| **Comparisons** | `author.column("id").eq(42)` | `BinaryComparisonOperation.of(author.column("id"), "=", IntegerLiteral.of(42))` | `BinaryComparisonOperation`, `Operators` |
-| **Unary Negation** | `employee.column("salary").negate()` | `Negate.of(employee.column("salary"))` | `Negate`, `Operators` |
-| **String Functions** | `author.column("name").lower()` | `Functions.lower(author.column("name"))` | `Functions`, `Function` |
-| **Range Checks** | `author.column("year").between(1900, 1950)` | `Between.of(author.column("year"), IntegerLiteral.of(1900), IntegerLiteral.of(1950))` | `Between` |
-| **Null Comparisons** | `author.column("name").isNull()` | `IsNull.of(author.column("name"))` | `IsNull` |
-| **Pattern Matching** | `author.column("name").like("A%")` | `Like.of(author.column("name"), StringLiteral.of("A%"))` | `Like` |
-
-You can freely mix and match both styles within the same query.
+| Feature | Fluent style | Static factory style |
+| :--- | :--- | :--- |
+| Comparison | `author.column("id").eq(42)` | `BinaryComparisonOperation.of(author.column("id"), "=", IntegerLiteral.of(42))` |
+| Negation | `employee.column("salary").negate()` | `Negate.of(employee.column("salary"))` |
+| Function | `author.column("name").lower()` | `Functions.lower(author.column("name"))` |
+| Range | `author.column("year").between(1900, 1950)` | `Between.of(author.column("year"), IntegerLiteral.of(1900), IntegerLiteral.of(1950))` |
+| Null check | `author.column("name").isNull()` | `IsNull.of(author.column("name"))` |
+| Pattern | `author.column("name").like("A%")` | `Like.of(author.column("name"), StringLiteral.of("A%"))` |
 
 ---
 
-## 2. Type Hierarchy & Compile-Time Safety
+## 2. Type System
 
-The most powerful aspect of SqlBuilder is its robust type system, which mirrors relational algebra. The Java compiler acts as a static analyzer, weeding out syntactically or logically invalid SQL constructions before they can ever hit the database.
-
-### Core Interface Tree (Class Hierarchy Diagram)
+The interface hierarchy lets the compiler reject many invalid statements before they reach the database.
 
 ```
                        [SqlObject]
-                            │ (Implemented by all AST nodes)
+                            │ (all AST nodes)
                             ▼
                        [Expression]
-                            │ (Base for any valid SQL expression fragment)
          ┌──────────────────┴──────────────────┐
          ▼                                     ▼
 [BooleanExpression]                    [ScalarExpression]
- (Logical Predicates)                  (Value-producing expressions)
+ (predicates)                          (value-producing expressions)
                                        ┌──────────────┴──────────────┐
                                        ▼                             ▼
-                              (QueryExpression)             [NumericExpression]
-                               - Subqueries                  - negate(), plus(), minus()
+                              [QueryExpression]             [NumericExpression]
+                               (subqueries, lists)           (arithmetic)
 ```
 
-*Note: Several versatile AST classes (e.g., `Column`, `Function`, `Cast`, `Case`, and `PlainSql`) implement both `NumericExpression` and `BooleanExpression`. This provides great flexibility, allowing them to be used for both logical predicates and arithmetic calculations depending on the SQL context.*
+| Interface | Purpose | Typical classes |
+| :--- | :--- | :--- |
+| `SqlObject` | Any node that can render itself as SQL. | all AST nodes |
+| `Expression` | Any operand or sub-expression. | `Column`, `Literal`, operations |
+| `ScalarExpression` | A single value. Provides comparisons (`eq()`, `lt()`, `between()`, `like()`, `in()`, `isNull()`) and function shortcuts (`avg()`, `upper()`, `lag()`, …). | `Column`, `Literal`, `Function`, `Cast`, `Case`, `PlainSql`, arithmetic |
+| `NumericExpression` | A numeric value. Provides `plus()`, `minus()`, `multiply()`, `divide()`, `modulo()` and `negate()`. | `ArithmeticOperation`, `Negate`, `IntegerLiteral`, `Column`, `Function`, … |
+| `BooleanExpression` | A predicate. Provides `and()`, `or()`, `not()`. | comparisons, logical operations, `IsNull`, `Column`, `Function`, … |
+| `QueryExpression` | A subquery or a list of values. | `Select`, `SetOperator`, `ExpressionList`, `Function`, `PlainSql` |
+| `Selection<?>` | Anything that can appear in a `SELECT` list and be aliased with `as(...)`. | `Column`, `Literal`, `Function`, `Case`, `Cast`, `Select`, … |
 
-### Roles / Responsibilities of Key Interfaces
+`Column`, `Function`, `Cast`, `Case` and `PlainSql` are both numeric and boolean expressions, so they can be used in calculations as well as in predicates. Some examples of what the types enforce:
 
-| Interface | Description | Typical Implementing Classes | Allowed Contexts |
-| :--- | :--- | :--- | :--- |
-| **`SqlObject`** | Root of the syntax tree. Any node that can render itself into SQL. | All SQL AST nodes | Visitor traversals |
-| **`Expression`** | Represents any valid operand or sub-expression in SQL. | `Column`, `Literal`, operations | AST clauses, assignments |
-| **`ScalarExpression`** | Represents expressions evaluating to a **single scalar or row value**. Provides comparison methods (`eq()`, `lt()`, `between()`, `like()`, `isNull()`) and **fluent function shortcuts** (`avg()`, `upper()`, `lag()`, etc.). | `Column`, `Literal`, `Function`, `Cast`, `Case`, `PlainSql`, arithmetic operations | `SELECT`, `GROUP BY`, comparison operands |
-| **`NumericExpression`** | Represents **numeric** values, adding support for unary negation (`negate()`) and math operators (`plus()`, `minus()`, `multiply()`, `divide()`, `modulo()`). | `ArithmeticOperation`, `Negate`, `Column`, `Cast`, `Case`, `Function`, `PlainSql`, numbers | Math formulas, ranges |
-| **`BooleanExpression`** | Represents logical truths (**predicates**). Provides logical chaining (`and()`, `or()`, `not()`). | `BinaryComparisonOperation`, logical operations, `IsNull`, `Column`, `Cast`, `Case`, `Function`, `PlainSql` | `WHERE`, `HAVING`, `ON` (Join) |
-| **`QueryExpression`** | Represents sub-statements or groupings acting as table sources or scalar lists. | `Select`, `SetOperator`, `PlainSql`, `LiteralList`, `Function` | Subqueries, `FROM` derived tables |
-| **`Selection<?>`** | Any projection or expression in a `SELECT` clause that can be aliased (`.as("alias")`). | `Column`, `Literal`, `Case`, `Cast`, `Function`, `PlainSql` | `SELECT` projection, `ORDER BY` target |
+- `where(...)` and `having(...)` only accept `BooleanExpression`s.
+- `plus()`, `multiply()` and the other arithmetic operators are only available on `NumericExpression`s.
+- `groupBy(...)` accepts any `Expression`; whether the expression is valid for grouping is up to the caller.
 
-### How Compile-Time Constraints Work
+### Raw Java Values
 
-The class and interface hierarchy enforces correct SQL structure at compile-time rather than runtime. Below are key examples of how these constraints prevent invalid SQL patterns:
+Many methods also accept plain Java values (`eq(42)`, `between(1900, 1950)`, `in("a", "b")`, `Insert.values(...)`, `Update.set(...).value(...)`). An `Expression` is used as is; any other value is converted into a literal:
 
-1. **Flexible Grouping Expressions:**
-   The `groupBy(...)` clause accepts `Expression...`, allowing scalar expressions and other expression types. The caller is responsible for ensuring that the supplied expressions are valid for the target database.
-2. **Type-Safe Filtering:**
-   The `.where()` method requires `BooleanExpression...`. You cannot pass raw math formulas or bare values that do not resolve to logical predicates.
-3. **Restricted Math Operators:**
-   Mathematical chain operations like `.plus()` or `.multiply()` are restricted to `NumericExpression` implementations, guaranteeing you won't accidentally add values to non-numeric types.
+| Java type | Literal |
+| :--- | :--- |
+| `String` | `StringLiteral` (single quotes are escaped by doubling) |
+| `Integer`, `Long`, other `Number` types with an integral value | `IntegerLiteral` |
+| `Double`, other `Number` types with a fractional value | `DoubleLiteral` |
+| `Boolean` | `BooleanLiteral` |
+| `java.sql.Date`, `LocalDate` | `DateLiteral` |
+| `java.sql.Timestamp`, `java.util.Date`, `Instant`, `OffsetDateTime`, `Calendar` | `TimestampLiteral` |
+| `null` | `NullLiteral` |
 
-### Numeric Expressions
+Any other type (e.g. `UUID`, enums, or a collection passed as a single argument) throws an `IllegalArgumentException`. Convert such values yourself, or pass them as a [`Placeholder`](#5-placeholders-and-plainsql).
 
-Numeric expressions support both binary arithmetic and unary negation:
-
-```java
-Table employee = Table.of("employee").alias("e");
-
-Select select = Select.newInstance()
-    .select(employee.column("salary").negate().as("negative_salary"))
-    .from(employee);
-```
-
-This produces `-(e.salary)`. The equivalent static factory form is
-`Operators.negate(employee.column("salary"))` or `Negate.of(employee.column("salary"))`.
+`Number` types other than `Integer`, `Long` and `Double` are converted through `doubleValue()`, so a `BigDecimal` with many digits may lose precision. Use a placeholder for exact decimal values.
 
 ---
 
-## 3. Building Core SELECT Queries
+## 3. SELECT Queries
 
-SqlBuilder provides a clean, sequential flow to build relational queries, matching the logical order of standard SQL clauses.
+The SQL in the comments below is the default single-line output of `toSql()`, with whitespace simplified.
 
-### A. Projections & Table Sources (`select()`, `from()`)
+### A. Projections and Tables
 
-An empty selection list automatically falls back to `SELECT *`. You specify sources by passing `Table` objects:
+An empty selection list renders as `select *`.
 
 ```java
 Table author = Table.of("author");
 
-// "SELECT *" fallback:
-Select selectAll = Select.newInstance().from(author);
+// select * from author a
+Select all = Select.newInstance().from(author);
 
-// Specific projections:
-Select selectFields = Select.newInstance()
+// select a.first_name, a.last_name from author a
+Select names = Select.newInstance()
     .select(author.column("first_name"), author.column("last_name"))
     .from(author);
 ```
 
-### B. Joining Tables (`join()`, `on()`)
-
-You can perform inner and outer joins fluently using `.join().on()` or the static `Joins` helper class:
+### B. Joins
 
 ```java
-Table author = Table.of("author").alias("a");
-Table book = Table.of("book").alias("b");
+Table author = Table.of("author");
+Table book = Table.of("book");
 
+// select a.last_name, b.title from author a inner join book b on b.author_id = a.id
 Select select = Select.newInstance()
     .select(author.column("last_name"), book.column("title"))
     .from(author)
     .join(book).on(author.column("id").eq(book.column("author_id")));
 ```
 
-### C. Filtering & Logical Conditions (`where()`)
+The static `Joins` helper creates joins of other types, e.g. `Joins.left(...)`.
 
-Filter sets are built using logical comparison operations (`eq`, `ne`, `gt`, `lt`, `between`, `like`, `isNull`) combined using `.and()`, `.or()`, and `.not()` logic:
+### C. Filtering
+
+Combine predicates with `and()`, `or()` and `not()`:
 
 ```java
+// select * from author a
+//   where a.year_of_birth between 1900 and 1950
+//   and (a.first_name = 'Paulo' or a.first_name = 'Gabriel')
 Select select = Select.newInstance()
     .from(author)
     .where(author.column("year_of_birth").between(1900, 1950)
@@ -181,13 +168,44 @@ Select select = Select.newInstance()
             .or(author.column("first_name").eq("Gabriel"))));
 ```
 
-### D. Grouping & Aggregating (`groupBy()`, `having()`)
+`in(...)` and `notIn(...)` test against a list or a subquery. A list may contain any scalar expressions, such as literals, columns, placeholders or functions:
 
-The `groupBy` clause accepts `Expression...`, so you can group by simple columns or compound expressions:
+```java
+// a.first_name in ('Paulo', 'Gabriel')
+author.column("first_name").in("Paulo", "Gabriel");
+
+// a.id in (1, a.coauthor_id, ?)
+author.column("id").in(1, author.column("coauthor_id"), Placeholder.of(42));
+
+// a.id in (select b.author_id from book b)
+author.column("id").in(Select.newInstance().select(book.column("author_id")).from(book));
+```
+
+### D. Calculations and Functions
 
 ```java
 Table employee = Table.of("employee");
 
+// select -(a.salary) as negative_salary, (a.salary + 100) as raised from employee a
+Select select = Select.newInstance()
+    .select(employee.column("salary").negate().as("negative_salary"),
+        employee.column("salary").plus(100).as("raised"))
+    .from(employee);
+```
+
+`ScalarExpression` offers shortcuts for common functions:
+
+- **Aggregates:** `avg()`, `count()`, `max()`, `min()`, `sum()`
+- **Strings:** `length()`, `upper()`, `lower()`, `trim()`, `concatFunc(...)`
+- **Analytical:** `firstValue()`, `lastValue()`, `lag()`, `lag(offset)`, `lead()`, `nthValue(offset)`
+
+`employee.column("name").upper()` is equivalent to `Functions.upper(employee.column("name"))`. Use `Function.of(name, arguments...)` for any other function.
+
+### E. Grouping
+
+```java
+// select a.department_id, avg(a.salary) as avg_sal from employee a
+//   group by a.department_id having avg(a.salary) > 5000
 Select select = Select.newInstance()
     .select(employee.column("department_id"), employee.column("salary").avg().as("avg_sal"))
     .from(employee)
@@ -195,11 +213,11 @@ Select select = Select.newInstance()
     .having(employee.column("salary").avg().gt(5000));
 ```
 
-### E. Ordering & Pagination (`orderBy()`, `offset()`, `fetch()`)
-
-You can easily request specific sorting (including `nullsFirst` and `nullsLast` options) and define page limits:
+### F. Sorting and Pagination
 
 ```java
+// select * from author a order by a.last_name nulls last
+//   offset 10 rows fetch next 20 rows only
 Select select = Select.newInstance()
     .from(author)
     .orderBy(OrderBy.of(author.column("last_name"), OrderBy.ASCENDING).nullsLast())
@@ -207,141 +225,162 @@ Select select = Select.newInstance()
     .fetch(20);
 ```
 
----
-
-## 4. Advanced Query Techniques
-
-Once you are comfortable with core SELECT statements, SqlBuilder offers support for complex relational patterns.
-
-### A. Common Table Expressions (CTE / WITH Clauses)
-
-Subqueries can be cleanly defined and referenced at the top level using CTEs:
+### G. Common Table Expressions (`WITH`)
 
 ```java
-Select subQuery = Select.newInstance().select(author.column("id")).from(author);
-CommonTableExpression cte = CommonTableExpression.of("author_ids", subQuery);
+CommonTableExpression cte = CommonTableExpression.of("author_ids",
+    Select.newInstance().select(author.column("id")).from(author));
 
-Select mainSelect = Select.newInstance()
+// with author_ids as (select a.id from author a) select * from author_ids b
+Select select = Select.newInstance()
     .with(cte)
-    .select(Column.WILDCARD)
     .from(Table.of(cte));
 ```
 
-### B. Window Functions & Analytical Queries
+Use `withRecursive(...)` instead of `with(...)` to render `with recursive`. `removeWith()` removes all CTEs and resets the recursive flag. `Insert` and `Update` support CTEs in the same way.
 
-SqlBuilder provides extensive support for analytical `OVER (PARTITION BY ... ORDER BY ... ROWS BETWEEN ...)` blocks:
+### H. Set Operations
 
 ```java
-Table employee = Table.of("employee");
+// (select a.id from author a) union all (select b.id from book b)
+SetOperator union = Sets.unionAll(
+    Select.newInstance().select(author.column("id")).from(author),
+    Select.newInstance().select(book.column("id")).from(book));
+```
 
+### I. Window Functions
+
+```java
 Window window = Window.newInstance()
     .partitionBy(employee.column("department_id"))
     .orderBy(employee.column("salary"));
-
-// rows between 1 preceding and 3 following
 window.rows().betweenPreceding(IntegerLiteral.of(1)).andFollowing(IntegerLiteral.of(3));
 
-WindowFunction rowExpr = WindowFunction.of(Functions.rowNumber(), window);
-Select select = Select.newInstance().select(rowExpr).from(employee);
-```
-
-### C. Parameterized Queries using Placeholders
-
-By default, SqlBuilder produces clean, hardcoded literals if they are passed. To separate SQL logic from parameter values and safely execute prepared statements, use `Placeholder`.
-
-You can store values inside placeholders either **during instantiation** or **dynamically at a later point**:
-
-```java
-// Option 1: Instantiate with a stored value
-Placeholder agePlaceholder = Placeholder.of(1920);
-
-// Option 2: Instantiate an empty placeholder, and store/update the value later
-Placeholder namePlaceholder = Placeholder.empty();
-namePlaceholder.setValue("Paulo"); // Stores/updates the value
-```
-
-You can retrieve placeholders in order of SQL appearance to easily bind parameters to a JDBC `PreparedStatement` (see [6. Execution with JDBC](#6-execution-with-jdbc) for complete code examples).
-
-Additionally, you can customize how placeholders are drawn (e.g., as named parameters `:authorId` or positions `$1`, `$2` in PostgreSQL) by implementing a custom `PlaceholderBuilder` through `SqlBuildOptions`.
-
-### D. Fluent Function Shortcuts
-
-To enhance developer ergonomics and facilitate method chaining, `ScalarExpression` provides built-in `default` shortcuts to wrap expressions inside SQL functions:
-
-* **Aggregates:** `.avg()`, `.count()`, `.max()`, `.min()`, `.sum()`
-* **String Utilities:** `.length()`, `.upper()`, `.lower()`, `.trim()`, `.concatFunc(Object argument)`
-* **Analytical / Navigation Functions:** `.firstValue()`, `.lastValue()`, `.lag()`, `.lag(Literal<?> offset)`, `.lead()`, `.nthValue(Literal<?> offset)`
-
-#### Fluent Chaining Example:
-```java
-// Traditional style:
-Function upperName = Functions.upper(employee.column("name"));
-
-// Fluent style using shortcuts:
-Function upperNameFluent = employee.column("name").upper();
-
-// Complex analytical query with fluent chaining:
+// select row_number() over (partition by a.department_id order by a.salary
+//   rows between 1 preceding and 3 following) from employee a
 Select select = Select.newInstance()
-    .select(
-        employee.column("id"),
-        employee.column("salary").avg().as("avg_salary"),
-        employee.column("salary").lag(IntegerLiteral.of(1)).as("prev_salary")
-    )
+    .select(WindowFunction.of(Functions.rowNumber(), window))
     .from(employee);
 ```
 
-### E. PlainSql for Custom Extensibility
+---
 
-For proprietary or database-specific features not natively modeled in the library, `PlainSql` serves as an extensible fallback. It supports parameter bindings using `{}` tokens:
+## 4. Modifying Data
+
+### A. INSERT
+
+`Insert` adds rows either from values or from a query. The target table is rendered without an alias, and columns without a table prefix.
 
 ```java
-PlainSql customFunc = PlainSql.of("ST_Distance({}, {})", geomColumnA, geomColumnB);
+Table author = Table.of("author", "library");
+
+// insert into library.author (first_name, last_name)
+//   values ('Paulo', 'Coelho'), ('Isabel', 'Allende')
+Insert insert = Insert.into(author)
+    .columns(author.column("first_name"), author.column("last_name"))
+    .values("Paulo", "Coelho")
+    .values("Isabel", "Allende");
 ```
-*Security note:* Values passed as tokens are automatically escaped safely against RegEx injections during replacement.
+
+Each call to `values(...)` adds one row; calls without values are ignored. Columns can also be given by name: `columns("first_name", "last_name")`. With placeholders, the same statement can be reused for JDBC batches:
+
+```java
+// insert into library.author (first_name, last_name) values (?, ?)
+Insert insert = Insert.into(author)
+    .columns("first_name", "last_name")
+    .values(Placeholder.empty(), Placeholder.empty());
+```
+
+To insert the result of a query, pass it to `query(...)`. It is rendered without enclosing parentheses:
+
+```java
+Table book = Table.of("book");
+
+// insert into book_archive (id) select a.id from book a where a.year < 1900
+Insert insert = Insert.into(Table.of("book_archive"))
+    .columns("id")
+    .query(Select.newInstance()
+        .select(book.column("id"))
+        .from(book)
+        .where(book.column("year").lt(1900)));
+```
+
+A statement uses either values or a query, and the last call wins: `query(...)` removes all rows added before, and `values(...)` removes a query set before. `removeValues()` and `removeQuery()` remove them explicitly.
+
+Several rows in one `values` clause require Oracle 23c or later. For older versions, insert one row per statement or use JDBC batches.
+
+### B. UPDATE
+
+```java
+Table author = Table.of("author");
+
+// update author a set first_name = 'Paulo', year_of_birth = 1947 where a.id = 42
+Update update = Update.newInstance()
+    .table(author)
+    .set(author.column("first_name")).value("Paulo")
+    .set(author.column("year_of_birth")).value(1947)
+    .where(author.column("id").eq(42));
+```
+
+Assigned columns are rendered without a table prefix. The table keeps its alias, so `where` conditions and values can refer to its columns, e.g. `.set(author.column("year_of_birth")).value(author.column("year_of_birth").plus(1))`. Values can be literals, expressions, placeholders or subqueries.
 
 ---
 
-## 5. Customizing Formatting & Dialects (`SqlBuildOptions`)
+## 5. Placeholders and PlainSql
 
-Generating and outputting SQL is not just for developers debugging code. In many real-world applications, generating formatted SQL is a core production feature—such as for audit logging, exporting SQL scripts to files, displaying query analyzers in user interfaces, or generating migration DDLs.
+### A. Placeholders
 
-SqlBuilder provides extensive support for both compact, single-line output and highly structured pretty-printed formatting.
-
-### A. Compact Inline SQL Output (e.g., for Logging and Simple Exports)
-
-Every AST node in SqlBuilder overrides `.toString()`, which internally calls `.toSql()` using the default options. This is perfect for quick logging, diagnostic dumps, or inline outputs:
+Use `Placeholder` instead of literals to keep values out of the SQL string and bind them through a JDBC `PreparedStatement`. A placeholder renders as `?` and can get its value when it is created or later:
 
 ```java
-Select select = Select.newInstance()
-    .select(author.column("first_name"))
-    .from(author);
+Placeholder year = Placeholder.of(1920);
 
-// Quick print to logs (outputs single-line SQL by default)
-System.out.println(select); 
-// Generates: (select a.first_name from author a )
+Placeholder name = Placeholder.empty();
+name.setValue("Paulo");
 ```
 
-Alternatively, call `.toSql()` manually to get the default, unformatted SQL string:
+`getPlaceholders()` returns all placeholders of a statement in the order they appear in the SQL (see [7. Execution with JDBC](#7-execution-with-jdbc)). To render placeholders differently, e.g. as `$1` or `:name`, set a custom `PlaceholderBuilder` in `SqlBuildOptions`.
+
+### B. PlainSql
+
+`PlainSql` inserts SQL text for features the library does not model. `{}` tokens are replaced by the given arguments; AST nodes are rendered as SQL:
+
 ```java
+// st_distance(a.geom_a, a.geom_b)
+PlainSql distance = PlainSql.of("st_distance({}, {})", table.column("geom_a"), table.column("geom_b"));
+```
+
+Other arguments are inserted as text **without escaping**. Never pass user input as a `PlainSql` argument; use a placeholder instead.
+
+---
+
+## 6. Formatting (`SqlBuildOptions`)
+
+`toSql()` and `toString()` render a statement on a single line with default options:
+
+```java
+Select select = Select.newInstance().select(author.column("first_name")).from(author);
+
+// select a.first_name from author a
 String sql = select.toSql();
 ```
 
-### B. Formatted Multi-Line SQL (Pretty Printing for UI Displays and File Exports)
-
-If your software needs to write SQL scripts into file exports (e.g. `.sql` dump files) or display the queries to database administrators in a graphical user interface (GUI), instantiate `SqlBuildOptions` and configure the **indentation** and **newline** characters to get a highly readable, pretty-printed block:
+For readable output, e.g. for logs, files or user interfaces, pass `SqlBuildOptions`:
 
 ```java
-SqlBuildOptions prettyPrintOptions = SqlBuildOptions.defaults()
-    .setNewline("\n")                     // Choose your line-break character
-    .setIndent("  ")                      // Choose indent character (e.g. 2 spaces or 4 spaces)
-    .setKeywordCase(SqlBuildOptions.KeywordCase.UPPERCASE); // Choose keywords case
+SqlBuildOptions options = SqlBuildOptions.defaults()
+    .setNewline("\n")                                            // line separator
+    .setIndent("  ")                                             // indentation; enables multi-line output
+    .setKeywordCase(SqlBuildOptions.KeywordCase.UPPERCASE)       // keyword case
+    .setIdentifierCase(SqlBuildOptions.IdentifierCase.UPPERCASE) // identifier case
+    .setIdentifierDelimiter("\"")                                // quote identifiers, e.g. "AUTHOR"
+    .setUseJdbcEscapeNotation(true);                             // dates as {d '2026-01-02'}
 
-// Build and Pretty Print
-String formattedSql = SqlBuilder.newInstance().build(select, prettyPrintOptions);
-System.out.println(formattedSql);
+String sql = SqlBuilder.newInstance().build(select, options);
 ```
 
-#### Example Output:
+With `setIndent("  ")` and uppercase keywords, the statement above renders as:
+
 ```sql
 SELECT
   a.first_name
@@ -349,79 +388,36 @@ FROM
   author a
 ```
 
-### C. Advanced Formatting Customizations
-
-A variety of options can be customized via `SqlBuildOptions` to adjust SQL generation for specific database dialects or conventions:
-
-```java
-SqlBuildOptions options = SqlBuildOptions.defaults()
-    .setNewline("\r\n")                                      // Choose line separator
-    .setIndent("    ")                                       // Choose indentation levels
-    .setIdentifierDelimiter("\"")                            // Delimiters (e.g., "my_table")
-    .setIdentifierCase(SqlBuildOptions.IdentifierCase.UPPERCASE) // Convert identifier casing
-    .setKeywordCase(SqlBuildOptions.KeywordCase.UPPERCASE)       // Convert keyword casing
-    .setUseJdbcEscapeNotation(true);                         // Use JDBC dates {d 'yyyy-mm-dd'}
-```
-
 ---
 
-## 6. Execution with JDBC
+## 7. Execution with JDBC
 
-SqlBuilder compiles your Java query trees (`Select`, `Update`, etc.) into standard SQL strings. You can then execute these strings using JDBC.
-
-### Non-Parameterized Queries (Using standard `Statement`)
-
-If your query contains clean, hardcoded literals (and no user inputs), you can build and run it directly:
+The rendered SQL can be executed with plain JDBC. Without placeholders, use a `Statement`:
 
 ```java
-Select select = Select.newInstance()
-    .select(author.column("first_name"), book.column("title"))
-    .from(author)
-    .join(book).on(author.column("id").eq(book.column("author_id")));
-
-// Compile to SQL
-String sql = SqlBuilder.newInstance().build(select);
-
-// Execute via JDBC Statement
 try (Statement stmt = connection.createStatement();
-     ResultSet rs = stmt.executeQuery(sql)) {
+     ResultSet rs = stmt.executeQuery(select.toSql())) {
     while (rs.next()) {
         String firstName = rs.getString("first_name");
-        String title = rs.getString("title");
     }
 }
 ```
 
-### Parameterized Queries (Using `PreparedStatement` & placeholders)
-
-To secure user input, pass `Placeholder` instances. You set their values in Java, build the SQL String, and bind them dynamically.
-
-In simple or toy projects, the generic `PreparedStatement.setObject(...)` method might suffice. However, **in real-world production code**, you should check the type of raw values to bind them using specific JDBC setters (`setInt()`, `setString()`, `setNull()`, etc.). This avoids driver-specific type-coercion issues and guarantees full database driver compliance.
-
-Here is the recommended production binding pattern:
+With placeholders, use a `PreparedStatement` and bind the values in the order returned by `getPlaceholders()`:
 
 ```java
-Placeholder keywordPlaceholder = Placeholder.empty();
+Placeholder keyword = Placeholder.of("%City%");
 
+// select a.title from book a where a.title like ?
 Select select = Select.newInstance()
     .select(book.column("title"))
     .from(book)
-    .where(book.column("title").like(keywordPlaceholder));
+    .where(book.column("title").like(keyword));
 
-// Set parameter value dynamically
-keywordPlaceholder.setValue("%City%");
-
-// Compile to parameterized SQL: SELECT b.title FROM book b WHERE b.title LIKE ?
-String sql = SqlBuilder.newInstance().build(select);
-
-try (PreparedStatement ps = connection.prepareStatement(sql)) {
-    // 1. Collect ordered placeholders inside the select tree
+try (PreparedStatement ps = connection.prepareStatement(select.toSql())) {
     List<Placeholder> placeholders = select.getPlaceholders();
-    
-    // 2. Bind parameter values by safely inspecting their real types
     for (int i = 0; i < placeholders.size(); i++) {
-        Object value = placeholders.get(i).getValue().orElse(null);
-        bindParameter(ps, i + 1, value); // Parameter index is 1-based
+        bind(ps, i + 1, placeholders.get(i).getValue().orElse(null));
     }
 
     try (ResultSet rs = ps.executeQuery()) {
@@ -430,31 +426,30 @@ try (PreparedStatement ps = connection.prepareStatement(sql)) {
         }
     }
 }
+```
 
-// ...
+Bind values with type-specific setters rather than a generic `setObject(...)`. Some drivers fail on `setObject(index, null)` or coerce types unexpectedly:
 
-/**
- * Production Helper: Safely maps Java types to driver-compliant JDBC setters.
- * This is crucial since direct setObject(index, null) fails on some database drivers.
- */
-private void bindParameter(PreparedStatement ps, int paramIndex, Object value) throws SQLException {
+```java
+private void bind(PreparedStatement ps, int index, Object value) throws SQLException {
     if (value == null) {
-        ps.setNull(paramIndex, java.sql.Types.NULL);
-    } else if (value instanceof String) {
-        ps.setString(paramIndex, (String) value);
-    } else if (value instanceof Integer) {
-        ps.setInt(paramIndex, (Integer) value);
-    } else if (value instanceof Long) {
-        ps.setLong(paramIndex, (Long) value);
-    } else if (value instanceof Double) {
-        ps.setDouble(paramIndex, (Double) value);
-    } else if (value instanceof Boolean) {
-        ps.setBoolean(paramIndex, (Boolean) value);
-    } else if (value instanceof java.time.LocalDate) {
-        ps.setDate(paramIndex, java.sql.Date.valueOf((java.time.LocalDate) value));
+        ps.setNull(index, Types.NULL);
+    } else if (value instanceof String string) {
+        ps.setString(index, string);
+    } else if (value instanceof Integer number) {
+        ps.setInt(index, number);
+    } else if (value instanceof Long number) {
+        ps.setLong(index, number);
+    } else if (value instanceof Double number) {
+        ps.setDouble(index, number);
+    } else if (value instanceof Boolean bool) {
+        ps.setBoolean(index, bool);
+    } else if (value instanceof LocalDate date) {
+        ps.setDate(index, Date.valueOf(date));
     } else {
-        // Fallback for other objects
-        ps.setObject(paramIndex, value);
+        ps.setObject(index, value);
     }
 }
 ```
+
+`Insert` and `Update` are executed the same way with `executeUpdate()`.
