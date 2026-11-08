@@ -7,7 +7,7 @@ select
   *
 from
   author a
-  join book b on a.id = b.author_id
+  join book b on b.author_id = a.id
 where
   a.year_of_birth > 1920
   and a.first_name = 'Paulo'
@@ -32,5 +32,5 @@ System.out.println(
 
 ## Developer Guide
 
-For a  guide on how to integrate and use **SqlBuilder** in your own Java projects, along with architecture details
+For a guide on how to integrate and use **SqlBuilder** in your own Java projects, along with architecture details
 and core design concepts, please refer to the [Developer Guide](DEVELOPER-GUIDE.md).

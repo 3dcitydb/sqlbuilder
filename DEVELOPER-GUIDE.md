@@ -181,6 +181,16 @@ author.column("id").in(1, author.column("coauthor_id"), Placeholder.of(42));
 author.column("id").in(Select.newInstance().select(book.column("author_id")).from(book));
 ```
 
+Use `Operators.exists(...)` and `Operators.notExists(...)` to test whether a subquery returns rows:
+
+```java
+// not exists (select b.author_id from book b where b.author_id = a.id)
+Operators.notExists(Select.newInstance()
+    .select(book.column("author_id"))
+    .from(book)
+    .where(book.column("author_id").eq(author.column("id"))));
+```
+
 ### D. Calculations and Functions
 
 ```java
